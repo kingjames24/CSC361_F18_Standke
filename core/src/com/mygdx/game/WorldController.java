@@ -5,25 +5,34 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.mygdx.objects.Timmy;
 import com.mygdx.util.CameraHelper;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 
 
 
-public class WorldController extends InputAdapter
+public class WorldController extends InputAdapter implements Disposable
 {
 	private Game game;
 	public CameraHelper cameraHelper;
-	public Sprite[] testSprites;
-    public int selectedSprite;
+    public World b2world;
+    public Timmy tim; 
 	
 	public WorldController(Game game) 
 	{
 		this.game = game;
+		tim = new Timmy(); 
 		init();
 	}
 	
@@ -31,18 +40,18 @@ public class WorldController extends InputAdapter
 	{
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
-		initTestObjects();   //used for testing purposes will not be used in game
+		initPhysics();
 	}
 	
 	public void update(float deltaTime)
 	{
 		handleDebugInput(deltaTime);
-		updateTestObjects(deltaTime); //used for testing purposes will not be used in game
+		b2world.step(deltaTime, 8, 3);
 		cameraHelper.update(deltaTime);	
 	}
 	
 	
-	public boolean keyUp(int keycode) 
+/*	public boolean keyUp(int keycode) 
 	{
 		 
 		 if (keycode == Keys.R) 
@@ -68,20 +77,13 @@ public class WorldController extends InputAdapter
 		         
 		}
 		       return false;
-	}
+	}*/
 	
 	private void handleDebugInput(float deltaTime)              //used only for debuging will not be in game
 	{
 			if (Gdx.app.getType() != ApplicationType.Desktop) return;
 			
-			// Selected Sprite Controls
-		    float sprMoveSpeed = 5 * deltaTime;
-		    if (Gdx.input.isKeyPressed(Keys.A)) moveSelectedSprite(-sprMoveSpeed, 0);
-		    if (Gdx.input.isKeyPressed(Keys.D)) moveSelectedSprite(sprMoveSpeed, 0);
-		    if (Gdx.input.isKeyPressed(Keys.W)) moveSelectedSprite(0,sprMoveSpeed);
-		    if (Gdx.input.isKeyPressed(Keys.S)) moveSelectedSprite(0,-sprMoveSpeed);
-		
-		 
+
 		   // Camera Controls (move)
 	       float camMoveSpeed = 5 * deltaTime;
 	       float camMoveSpeedAccelerationFactor = 5;
@@ -109,63 +111,44 @@ public class WorldController extends InputAdapter
 	}
 	
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-/*-----------------BELOW USED for TESTING SPRITES NOT GOING TO BE IN GAME--------------*/	
-	
-	
-	
-	
-	 private void initTestObjects() 
-	 {
-	       // Create new array for 10 sprites
-	       testSprites = new Sprite[1];
-	       Array<TextureRegion> regions = new Array<TextureRegion>();
-	       regions.add(Assets.instance.timmy.frame1);
-	       // Create new sprites using the just created texture
-	       for (int i = 0; i < testSprites.length; i++) 
-	       {
-	         Sprite spr = new Sprite(regions.first());
-	         // Define sprite size to be 1m x 1m in game world
-	         spr.setSize(1, 1);
-	         // Set origin to sprite's center
-	         spr.setOrigin(spr.getWidth() / 2.0f, spr.getHeight() / 2.0f);
-	         // Calculate random position for sprite
-	         float randomX = MathUtils.random(-2.0f, 2.0f);
-	         float randomY = MathUtils.random(-2.0f, 2.0f);
-	         spr.setPosition(randomX, randomY);
-	         // Put new sprite into array
-	         testSprites[i] = spr;
-	       }
-	       // Set first sprite as selected one
-	       selectedSprite = 0;
+	@Override
+	public void dispose() 
+	{
+		if (b2world != null) b2world.dispose();
 	}
 	
-	 private void updateTestObjects(float deltaTime) 
-	 {
-		  // Get current rotation from selected sprite
-		  //float rotation = testSprites[selectedSprite].getRotation();
-		  // Rotate sprite by 90 degrees per second
-		  //rotation += 90 * deltaTime;
-		  // Wrap around at 360 degrees
-		  //rotation %= 360;
-		  // Set new rotation value to selected sprite
-		  //testSprites[selectedSprite].setRotation(rotation);
+	private void initPhysics () 
+    {
+    	   if (b2world != null) b2world.dispose();
+    	   b2world = new World(new Vector2(0, 0), true);
+    	   Vector2 origin = new Vector2();
+    	   float rotation = MathUtils.random(0.0f, 360.0f)* MathUtils.degreesToRadians;
+    	 
+    	   // Timmy
+    	   BodyDef bodyDef = new BodyDef();
+		   bodyDef.type = BodyType.DynamicBody;
+		   bodyDef.angle = rotation;
+		   bodyDef.position.set(tim.position);
+		   bodyDef.linearVelocity.add(new Vector2(2,1)); 
+		   Body body = b2world.createBody(bodyDef);
+    	   tim.body=body; 
+    	   
+    	   PolygonShape polygonShape = new PolygonShape();
+    	   origin.x = tim.dimension.x / 2.0f;
+	       origin.y = tim.dimension.y / 2.0f;
+	       polygonShape.setAsBox(tim.dimension.x/2.0f, tim.dimension.y/2.0f, origin, 0);
+	       
+	       FixtureDef fixtureDef = new FixtureDef();
+	       fixtureDef.shape = polygonShape;
+	       fixtureDef.density = 50;
+	       fixtureDef.restitution = 0.5f;
+	       fixtureDef.friction = 0.5f;
+	       body.createFixture(fixtureDef);
+	       polygonShape.dispose();
+	       
+    }
+	
 		
-	}
-	 
-	 private void moveSelectedSprite (float x, float y) {
-	       testSprites[selectedSprite].translate(x, y);
-	}
+	
 
 }

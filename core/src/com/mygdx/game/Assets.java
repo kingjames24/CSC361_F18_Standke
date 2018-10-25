@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Disposable;
 import com.mygdx.util.Constants;
 
@@ -27,8 +28,9 @@ public class Assets implements Disposable, AssetErrorListener
     
     
     public class AssetTimmy
-    {	public final AtlasRegion frame1; 
-    
+    {	
+    	public final AtlasRegion frame1; 
+    	
     	public AssetTimmy (TextureAtlas atlas)
     	{
     		frame1= atlas.findRegion("Tim"); 
