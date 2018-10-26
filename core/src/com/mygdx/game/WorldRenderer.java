@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -43,14 +44,15 @@ public class WorldRenderer implements Disposable
 		worldController.cameraHelper.applyTo(camera);
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		/*for(Sprite sprite : worldController.testSprites) {
-		    sprite.draw(batch);
-		  }*/
 		worldController.tim.render(batch);
 		batch.end();
 		
 		if (DEBUG_DRAW_BOX2D_WORLD)
 		{
+			b2debugRenderer.setDrawAABBs(false);
+			b2debugRenderer.setDrawVelocities(false);
+			b2debugRenderer.AABB_COLOR.set(Color.BLACK); 
+			b2debugRenderer.VELOCITY_COLOR.set(Color.BLACK); 
 			b2debugRenderer.render(worldController.b2world, camera.combined);
 		}
 			
@@ -60,6 +62,7 @@ public class WorldRenderer implements Disposable
 	public void dispose() 
 	{
 		batch.dispose();
+		b2debugRenderer.dispose();
 		
 	}
 

@@ -83,6 +83,13 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 			if (Gdx.app.getType() != ApplicationType.Desktop) return;
 			
+			//controls player in game
+			float sprMoveSpeed = 2;
+		    if (Gdx.input.isKeyPressed(Keys.A))tim.body.applyLinearImpulse(new Vector2(-sprMoveSpeed, 0), tim.body.getWorldCenter(), true);
+		    if (Gdx.input.isKeyPressed(Keys.D))tim.body.applyLinearImpulse(new Vector2(sprMoveSpeed, 0), tim.body.getWorldCenter(), true);
+		    if (Gdx.input.isKeyPressed(Keys.W)) tim.body.applyLinearImpulse(new Vector2(0,6), tim.body.getWorldCenter(), true);
+		    if (Gdx.input.isKeyPressed(Keys.S)) tim.body.applyLinearImpulse(new Vector2(0,-sprMoveSpeed), tim.body.getWorldCenter(), true);
+
 
 		   // Camera Controls (move)
 	       float camMoveSpeed = 5 * deltaTime;
@@ -120,33 +127,57 @@ public class WorldController extends InputAdapter implements Disposable
 	private void initPhysics () 
     {
     	   if (b2world != null) b2world.dispose();
-    	   b2world = new World(new Vector2(0, 0), true);
+    	   b2world = new World(new Vector2(0, -4f), true);
     	   Vector2 origin = new Vector2();
-    	   float rotation = MathUtils.random(0.0f, 360.0f)* MathUtils.degreesToRadians;
+
     	 
     	   // Timmy
     	   BodyDef bodyDef = new BodyDef();
 		   bodyDef.type = BodyType.DynamicBody;
-		   bodyDef.angle = rotation;
+		   //bodyDef.angle = rotation;
 		   bodyDef.position.set(tim.position);
-		   bodyDef.linearVelocity.add(new Vector2(2,1)); 
+		   bodyDef.linearVelocity.set(new Vector2(1,1)); 
 		   Body body = b2world.createBody(bodyDef);
+		   body.setUserData(tim);
     	   tim.body=body; 
     	   
     	   PolygonShape polygonShape = new PolygonShape();
-    	   origin.x = tim.dimension.x / 2.0f;
-	       origin.y = tim.dimension.y / 2.0f;
+    	   origin.x = tim.dimension.x/2;
+	       origin.y = tim.dimension.y/2;
 	       polygonShape.setAsBox(tim.dimension.x/2.0f, tim.dimension.y/2.0f, origin, 0);
 	       
 	       FixtureDef fixtureDef = new FixtureDef();
 	       fixtureDef.shape = polygonShape;
 	       fixtureDef.density = 50;
-	       fixtureDef.restitution = 0.5f;
+	       fixtureDef.restitution = 0.1f;
 	       fixtureDef.friction = 0.5f;
 	       body.createFixture(fixtureDef);
 	       polygonShape.dispose();
-	       
+	       //creating a static boundary to play with physics
+	       createBoundary();       
     }
+	
+	
+	private void createBoundary()
+	{
+		 BodyDef bodyDef = new BodyDef();
+		 bodyDef.type = BodyType.StaticBody;
+		 bodyDef.position.set(0,0); 
+		 Body staticBody = b2world.createBody(bodyDef);
+		 
+		 PolygonShape polygonShape = new PolygonShape();
+		 FixtureDef fixtureDef = new FixtureDef();
+	     fixtureDef.shape = polygonShape;
+	     polygonShape.setAsBox(4, 1, new Vector2(0,0), 0);
+	     staticBody.createFixture(fixtureDef);
+	     polygonShape.setAsBox(4, 1, new Vector2(0,10), 0);
+	     staticBody.createFixture(fixtureDef);
+	     polygonShape.setAsBox(1, 4, new Vector2(-5,5), 0);
+	     staticBody.createFixture(fixtureDef);
+	     polygonShape.setAsBox(1, 4, new Vector2(5,5), 0);
+	     staticBody.createFixture(fixtureDef);
+	     polygonShape.dispose();
+	}
 	
 		
 	

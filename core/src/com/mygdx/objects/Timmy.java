@@ -8,12 +8,14 @@ import com.mygdx.game.Assets;
 
 public class Timmy 
 {
-	public Vector2 position = new Vector2();
+	public Vector2 linearVelocity = new Vector2(); 
+	public Vector2 position = new Vector2(1,1);
 	public Vector2 dimension = new Vector2(1,1);
 	public Vector2 origin = new Vector2();
 	public Vector2 scale = new Vector2(1,1);
 	public Body body;
 	public float rotation;
+	public float deltatime; 
 	private TextureRegion regTim;
 	
 	public Timmy()
@@ -32,6 +34,9 @@ public class Timmy
 	{
 		TextureRegion reg = null;
 		
+		position= body.getPosition();
+		rotation= (float) Math.toDegrees(body.getAngle());
+		
 		reg = regTim;
 		batch.draw(reg.getTexture(), position.x, 
 				position.y, origin.x, origin.y, dimension.x,
@@ -39,6 +44,12 @@ public class Timmy
 				reg.getRegionY(), reg.getRegionWidth(),
 				reg.getRegionHeight(), false, false);
 	}
+	
+	
+	
+	
+	
+	
 	
 
 }
