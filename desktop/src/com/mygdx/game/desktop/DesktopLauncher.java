@@ -1,12 +1,40 @@
 package com.mygdx.game.desktop;
-
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.mygdx.game.CSC361_F18_Standke;
+
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
+import com.mygdx.rainmaker.RainMaker;
+
+
 
 public class DesktopLauncher {
+	
+	private static boolean rebuildAtlas = false;
+	private static boolean drawDebugOutline = true;
+	
 	public static void main (String[] arg) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new CSC361_F18_Standke(), config);
+		
+		//if needed rebuild the image atlas
+				if(rebuildAtlas)
+				{
+					Settings settings = new Settings();
+					settings.maxWidth = 1024;
+					settings.maxHeight = 1024;
+					settings.duplicatePadding = false;
+					settings.debug = drawDebugOutline;
+					TexturePacker.process(settings, "assets-raw/images", "../core/assets/images",
+							"rainmaker.atlas");
+					/*TexturePacker.process(settings,  "assets-raw/images-ui", "../core/assets/images-ui",
+							"canyonbunny-ui.atlas");*/
+				}
+				
+				LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
+				cfg.title = "RainMaker";
+				cfg.width = 800;
+				cfg.height= 480;
+				
+				new LwjglApplication(new RainMaker(), cfg);
+		
 	}
 }

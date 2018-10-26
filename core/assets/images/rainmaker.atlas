@@ -1,0 +1,34 @@
+
+rainmaker.png
+size: 256,512
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Tim
+  rotate: false
+  xy: 2, 318
+  size: 154, 148
+  orig: 154, 148
+  offset: 0, 0
+  index: 4
+Tim
+  rotate: false
+  xy: 2, 160
+  size: 137, 156
+  orig: 137, 156
+  offset: 0, 0
+  index: 3
+Tim
+  rotate: false
+  xy: 2, 2
+  size: 120, 156
+  orig: 120, 156
+  offset: 0, 0
+  index: 1
+Tim
+  rotate: false
+  xy: 124, 16
+  size: 123, 142
+  orig: 123, 142
+  offset: 0, 0
+  index: 2
