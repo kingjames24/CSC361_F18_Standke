@@ -80,7 +80,7 @@ public class Platform
  	   {
  		   floatCycleTimeLeft = FLOAT_CYCLE_TIME;
  		   floatingDownwards = !floatingDownwards;
- 		   body.setLinearVelocity(0, FLOAT_AMPLITUDE * (floatingDownwards ? -1 : 1));
+ 		   body.setLinearVelocity(0, FLOAT_AMPLITUDE * (floatingDownwards ? 1 : -1));
  	   }
  	   else
  	   {
