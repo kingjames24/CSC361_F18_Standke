@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.mygdx.objects.Platform;
 import com.mygdx.objects.Timmy;
 import com.mygdx.util.CameraHelper;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -27,12 +28,22 @@ public class WorldController extends InputAdapter implements Disposable
 	private Game game;
 	public CameraHelper cameraHelper;
     public World b2world;
-    public Timmy tim; 
+    
+    //will be replaced when level is added
+    public Timmy tim;
+    public Platform[] platform; 
 	
 	public WorldController(Game game) 
 	{
 		this.game = game;
-		tim = new Timmy(); 
+		tim = new Timmy();
+		
+		platform = new Platform[8]; 
+		for(int i=0; i<platform.length; i++)
+		{
+			
+				platform[i]=new Platform();	
+		}
 		init();
 	}
 	
@@ -47,38 +58,15 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		handleDebugInput(deltaTime);
 		b2world.step(deltaTime, 8, 3);
+		
+		platform[0].update(deltaTime);//moving platforms
+		platform[7].update(deltaTime);//moving platforms
+		
 		cameraHelper.update(deltaTime);	
 	}
 	
 	
-/*	public boolean keyUp(int keycode) 
-	{
-		 
-		 if (keycode == Keys.R) 
-		 {
-			 init();
-		    
-		 }
-		 else if (keycode == Keys.SPACE) 
-		 {
-		         selectedSprite = (selectedSprite + 1) % testSprites.length;
-		         // Update camera's target to follow the currently
-		         // selected sprite
-		         if (cameraHelper.hasTarget()) {
-		           cameraHelper.setTarget(testSprites[selectedSprite]);
-		         }
-		         
-		 }
-		       // Toggle camera follow
-		 else if (keycode == Keys.ENTER) 
-		 {
-		         cameraHelper.setTarget(cameraHelper.hasTarget() ? null :
-		           testSprites[selectedSprite]);
-		         
-		}
-		       return false;
-	}*/
-	
+
 	private void handleDebugInput(float deltaTime)              //used only for debuging will not be in game
 	{
 			if (Gdx.app.getType() != ApplicationType.Desktop) return;
@@ -144,7 +132,7 @@ public class WorldController extends InputAdapter implements Disposable
     	   PolygonShape polygonShape = new PolygonShape();
     	   origin.x = tim.dimension.x/2;
 	       origin.y = tim.dimension.y/2;
-	       polygonShape.setAsBox(tim.dimension.x/2.0f, tim.dimension.y/2.0f, origin, 0);
+	       polygonShape.setAsBox(tim.dimension.x/2.5f, tim.dimension.y/2.5f, origin, 0);
 	       
 	       FixtureDef fixtureDef = new FixtureDef();
 	       fixtureDef.shape = polygonShape;
@@ -158,12 +146,13 @@ public class WorldController extends InputAdapter implements Disposable
     }
 	
 	
-	private void createBoundary()
+	private void createBoundary() //used for physics testing 
 	{
 		 BodyDef bodyDef = new BodyDef();
 		 bodyDef.type = BodyType.StaticBody;
 		 bodyDef.position.set(0,0); 
 		 Body staticBody = b2world.createBody(bodyDef);
+		 
 		 
 		 PolygonShape polygonShape = new PolygonShape();
 		 FixtureDef fixtureDef = new FixtureDef();
@@ -177,7 +166,50 @@ public class WorldController extends InputAdapter implements Disposable
 	     polygonShape.setAsBox(1, 4, new Vector2(5,5), 0);
 	     staticBody.createFixture(fixtureDef);
 	     polygonShape.dispose();
+	     
+	     createPlatforms(); 
 	}
+	
+	private void createPlatforms()
+	{	
+		float x=-4, y=3;
+		Vector2 origin = new Vector2();
+ 	   	for (int i=0; i<platform.length; i++) 
+ 	   	{
+ 	   		    
+ 	   	       if (i==4)
+ 	   	       {
+ 	   	    	   x++; 
+ 	   	    	   continue; 
+ 	   	       }
+ 	   		   BodyDef bodyDef = new BodyDef();
+ 	   		   bodyDef.type = BodyType.KinematicBody;
+ 	   		   platform[i].position.x=x; 
+ 	   		   platform[i].position.y=y; 
+ 	   		   bodyDef.position.set(platform[i].position);
+ 	   		   Body body = b2world.createBody(bodyDef);
+ 	   		   body.setUserData(platform[i]);
+ 	   		   platform[i].body = body;
+ 	       
+ 	   		   PolygonShape polygonShape = new PolygonShape();
+ 	   		   origin.x = platform[i].dimension.x / 2.0f;
+ 	   		   origin.y = platform[i].dimension.y / 2.0f;
+ 	   		   polygonShape.setAsBox(platform[i].dimension.x/ 2.0f, platform[i].dimension.y/ 2.0f, origin, 0);
+ 	       
+ 	   		   FixtureDef fixtureDef = new FixtureDef();
+ 	   		   fixtureDef.shape = polygonShape;
+ 	   		   body.createFixture(fixtureDef);
+ 	   		   polygonShape.dispose();
+ 	   		   x++; 
+ 	   	   
+ 	        
+ 	   }
+		
+		
+		
+	}
+	
+	
 	
 		
 	

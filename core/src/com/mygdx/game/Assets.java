@@ -19,6 +19,11 @@ import com.mygdx.util.Constants;
 
 public class Assets implements Disposable, AssetErrorListener  
 {
+	public AssetLevelDecoration leveldecoration; 
+	public AssetPoints plus; 
+	public AssetPowerUp up; 
+	public AssetRainDrop drop;
+	public AssetPlatform plat; 
 	public AssetTimmy timmy; 
 	public static final String TAG = Assets.class.getName();
 	public static final Assets instance = new Assets();
@@ -38,8 +43,78 @@ public class Assets implements Disposable, AssetErrorListener
     }
     
     
+    public class AssetPlatform
+    {
+    	
+    	public final AtlasRegion middle;
+    	
+    	public AssetPlatform (TextureAtlas atlas)
+    	{
+    		
+    		middle = atlas.findRegion("platform");
+    	}
+    }
     
     
+    public class AssetRainDrop
+    {
+    	
+    	public final AtlasRegion rain01;
+    	public final AtlasRegion rain02; 
+    	public final AtlasRegion rain03; 
+    	
+    	public AssetRainDrop (TextureAtlas atlas)
+    	{
+    		
+    		rain01 = atlas.findRegion("raindrop01");
+    		rain02 = atlas.findRegion("raindrop02");
+    		rain03 = atlas.findRegion("raindrop03");
+    	}
+    }
+    
+    public class AssetPowerUp
+    {
+    	
+    	public final AtlasRegion power;
+    	
+    	public AssetPowerUp (TextureAtlas atlas)
+    	{
+    		
+    		power = atlas.findRegion("special_power");
+    	}
+    }
+    
+    public class AssetPoints
+    {
+    	
+    	public final AtlasRegion points;
+    	
+    	public AssetPoints (TextureAtlas atlas)
+    	{
+    		
+    		points = atlas.findRegion("5points");
+    	}
+    }
+    
+    public class AssetLevelDecoration
+    {
+    	
+    	public final AtlasRegion chopper;
+    	public final AtlasRegion city;
+    	public final AtlasRegion man1;
+    	public final AtlasRegion man2;
+    	public final AtlasRegion woman1;
+    	
+    	public AssetLevelDecoration (TextureAtlas atlas)
+    	{
+    		
+    		chopper = atlas.findRegion("chopper");
+    		city = atlas.findRegion("city_background");
+    		man1 = atlas.findRegion("man_rain01");
+    		man2 = atlas.findRegion("man_rain02");
+    		woman1 = atlas.findRegion("woman_rain");
+    	}
+    }
     
     
     
@@ -77,7 +152,12 @@ public class Assets implements Disposable, AssetErrorListener
 	    }
 	    
 	    // create game resource objects
-	    timmy = new AssetTimmy(atlas); 
+	    timmy = new AssetTimmy(atlas);
+	    plat = new AssetPlatform(atlas); 
+	    drop = new AssetRainDrop(atlas); 
+	    up = new AssetPowerUp(atlas); 
+	    plus = new AssetPoints(atlas); 
+	    leveldecoration = new AssetLevelDecoration(atlas); 
     	 
    }
 
