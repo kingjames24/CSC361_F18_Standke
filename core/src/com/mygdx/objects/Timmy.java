@@ -9,14 +9,14 @@ import com.mygdx.game.Assets;
 public class Timmy 
 {
 	public Vector2 linearVelocity = new Vector2(); 
-	public Vector2 position = new Vector2(1,1);
+	public Vector2 position = new Vector2(-3,4);
 	public Vector2 dimension = new Vector2(1,1);
 	public Vector2 origin = new Vector2();
 	public Vector2 scale = new Vector2(1,1);
 	public Body body;
 	public float rotation;
 	public float deltatime; 
-	private TextureRegion regTim;
+	public TextureRegion regTim;
 	
 	public Timmy()
 	{

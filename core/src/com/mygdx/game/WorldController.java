@@ -14,6 +14,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.mygdx.objects.Platform;
+import com.mygdx.objects.Raindrops;
 import com.mygdx.objects.Timmy;
 import com.mygdx.util.CameraHelper;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -26,13 +28,23 @@ public class WorldController extends InputAdapter implements Disposable
 {
 	private Game game;
 	public CameraHelper cameraHelper;
-    public World b2world;
-    public Timmy tim; 
+    public static World b2world;
+    
+    //will be replaced when level is added
+    public Timmy tim;
+    public Raindrops rain; 
+    public Platform[] platform; 
 	
 	public WorldController(Game game) 
 	{
 		this.game = game;
-		tim = new Timmy(); 
+		tim = new Timmy();
+		platform = new Platform[8]; 
+		for(int i=0; i<platform.length; i++)
+		{
+			
+				platform[i]=new Platform();	
+		}
 		init();
 	}
 	
@@ -40,51 +52,31 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
+		cameraHelper.setPosition(0, 5);
 		initPhysics();
+		rain= new Raindrops(10);
+		
 	}
 	
 	public void update(float deltaTime)
 	{
 		handleDebugInput(deltaTime);
 		b2world.step(deltaTime, 8, 3);
+		
+		platform[0].update(deltaTime);//moving platforms
+		platform[7].update(deltaTime);//moving platforms
+		
 		cameraHelper.update(deltaTime);	
 	}
 	
 	
-/*	public boolean keyUp(int keycode) 
-	{
-		 
-		 if (keycode == Keys.R) 
-		 {
-			 init();
-		    
-		 }
-		 else if (keycode == Keys.SPACE) 
-		 {
-		         selectedSprite = (selectedSprite + 1) % testSprites.length;
-		         // Update camera's target to follow the currently
-		         // selected sprite
-		         if (cameraHelper.hasTarget()) {
-		           cameraHelper.setTarget(testSprites[selectedSprite]);
-		         }
-		         
-		 }
-		       // Toggle camera follow
-		 else if (keycode == Keys.ENTER) 
-		 {
-		         cameraHelper.setTarget(cameraHelper.hasTarget() ? null :
-		           testSprites[selectedSprite]);
-		         
-		}
-		       return false;
-	}*/
-	
+
 	private void handleDebugInput(float deltaTime)              //used only for debuging will not be in game
 	{
 			if (Gdx.app.getType() != ApplicationType.Desktop) return;
 			
 			//controls player in game
-			float sprMoveSpeed = 2;
+			float sprMoveSpeed = 1;
 		    if (Gdx.input.isKeyPressed(Keys.A))tim.body.applyLinearImpulse(new Vector2(-sprMoveSpeed, 0), tim.body.getWorldCenter(), true);
 		    if (Gdx.input.isKeyPressed(Keys.D))tim.body.applyLinearImpulse(new Vector2(sprMoveSpeed, 0), tim.body.getWorldCenter(), true);
 		    if (Gdx.input.isKeyPressed(Keys.W)) tim.body.applyLinearImpulse(new Vector2(0,6), tim.body.getWorldCenter(), true);
@@ -127,16 +119,16 @@ public class WorldController extends InputAdapter implements Disposable
 	private void initPhysics () 
     {
     	   if (b2world != null) b2world.dispose();
-    	   b2world = new World(new Vector2(0, -4f), true);
+    	   b2world = new World(new Vector2(0, -5f), true);
     	   Vector2 origin = new Vector2();
 
     	 
     	   // Timmy
     	   BodyDef bodyDef = new BodyDef();
 		   bodyDef.type = BodyType.DynamicBody;
-		   //bodyDef.angle = rotation;
+		   bodyDef.fixedRotation=true;
 		   bodyDef.position.set(tim.position);
-		   bodyDef.linearVelocity.set(new Vector2(1,1)); 
+		   bodyDef.linearVelocity.set(new Vector2(0,0)); 
 		   Body body = b2world.createBody(bodyDef);
 		   body.setUserData(tim);
     	   tim.body=body; 
@@ -144,13 +136,13 @@ public class WorldController extends InputAdapter implements Disposable
     	   PolygonShape polygonShape = new PolygonShape();
     	   origin.x = tim.dimension.x/2;
 	       origin.y = tim.dimension.y/2;
-	       polygonShape.setAsBox(tim.dimension.x/2.0f, tim.dimension.y/2.0f, origin, 0);
+	       polygonShape.setAsBox(tim.dimension.x/2.5f, tim.dimension.y/2.5f, origin, 0);
 	       
 	       FixtureDef fixtureDef = new FixtureDef();
 	       fixtureDef.shape = polygonShape;
-	       fixtureDef.density = 50;
+	       fixtureDef.density =50;
 	       fixtureDef.restitution = 0.1f;
-	       fixtureDef.friction = 0.5f;
+	       fixtureDef.friction = .01f;
 	       body.createFixture(fixtureDef);
 	       polygonShape.dispose();
 	       //creating a static boundary to play with physics
@@ -158,26 +150,68 @@ public class WorldController extends InputAdapter implements Disposable
     }
 	
 	
-	private void createBoundary()
+	private void createBoundary() //used for physics testing 
 	{
 		 BodyDef bodyDef = new BodyDef();
 		 bodyDef.type = BodyType.StaticBody;
 		 bodyDef.position.set(0,0); 
 		 Body staticBody = b2world.createBody(bodyDef);
 		 
+		 
 		 PolygonShape polygonShape = new PolygonShape();
 		 FixtureDef fixtureDef = new FixtureDef();
 	     fixtureDef.shape = polygonShape;
 	     polygonShape.setAsBox(4, 1, new Vector2(0,0), 0);
-	     staticBody.createFixture(fixtureDef);
-	     polygonShape.setAsBox(4, 1, new Vector2(0,10), 0);
 	     staticBody.createFixture(fixtureDef);
 	     polygonShape.setAsBox(1, 4, new Vector2(-5,5), 0);
 	     staticBody.createFixture(fixtureDef);
 	     polygonShape.setAsBox(1, 4, new Vector2(5,5), 0);
 	     staticBody.createFixture(fixtureDef);
 	     polygonShape.dispose();
+	     
+	     createPlatforms(); 
 	}
+	
+	private void createPlatforms()
+	{	
+		float x=-4, y=3;
+		Vector2 origin = new Vector2();
+ 	   	for (int i=0; i<platform.length; i++) 
+ 	   	{
+ 	   		    
+ 	   	       if (i==4)
+ 	   	       {
+ 	   	    	   x++; 
+ 	   	    	   continue; 
+ 	   	       }
+ 	   		   BodyDef bodyDef = new BodyDef();
+ 	   		   bodyDef.type = BodyType.KinematicBody;
+ 	   		   platform[i].position.x=x; 
+ 	   		   platform[i].position.y=y; 
+ 	   		   bodyDef.position.set(platform[i].position);
+ 	   		   Body body = b2world.createBody(bodyDef);
+ 	   		   body.setUserData(platform[i]);
+ 	   		   platform[i].body = body;
+ 	       
+ 	   		   PolygonShape polygonShape = new PolygonShape();
+ 	   		   origin.x = platform[i].dimension.x / 2.0f;
+ 	   		   origin.y = platform[i].dimension.y / 2.0f;
+ 	   		   polygonShape.setAsBox(platform[i].dimension.x/ 2.0f, platform[i].dimension.y/ 2.0f, origin, 0);
+ 	       
+ 	   		   FixtureDef fixtureDef = new FixtureDef();
+ 	   		   fixtureDef.shape = polygonShape;
+ 	   		   body.createFixture(fixtureDef);
+ 	   		   polygonShape.dispose();
+ 	   		   x++; 
+ 	   	   
+ 	        
+ 	   }
+		
+		
+		
+	}
+	
+	
 	
 		
 	

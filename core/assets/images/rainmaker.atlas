@@ -53,20 +53,20 @@ city_background
   orig: 960, 220
   offset: 0, 0
   index: -1
-man_rain
+man_rain01
   rotate: false
   xy: 818, 10
   size: 121, 98
   orig: 121, 98
   offset: 0, 0
-  index: 1
-man_rain
+  index: -1
+man_rain02
   rotate: false
   xy: 310, 5
   size: 111, 97
   orig: 111, 97
   offset: 0, 0
-  index: 2
+  index: -1
 platform
   rotate: false
   xy: 2, 53
@@ -74,27 +74,27 @@ platform
   orig: 306, 57
   offset: 0, 0
   index: 2
-raindrop
-  rotate: false
-  xy: 1006, 453
-  size: 16, 21
-  orig: 16, 21
-  offset: 0, 0
-  index: 2
-raindrop
+raindrop01
   rotate: false
   xy: 1002, 422
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
-  index: 1
-raindrop
+  index: -1
+raindrop02
+  rotate: false
+  xy: 1006, 453
+  size: 16, 21
+  orig: 16, 21
+  offset: 0, 0
+  index: -1
+raindrop03
   rotate: false
   xy: 2, 29
   size: 21, 22
   orig: 21, 22
   offset: 0, 0
-  index: 3
+  index: -1
 special_power
   rotate: false
   xy: 964, 409

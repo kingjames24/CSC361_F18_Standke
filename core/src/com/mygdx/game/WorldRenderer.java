@@ -44,7 +44,15 @@ public class WorldRenderer implements Disposable
 		worldController.cameraHelper.applyTo(camera);
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		worldController.tim.render(batch);
+		worldController.tim.render(batch);  //worldcontroller is directly rendering will change with level
+		for(int i=0; i<worldController.platform.length; i++)
+		{
+			if(i!=4)
+			{
+				worldController.platform[i].render(batch);
+			}
+		}
+		worldController.rain.render(batch);
 		batch.end();
 		
 		if (DEBUG_DRAW_BOX2D_WORLD)
