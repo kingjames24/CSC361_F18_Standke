@@ -25,7 +25,7 @@ public class Raindrops
 	private Array<TextureRegion> rainDrops;
     private Array<RainDrop> rainDrop;
     private int amount;
-	public Vector2 position=new Vector2();
+	public Vector2 position=new Vector2(0,10);
 	public Vector2 dimension=new Vector2();
 	public Vector2 origin=new Vector2();
 	public Vector2 scale=new Vector2(1,1);
@@ -35,7 +35,7 @@ public class Raindrops
 	private class RainDrop //have not created an abstract class yet
     {
 		private TextureRegion rainDrop;
-		public Vector2 position=new Vector2();
+		public Vector2 position=new Vector2(0,10);
 		public Vector2 dimension=new Vector2();
 		public Vector2 origin=new Vector2();
 		public Vector2 scale=new Vector2(1,1);
@@ -43,10 +43,7 @@ public class Raindrops
 		public Body body;
 		
 	
-	public void setBody(Body body)
-	{
-		this.body=body; 
-	}
+	
 	
 	public void setRegion (TextureRegion region) 
 	{
@@ -57,7 +54,7 @@ public class Raindrops
 	public void render(SpriteBatch batch) 
 	{
 		position= body.getPosition();
-		rotation= (float) Math.toDegrees(body.getAngle());
+		rotation= body.getAngle() * MathUtils.radiansToDegrees;
 		 
 		
 		TextureRegion reg = rainDrop;
@@ -101,9 +98,9 @@ public class Raindrops
      drop.setRegion(rainDrops.random());
      drop.dimension.set(dimension);
      
-     float x = MathUtils.random(-4, 4);
-     float y = 40;
-     float rotation = MathUtils.random(0.0f, 6.0f)* MathUtils.degreesToRadians;
+     float x = MathUtils.random(-10, 10);
+     float y = MathUtils.random(5,15);
+     float rotation = MathUtils.random(0.0f, 5.0f)* MathUtils.degreesToRadians; 
      
      BodyDef bodyDef = new BodyDef();
      bodyDef.position.set(drop.position);
@@ -113,21 +110,23 @@ public class Raindrops
      body.setType(BodyType.DynamicBody);
      body.setUserData(drop);
      body.setFixedRotation(true);
+     body.setGravityScale(0.1f);
      drop.body=body;
+ 
      
-     
-     CircleShape circleshape = new CircleShape();
-     circleshape.setPosition(drop.position);
-     circleshape.setRadius(.30f);
+     PolygonShape polygonShape = new PolygonShape();
+	 drop.origin.x =drop.dimension.x/2f;
+     drop.origin.y =drop.dimension.x/2f;
+     polygonShape.setAsBox(drop.dimension.x/2f, drop.dimension.y/2f, drop.origin, 0);
      
      
      FixtureDef fixtureDef = new FixtureDef();
-     fixtureDef.shape = circleshape;
+     fixtureDef.shape = polygonShape;
      fixtureDef.density = .1f;
      fixtureDef.restitution = 0.2f;
      fixtureDef.friction = 0.5f;
      body.createFixture(fixtureDef);
-     circleshape.dispose();
+     polygonShape.dispose();
    
      return drop;
    }

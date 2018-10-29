@@ -52,8 +52,9 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
+		cameraHelper.setPosition(0, 5);
 		initPhysics();
-		rain= new Raindrops(2);
+		rain= new Raindrops(10);
 		
 	}
 	
@@ -75,7 +76,7 @@ public class WorldController extends InputAdapter implements Disposable
 			if (Gdx.app.getType() != ApplicationType.Desktop) return;
 			
 			//controls player in game
-			float sprMoveSpeed = 2;
+			float sprMoveSpeed = 1;
 		    if (Gdx.input.isKeyPressed(Keys.A))tim.body.applyLinearImpulse(new Vector2(-sprMoveSpeed, 0), tim.body.getWorldCenter(), true);
 		    if (Gdx.input.isKeyPressed(Keys.D))tim.body.applyLinearImpulse(new Vector2(sprMoveSpeed, 0), tim.body.getWorldCenter(), true);
 		    if (Gdx.input.isKeyPressed(Keys.W)) tim.body.applyLinearImpulse(new Vector2(0,6), tim.body.getWorldCenter(), true);
@@ -118,7 +119,7 @@ public class WorldController extends InputAdapter implements Disposable
 	private void initPhysics () 
     {
     	   if (b2world != null) b2world.dispose();
-    	   b2world = new World(new Vector2(0, -4f), true);
+    	   b2world = new World(new Vector2(0, -5f), true);
     	   Vector2 origin = new Vector2();
 
     	 
@@ -127,7 +128,7 @@ public class WorldController extends InputAdapter implements Disposable
 		   bodyDef.type = BodyType.DynamicBody;
 		   bodyDef.fixedRotation=true;
 		   bodyDef.position.set(tim.position);
-		   bodyDef.linearVelocity.set(new Vector2(1,1)); 
+		   bodyDef.linearVelocity.set(new Vector2(0,0)); 
 		   Body body = b2world.createBody(bodyDef);
 		   body.setUserData(tim);
     	   tim.body=body; 
@@ -139,9 +140,9 @@ public class WorldController extends InputAdapter implements Disposable
 	       
 	       FixtureDef fixtureDef = new FixtureDef();
 	       fixtureDef.shape = polygonShape;
-	       fixtureDef.density = 50;
+	       fixtureDef.density =50;
 	       fixtureDef.restitution = 0.1f;
-	       fixtureDef.friction = 0.5f;
+	       fixtureDef.friction = .01f;
 	       body.createFixture(fixtureDef);
 	       polygonShape.dispose();
 	       //creating a static boundary to play with physics

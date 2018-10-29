@@ -16,7 +16,7 @@ public class Timmy
 	public Body body;
 	public float rotation;
 	public float deltatime; 
-	private TextureRegion regTim;
+	public TextureRegion regTim;
 	
 	public Timmy()
 	{
