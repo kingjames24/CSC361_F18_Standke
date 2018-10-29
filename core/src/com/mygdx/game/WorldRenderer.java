@@ -52,6 +52,7 @@ public class WorldRenderer implements Disposable
 				worldController.platform[i].render(batch);
 			}
 		}
+		worldController.rain.render(batch);
 		batch.end();
 		
 		if (DEBUG_DRAW_BOX2D_WORLD)

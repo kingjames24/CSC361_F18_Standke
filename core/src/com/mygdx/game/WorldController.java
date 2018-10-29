@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.mygdx.objects.Platform;
+import com.mygdx.objects.Raindrops;
 import com.mygdx.objects.Timmy;
 import com.mygdx.util.CameraHelper;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -27,17 +28,17 @@ public class WorldController extends InputAdapter implements Disposable
 {
 	private Game game;
 	public CameraHelper cameraHelper;
-    public World b2world;
+    public static World b2world;
     
     //will be replaced when level is added
     public Timmy tim;
+    public Raindrops rain; 
     public Platform[] platform; 
 	
 	public WorldController(Game game) 
 	{
 		this.game = game;
 		tim = new Timmy();
-		
 		platform = new Platform[8]; 
 		for(int i=0; i<platform.length; i++)
 		{
@@ -52,6 +53,8 @@ public class WorldController extends InputAdapter implements Disposable
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
 		initPhysics();
+		rain= new Raindrops(2);
+		
 	}
 	
 	public void update(float deltaTime)
@@ -158,8 +161,6 @@ public class WorldController extends InputAdapter implements Disposable
 		 FixtureDef fixtureDef = new FixtureDef();
 	     fixtureDef.shape = polygonShape;
 	     polygonShape.setAsBox(4, 1, new Vector2(0,0), 0);
-	     staticBody.createFixture(fixtureDef);
-	     polygonShape.setAsBox(4, 1, new Vector2(0,10), 0);
 	     staticBody.createFixture(fixtureDef);
 	     polygonShape.setAsBox(1, 4, new Vector2(-5,5), 0);
 	     staticBody.createFixture(fixtureDef);
