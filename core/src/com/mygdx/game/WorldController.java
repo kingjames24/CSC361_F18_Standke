@@ -122,7 +122,7 @@ public class WorldController extends InputAdapter implements Disposable
     	   // Timmy
     	   BodyDef bodyDef = new BodyDef();
 		   bodyDef.type = BodyType.DynamicBody;
-		   //bodyDef.angle = rotation;
+		   bodyDef.fixedRotation=true;
 		   bodyDef.position.set(tim.position);
 		   bodyDef.linearVelocity.set(new Vector2(1,1)); 
 		   Body body = b2world.createBody(bodyDef);
