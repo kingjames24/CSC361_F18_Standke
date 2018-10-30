@@ -8,7 +8,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Assets;
@@ -16,12 +17,9 @@ import com.mygdx.game.WorldController;
 
 
 
-
-
-
-
 public class Raindrops
 {
+	
 	private Array<TextureRegion> rainDrops;
     private Array<RainDrop> rainDrop;
     private int amount;
@@ -30,9 +28,10 @@ public class Raindrops
 	public Vector2 origin=new Vector2();
 	public Vector2 scale=new Vector2(1,1);
 	public float rotation;
+	public int count; 
 	
 	
-	private class RainDrop //have not created an abstract class yet
+	public class RainDrop //have not created an abstract class yet
     {
 		private TextureRegion rainDrop;
 		public Vector2 position=new Vector2(0,10);
@@ -41,8 +40,30 @@ public class Raindrops
 		public Vector2 scale=new Vector2(1,1);
 		public float rotation;
 		public Body body;
-		
+		public Boolean hit=false;
+		public int key; 
 	
+	/*public RainDrop(int key)
+	{
+		this.key=key; 
+	}*/
+		
+	public void startContact() 
+	{
+		hit=true;
+		Array<Fixture> myfixture= body.getFixtureList();
+		Fixture f =myfixture.first();
+		f.setSensor(true);
+	}
+
+	public void EndContact()
+	{
+		
+		/*Array<Fixture> myfixture= body.getFixtureList();
+		Fixture f =myfixture.first();
+		f.setSensor(true); */
+		 
+	}
 	
 	
 	public void setRegion (TextureRegion region) 
@@ -53,6 +74,9 @@ public class Raindrops
 	
 	public void render(SpriteBatch batch) 
 	{
+		
+		if(hit) return; 
+		
 		position= body.getPosition();
 		rotation= body.getAngle() * MathUtils.radiansToDegrees;
 		 
@@ -83,16 +107,18 @@ public class Raindrops
 	   rainDrops.add(Assets.instance.drop.rain02);
 	   rainDrops.add(Assets.instance.drop.rain03);
 	   int numRaindrops = amount;
+	   int key=0; 
 	   rainDrop = new Array<RainDrop>(numRaindrops);
    	   for (int i = 0; i < numRaindrops; i++) 
    	   {
-   			RainDrop drop = spawnRainDrop();
+   			RainDrop drop = spawnRainDrop(key);
    			//drop.position.y = i * distFac;will have to create a way to randomize height of raindrops
    			rainDrop.add(drop);
+   			key++; 
    	   }    
    }
    
-   private RainDrop spawnRainDrop () 
+   private RainDrop spawnRainDrop (int key) 
    {
      RainDrop drop = new RainDrop();
      drop.setRegion(rainDrops.random());
@@ -136,6 +162,22 @@ public class Raindrops
      for (RainDrop drop : rainDrop)
          drop.render(batch);
    }
+   
+   public void update(float deltaTime) 
+   {
+	   for(RainDrop drop : rainDrop)
+	   {
+		   if(drop.position.y<=0)
+		   {
+			   
+			  init();  
+		   }
+		
+	   }
+	   
+   }
+   
+   
    
 	
 	

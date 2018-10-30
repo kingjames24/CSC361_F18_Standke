@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.mygdx.contacts.MyContactListener;
 import com.mygdx.objects.Platform;
 import com.mygdx.objects.Raindrops;
 import com.mygdx.objects.Timmy;
@@ -65,6 +66,7 @@ public class WorldController extends InputAdapter implements Disposable
 		
 		platform[0].update(deltaTime);//moving platforms
 		platform[7].update(deltaTime);//moving platforms
+		rain.update(deltaTime);
 		
 		cameraHelper.update(deltaTime);	
 	}
@@ -120,6 +122,7 @@ public class WorldController extends InputAdapter implements Disposable
     {
     	   if (b2world != null) b2world.dispose();
     	   b2world = new World(new Vector2(0, -5f), true);
+    	   b2world.setContactListener(new MyContactListener());
     	   Vector2 origin = new Vector2();
 
     	 
@@ -190,7 +193,7 @@ public class WorldController extends InputAdapter implements Disposable
  	   		   platform[i].position.y=y; 
  	   		   bodyDef.position.set(platform[i].position);
  	   		   Body body = b2world.createBody(bodyDef);
- 	   		   body.setUserData(platform[i]);
+ 	   		   //body.setUserData(platform[i]);
  	   		   platform[i].body = body;
  	       
  	   		   PolygonShape polygonShape = new PolygonShape();
