@@ -63,9 +63,7 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		handleDebugInput(deltaTime);
 		b2world.step(deltaTime, 8, 3);
-		
-		platform[0].update(deltaTime);//moving platforms
-		platform[7].update(deltaTime);//moving platforms
+				
 		rain.update(deltaTime);
 		
 		cameraHelper.update(deltaTime);	
@@ -143,9 +141,9 @@ public class WorldController extends InputAdapter implements Disposable
 	       
 	       FixtureDef fixtureDef = new FixtureDef();
 	       fixtureDef.shape = polygonShape;
-	       fixtureDef.density =50;
+	       fixtureDef.density =30;
 	       fixtureDef.restitution = 0.1f;
-	       fixtureDef.friction = .01f;
+	       fixtureDef.friction = 0f;
 	       body.createFixture(fixtureDef);
 	       polygonShape.dispose();
 	       //creating a static boundary to play with physics
