@@ -39,10 +39,18 @@ public class MyContactListener implements ContactListener
 				
 			}
 		}
-		else //timmy colliding with rain 
+		else  
 		{
-			RainDrop rain = (RainDrop)body1;
-			rain.startContact();
+			if(body1 instanceof Raindrops.RainDrop && body instanceof Raindrops.RainDrop)//rain colliding with rain
+			{
+				return; 
+			}
+			else
+			{
+				RainDrop rain = (RainDrop)body1; //timmy colliding with rain
+				rain.startContact();
+			}
+			
 		}
 		
 	}

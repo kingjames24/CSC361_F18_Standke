@@ -114,7 +114,7 @@ public class Raindrops
      drop.setRegion(rainDrops.random());
      drop.dimension.set(dimension);
      
-     float x = MathUtils.random(-5, 5);
+     float x = MathUtils.random(0, 1);
      float y = MathUtils.random(5,15);
      float rotation = MathUtils.random(0.0f, 5.0f)* MathUtils.degreesToRadians; 
      
@@ -126,7 +126,7 @@ public class Raindrops
      body.setType(BodyType.DynamicBody);
      body.setUserData(drop);
      body.setFixedRotation(true);
-     body.setGravityScale(0.1f);
+     body.setGravityScale(0.07f);
      drop.body=body;
  
      
@@ -157,15 +157,19 @@ public class Raindrops
    {
 	      for (int i = rainDrop.size - 1; i>= 0; i--) 
 	      {
-	          RainDrop drop = rainDrop.get(i);
-	          if (drop.hit) 
-	          {
-	                //add extra raindrops
-	        	  	rainDrop.removeIndex(i);
-	        	  	rainDrop.add(spawnRainDrop());
-	          }
+	    	  
+	         RainDrop drop=rainDrop.get(i);   
+	         if(drop != null)
+	         {
+	        	 if(drop.hit)
+	        	 {
+	        		 rainDrop.removeIndex(i);
+		        	 rainDrop.add(spawnRainDrop());
+	        	 }
+	         }
+	        
 	       } 
-	     }
+	 }
    
    
    
