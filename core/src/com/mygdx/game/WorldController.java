@@ -76,17 +76,17 @@ public class WorldController extends InputAdapter implements Disposable
 				{
 					if(drop.hit)
 					{
-						drop.hit=false; 
+						
 						drop.body.getWorld().destroyBody(drop.body);
+						
 					}
-					
+					rain.destroy(drop);
 				}
 				
 			}
 			rain.raindropScheduledForRemoval.clear();
 		}
 				
-		rain.update(deltaTime);
 		
 		cameraHelper.update(deltaTime);	
 	}

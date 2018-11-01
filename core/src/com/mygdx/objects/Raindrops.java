@@ -1,5 +1,7 @@
 package com.mygdx.objects;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -12,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Assets;
 import com.mygdx.game.WorldController;
+import com.mygdx.objects.Raindrops.RainDrop;
 
 
 
@@ -22,7 +25,7 @@ public class Raindrops
 	
 	public  Array<RainDrop> raindropScheduledForRemoval;
 	private Array<TextureRegion> rainDrops;
-    private Array<RainDrop> rainDrop;
+    private ArrayList<RainDrop> rainDrop;
     private int amount;
 	public Vector2 position=new Vector2(0,10);
 	public Vector2 dimension=new Vector2();
@@ -98,11 +101,10 @@ public class Raindrops
 	   rainDrops.add(Assets.instance.drop.rain03);
 	   int numRaindrops = amount;
 	   int key=0; 
-	   rainDrop = new Array<RainDrop>(numRaindrops);
+	   rainDrop = new ArrayList<RainDrop>();
    	   for (int i = 0; i < numRaindrops; i++) 
    	   {
    			RainDrop drop = spawnRainDrop();
-   			//drop.position.y = i * distFac;will have to create a way to randomize height of raindrops
    			rainDrop.add(drop);
    			key++; 
    	   }    
@@ -153,24 +155,12 @@ public class Raindrops
          drop.render(batch);
    }
    
-   public void update (float deltaTime) 
-   {
-	      for (int i = rainDrop.size - 1; i>= 0; i--) 
-	      {
-	    	  
-	         RainDrop drop=rainDrop.get(i);   
-	         if(drop != null)
-	         {
-	        	 if(drop.hit)
-	        	 {
-	        		 rainDrop.removeIndex(i);
-		        	 rainDrop.add(spawnRainDrop());
-	        	 }
-	         }
-	        
-	       } 
-	 }
    
+   public void destroy(RainDrop drop)
+   {
+	   rainDrop.remove(drop);
+	   rainDrop.add(spawnRainDrop());
+   }
    
    
 	
