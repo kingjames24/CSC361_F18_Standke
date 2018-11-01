@@ -47,10 +47,8 @@ public class WorldRenderer implements Disposable
 		worldController.tim.render(batch);  //worldcontroller is directly rendering will change with level
 		for(int i=0; i<worldController.platform.length; i++)
 		{
-			if(i!=4)
-			{
 				worldController.platform[i].render(batch);
-			}
+		
 		}
 		worldController.rain.render(batch);
 		batch.end();

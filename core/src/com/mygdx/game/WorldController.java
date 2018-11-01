@@ -17,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.mygdx.contacts.MyContactListener;
 import com.mygdx.objects.Platform;
 import com.mygdx.objects.Raindrops;
+import com.mygdx.objects.Raindrops.RainDrop;
 import com.mygdx.objects.Timmy;
 import com.mygdx.util.CameraHelper;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -40,7 +41,7 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		this.game = game;
 		tim = new Timmy();
-		platform = new Platform[8]; 
+		platform = new Platform[10]; 
 		for(int i=0; i<platform.length; i++)
 		{
 			
@@ -55,7 +56,7 @@ public class WorldController extends InputAdapter implements Disposable
 		cameraHelper = new CameraHelper();
 		cameraHelper.setPosition(0, 5);
 		initPhysics();
-		rain= new Raindrops(10);
+		rain= new Raindrops(5);
 		
 	}
 	
@@ -63,8 +64,29 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		handleDebugInput(deltaTime);
 		b2world.step(deltaTime, 8, 3);
+		
+		if(!b2world.isLocked()) 
+		{
+			int x= rain.raindropScheduledForRemoval.size;
+			for(int j=0; j<x; j++)
+			{
+			
+				RainDrop drop=rain.raindropScheduledForRemoval.pop();
+				if(drop!=null)
+				{
+					if(drop.hit)
+					{
+						
+						drop.body.getWorld().destroyBody(drop.body);
+						
+					}
+					rain.destroy(drop);
+				}
 				
-		rain.update(deltaTime);
+			}
+			rain.raindropScheduledForRemoval.clear();
+		}
+				
 		
 		cameraHelper.update(deltaTime);	
 	}
@@ -145,33 +167,10 @@ public class WorldController extends InputAdapter implements Disposable
 	       fixtureDef.restitution = 0.1f;
 	       fixtureDef.friction = 0f;
 	       body.createFixture(fixtureDef);
-	       polygonShape.dispose();
-	       //creating a static boundary to play with physics
-	       createBoundary();       
+	       polygonShape.dispose(); 
+	       createPlatforms();       
     }
 	
-	
-	private void createBoundary() //used for physics testing 
-	{
-		 BodyDef bodyDef = new BodyDef();
-		 bodyDef.type = BodyType.StaticBody;
-		 bodyDef.position.set(0,0); 
-		 Body staticBody = b2world.createBody(bodyDef);
-		 
-		 
-		 PolygonShape polygonShape = new PolygonShape();
-		 FixtureDef fixtureDef = new FixtureDef();
-	     fixtureDef.shape = polygonShape;
-	     polygonShape.setAsBox(4, 1, new Vector2(0,0), 0);
-	     staticBody.createFixture(fixtureDef);
-	     polygonShape.setAsBox(1, 4, new Vector2(-5,5), 0);
-	     staticBody.createFixture(fixtureDef);
-	     polygonShape.setAsBox(1, 4, new Vector2(5,5), 0);
-	     staticBody.createFixture(fixtureDef);
-	     polygonShape.dispose();
-	     
-	     createPlatforms(); 
-	}
 	
 	private void createPlatforms()
 	{	
@@ -180,11 +179,7 @@ public class WorldController extends InputAdapter implements Disposable
  	   	for (int i=0; i<platform.length; i++) 
  	   	{
  	   		    
- 	   	       if (i==4)
- 	   	       {
- 	   	    	   x++; 
- 	   	    	   continue; 
- 	   	       }
+ 	   	     
  	   		   BodyDef bodyDef = new BodyDef();
  	   		   bodyDef.type = BodyType.KinematicBody;
  	   		   platform[i].position.x=x; 
