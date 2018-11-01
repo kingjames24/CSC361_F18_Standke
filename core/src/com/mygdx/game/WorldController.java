@@ -17,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.mygdx.contacts.MyContactListener;
 import com.mygdx.objects.Platform;
 import com.mygdx.objects.Raindrops;
+import com.mygdx.objects.Raindrops.RainDrop;
 import com.mygdx.objects.Timmy;
 import com.mygdx.util.CameraHelper;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -63,6 +64,22 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		handleDebugInput(deltaTime);
 		b2world.step(deltaTime, 8, 3);
+		if(!b2world.isLocked()) 
+		{
+			
+			int x= rain.raindropScheduledForRemoval.size;
+			for(int j=0; j<x; j++)
+			{
+			
+				RainDrop drop=rain.raindropScheduledForRemoval.pop();
+				if(drop.hit && drop!=null)
+				{
+					drop.body.getWorld().destroyBody(drop.body);
+				}
+				
+			}
+			rain.raindropScheduledForRemoval.clear();
+		}
 				
 		rain.update(deltaTime);
 		
