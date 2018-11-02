@@ -1,4 +1,5 @@
 package com.mygdx.contacts;
+import com.mygdx.game.WorldController;
 import com.mygdx.objects.*;
 import com.mygdx.objects.Raindrops.RainDrop;
 
@@ -52,15 +53,30 @@ public class MyContactListener implements ContactListener
 			}
 			
 		}
+		if(body!=null && body instanceof Timmy)
+		{
+			WorldController.numFootContacts++; 
+		}
+		if (body1!=null && body1 instanceof Timmy)
+		{
+			WorldController.numFootContacts++; 
+		}
 		
 	}
 
 	@Override
 	public void endContact(Contact contact) 
 	{
-		
-		
-		
+		Object body=contact.getFixtureA().getBody().getUserData(); 
+		Object body1=contact.getFixtureB().getBody().getUserData(); 
+		if(body!=null && body instanceof Timmy)
+		{
+			WorldController.numFootContacts--; 
+		}
+		if (body1!=null && body1 instanceof Timmy)
+		{
+			WorldController.numFootContacts--; 
+		}
 	}
 		
 	
