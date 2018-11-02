@@ -101,8 +101,7 @@ public class Assets implements Disposable, AssetErrorListener
     	
     	public final AtlasRegion chopper;
     	public final AtlasRegion city;
-    	public final AtlasRegion man1;
-    	public final AtlasRegion man2;
+    	
     	public final AtlasRegion woman1;
     	
     	public AssetLevelDecoration (TextureAtlas atlas)
@@ -110,8 +109,6 @@ public class Assets implements Disposable, AssetErrorListener
     		
     		chopper = atlas.findRegion("chopper");
     		city = atlas.findRegion("city_background");
-    		man1 = atlas.findRegion("man_rain01");
-    		man2 = atlas.findRegion("man_rain02");
     		woman1 = atlas.findRegion("woman_rain");
     	}
     }

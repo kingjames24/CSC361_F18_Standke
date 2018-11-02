@@ -116,7 +116,7 @@ public class Raindrops extends AbstractGameObject
      drop.setRegion(rainDrops.random());
      drop.dimension.set(dimension);
      
-     float x = MathUtils.random(0, 5);
+     float x = MathUtils.random(0, 30);
      float y = MathUtils.random(0,1);
      float rotation = MathUtils.random(0.0f, 5.0f)* MathUtils.degreesToRadians; 
      

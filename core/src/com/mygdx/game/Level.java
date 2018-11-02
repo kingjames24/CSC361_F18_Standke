@@ -173,7 +173,7 @@ public class Level
 				
 		// decoration
 		people = new People(pixmap.getWidth());
-		people.position.set(0, 1);
+		people.position.set(0, -5);
 		background = new City(pixmap.getWidth());
 		background.position.set(0, -5);
 		chop = new Chopper(pixmap.getWidth());
@@ -206,8 +206,8 @@ public class Level
 		// Draw background people
 		people.render(batch);
 		
-		// Draw choppers
-		chop.render(batch);
+		/*// Draw choppers
+		chop.render(batch);*/
 		
 		tim.render(batch);
 	}

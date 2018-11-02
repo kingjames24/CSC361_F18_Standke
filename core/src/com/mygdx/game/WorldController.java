@@ -50,7 +50,7 @@ public class WorldController extends InputAdapter implements Disposable
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
 		initlevel(); 
-		//rain= new Raindrops(5);
+		rain= new Raindrops(30);
 		
 	}
 	
@@ -69,7 +69,7 @@ public class WorldController extends InputAdapter implements Disposable
 		
 		b2world.step(deltaTime, 8, 3);
 		
-		/*if(!b2world.isLocked()) 
+		if(!b2world.isLocked()) 
 		{
 			int x= rain.raindropScheduledForRemoval.size;
 			for(int j=0; j<x; j++)
@@ -89,7 +89,7 @@ public class WorldController extends InputAdapter implements Disposable
 				
 			}
 			rain.raindropScheduledForRemoval.clear();
-		}*/
+		}
 				
 		cameraHelper.update(deltaTime);
 		level.people.updateScrollPosition(cameraHelper.getPosition());
@@ -106,10 +106,12 @@ public class WorldController extends InputAdapter implements Disposable
 	       float sprMoveSpeed = 1;
 	       if (Gdx.input.isKeyPressed(Keys.LEFT)) 
 	       {
+	    	   level.people.timmyLeft(false);
 	    	   level.tim.body.applyLinearImpulse(new Vector2(-sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
 	       } 
 	       else if (Gdx.input.isKeyPressed(Keys.RIGHT)) 
 	       {
+	    	   level.people.timmyLeft(true);
 	    	   level.tim.body.applyLinearImpulse(new Vector2(sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
 	       }
 	       else 

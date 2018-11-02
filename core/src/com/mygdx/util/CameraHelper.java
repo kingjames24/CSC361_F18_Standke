@@ -27,7 +27,7 @@ public class CameraHelper
     	  if (!hasTarget()) return;
     	  position.lerp(target.position,  FOLLOW_SPEED * deltaTime);
     	  
-    	  position.y = Math.max(-1f,position.y);
+    	  position.y = Math.max(0,position.y);
     }
     
     public void setPosition (float x, float y) 

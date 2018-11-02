@@ -11,7 +11,8 @@ public class People extends AbstractGameObject
 	private TextureRegion man1; 
 	private TextureRegion man2; 
 	private TextureRegion woman1; 
-	private int length; 
+	private int length;
+	public boolean left=true; 
 	
 	public People(int width) 
 	{
@@ -24,8 +25,7 @@ public class People extends AbstractGameObject
 	{
 		dimension.set(1.5f,1.5f);
 		
-		man1=Assets.instance.leveldecoration.man1; 
-		man2=Assets.instance.leveldecoration.man2; 
+		man1=Assets.instance.leveldecoration.chopper; 
 		woman1=Assets.instance.leveldecoration.woman1; 
 		
 		origin.x = -dimension.x * 2;
@@ -37,7 +37,6 @@ public class People extends AbstractGameObject
 	public void render(SpriteBatch batch) 
 	{
 		drawmanone(batch, 0.5f, 0.5f, 0.8f); 
-		drawmantwo(batch, 0.25f, 0.25f, 0.5f);
 		drawwoman(batch, 0.0f, 0.0f, 0.3f); 
 		
 		
@@ -67,29 +66,7 @@ public class People extends AbstractGameObject
 		}
 	}
 
-	private void drawmantwo(SpriteBatch batch, float offsetX, float offsetY, float parrallexSpeedX) 
-	{
-		TextureRegion reg = null;
-		float xRel = dimension.x * offsetX;
-		float yRel = dimension.y * offsetY;
-		int manoneLength = 0;
-		manoneLength += MathUtils.ceil(length / (2 * dimension.x) * (1 - parrallexSpeedX));
-		manoneLength += MathUtils.ceil(0.5f + offsetX);
-		for(int i=0; i<manoneLength; i++)
-		{
-			reg=man2; 
-			batch.draw(reg.getTexture(), origin.x + xRel + position.x * parrallexSpeedX,
-					origin.y + yRel + position.y,
-					origin.x, origin.y,
-					dimension.x, dimension.y,
-					scale.x, scale.y,
-					rotation,
-					reg.getRegionX(), reg.getRegionY(),
-					reg.getRegionWidth(), reg.getRegionHeight(), 
-					false, false);
-			xRel += dimension.x+5;
-		}
-	}
+	
 
 	private void drawmanone(SpriteBatch batch, float offsetX, float offsetY, float parralexSpeedX) 
 	{
@@ -111,10 +88,15 @@ public class People extends AbstractGameObject
 					rotation,
 					reg.getRegionX(), reg.getRegionY(),
 					reg.getRegionWidth(), reg.getRegionHeight(), 
-					false, false);
+					left, false);
 			xRel += dimension.x+5;
 		}
 		
+	}
+	
+	public void timmyLeft(boolean left)
+	{
+		this.left=left; 
 	}
 	
 	public void updateScrollPosition(Vector2 camPosition)
