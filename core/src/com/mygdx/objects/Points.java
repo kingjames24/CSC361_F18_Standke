@@ -1,5 +1,15 @@
 package com.mygdx.objects;
 
-public class Points {
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+public class Points extends AbstractGameObject
+{
+
+	@Override
+	public void render(SpriteBatch batch) 
+	{
+		
+		;
+	}
 
 }

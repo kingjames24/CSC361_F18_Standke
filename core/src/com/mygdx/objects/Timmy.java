@@ -6,16 +6,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.game.Assets;
 
-public class Timmy 
+public class Timmy extends AbstractGameObject 
 {
-	public Vector2 linearVelocity = new Vector2(); 
-	public Vector2 position = new Vector2(-3,4);
-	public Vector2 dimension = new Vector2(1,1);
-	public Vector2 origin = new Vector2();
-	public Vector2 scale = new Vector2(1,1);
-	public Body body;
-	public float rotation;
-	public float deltatime; 
+
+	
+	
+	
+	
+	public float rotation; 
 	public TextureRegion regTim;
 	
 	public Timmy()

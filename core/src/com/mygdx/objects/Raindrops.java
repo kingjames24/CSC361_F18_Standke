@@ -20,7 +20,7 @@ import com.mygdx.objects.Raindrops.RainDrop;
 
 
 
-public class Raindrops
+public class Raindrops extends AbstractGameObject
 {
 	
 	public  Array<RainDrop> raindropScheduledForRemoval;

@@ -8,4 +8,6 @@ public class Constants
 	
 	public static final String TEXTURE_ATLAS_OBJECTS =
 			"images/rainmaker.atlas";
+	
+	public static final String LEVEL_01 = "levels/level-01.png";
 }

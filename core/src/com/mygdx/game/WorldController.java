@@ -20,6 +20,7 @@ import com.mygdx.objects.Raindrops;
 import com.mygdx.objects.Raindrops.RainDrop;
 import com.mygdx.objects.Timmy;
 import com.mygdx.util.CameraHelper;
+import com.mygdx.util.Constants;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -32,37 +33,40 @@ public class WorldController extends InputAdapter implements Disposable
 	public CameraHelper cameraHelper;
     public static World b2world;
     
-    //will be replaced when level is added
-    public Timmy tim;
+    
     public Raindrops rain; 
-    public Platform[] platform; 
+    public Level level;
 	
 	public WorldController(Game game) 
 	{
 		this.game = game;
-		tim = new Timmy();
-		platform = new Platform[10]; 
-		for(int i=0; i<platform.length; i++)
-		{
-			
-				platform[i]=new Platform();	
-		}
 		init();
 	}
+	
+	
 	
 	private void init() 
 	{
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
-		cameraHelper.setPosition(0, 5);
-		initPhysics();
-		rain= new Raindrops(5);
+		initlevel(); 
+		//rain= new Raindrops(5);
 		
+	}
+	
+	private void initlevel()
+	{
+		level = new Level(Constants.LEVEL_01);
+		cameraHelper.setTarget(level.tim);
+		initPhysics(); 
 	}
 	
 	public void update(float deltaTime)
 	{
 		handleDebugInput(deltaTime);
+		
+		handleInputGame(deltaTime); 
+		
 		b2world.step(deltaTime, 8, 3);
 		
 		if(!b2world.isLocked()) 
@@ -87,24 +91,75 @@ public class WorldController extends InputAdapter implements Disposable
 			rain.raindropScheduledForRemoval.clear();
 		}
 				
-		
-		cameraHelper.update(deltaTime);	
+		cameraHelper.update(deltaTime);
+		level.people.updateScrollPosition(cameraHelper.getPosition());
 	}
 	
 	
+	
+	
+	private void handleInputGame (float deltaTime) 
+	{
+	     if (cameraHelper.hasTarget(level.tim)) 
+	     {
+	       // Player Movement
+	       float sprMoveSpeed = 1;
+	       if (Gdx.input.isKeyPressed(Keys.LEFT)) 
+	       {
+	    	   level.tim.body.applyLinearImpulse(new Vector2(-sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
+	       } 
+	       else if (Gdx.input.isKeyPressed(Keys.RIGHT)) 
+	       {
+	    	   level.tim.body.applyLinearImpulse(new Vector2(sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
+	       }
+	       else 
+	       {
+	    	   ;
+	       }
+	       // Bunny Jump
+	       if ( Gdx.input.isKeyPressed(Keys.SPACE))
+	       {
+	    	   level.tim.body.applyLinearImpulse(new Vector2(0,sprMoveSpeed), level.tim.body.getWorldCenter(), true);
+	       } 
+	
+	     } 
+	 }
+	
+	public boolean keyUp (int keycode) 
+	{
+      /*// Reset game world
+      if (keycode == Keys.R) 
+      {
+    	  	init();
+    	  	Gdx.app.debug(TAG, "Game world resetted");
+      }*/
+      // Toggle camera follow
+      if (keycode == Keys.ENTER) 
+      {
+        cameraHelper.setTarget(cameraHelper.hasTarget()
+        		? null: level.tim);
+        /*Gdx.app.debug(TAG, "Camera follow enabled: "
+        			+ cameraHelper.hasTarget());*/
+      }
+      
+      //added p234 denny fleagle
+      //Back to menu
+      /*else if(keycode == Keys.ESCAPE || keycode == Keys.BACK)
+      {
+    	  backToMenu();
+      }
+      */
+      return false;
+	}
+	
 
-	private void handleDebugInput(float deltaTime)              //used only for debuging will not be in game
+	private void handleDebugInput(float deltaTime)              //used only for debbuging camera
 	{
 			if (Gdx.app.getType() != ApplicationType.Desktop) return;
 			
-			//controls player in game
-			float sprMoveSpeed = 1;
-		    if (Gdx.input.isKeyPressed(Keys.A))tim.body.applyLinearImpulse(new Vector2(-sprMoveSpeed, 0), tim.body.getWorldCenter(), true);
-		    if (Gdx.input.isKeyPressed(Keys.D))tim.body.applyLinearImpulse(new Vector2(sprMoveSpeed, 0), tim.body.getWorldCenter(), true);
-		    if (Gdx.input.isKeyPressed(Keys.W)) tim.body.applyLinearImpulse(new Vector2(0,6), tim.body.getWorldCenter(), true);
-		    if (Gdx.input.isKeyPressed(Keys.S)) tim.body.applyLinearImpulse(new Vector2(0,-sprMoveSpeed), tim.body.getWorldCenter(), true);
-
-
+			
+			
+			if (!cameraHelper.hasTarget(level.tim)) {
 		   // Camera Controls (move)
 	       float camMoveSpeed = 5 * deltaTime;
 	       float camMoveSpeedAccelerationFactor = 5;
@@ -121,6 +176,8 @@ public class WorldController extends InputAdapter implements Disposable
 	       if (Gdx.input.isKeyPressed(Keys.COMMA))cameraHelper.addZoom(camZoomSpeed);
 	       if (Gdx.input.isKeyPressed(Keys.PERIOD)) cameraHelper.addZoom(-camZoomSpeed);
 	       if (Gdx.input.isKeyPressed(Keys.SLASH)) cameraHelper.setZoom(1);
+	       
+			}
 		
 	}
 	
@@ -150,16 +207,16 @@ public class WorldController extends InputAdapter implements Disposable
     	   BodyDef bodyDef = new BodyDef();
 		   bodyDef.type = BodyType.DynamicBody;
 		   bodyDef.fixedRotation=true;
-		   bodyDef.position.set(tim.position);
+		   bodyDef.position.set(level.tim.position);
 		   bodyDef.linearVelocity.set(new Vector2(0,0)); 
 		   Body body = b2world.createBody(bodyDef);
-		   body.setUserData(tim);
-    	   tim.body=body; 
+		   body.setUserData(level.tim);
+    	   level.tim.body=body; 
     	   
     	   PolygonShape polygonShape = new PolygonShape();
-    	   origin.x = tim.dimension.x/2;
-	       origin.y = tim.dimension.y/2;
-	       polygonShape.setAsBox(tim.dimension.x/2.5f, tim.dimension.y/2.5f, origin, 0);
+    	   origin.x = level.tim.dimension.x/2;
+	       origin.y = level.tim.dimension.y/2;
+	       polygonShape.setAsBox(level.tim.dimension.x/2.5f, level.tim.dimension.y/2.5f, origin, 0);
 	       
 	       FixtureDef fixtureDef = new FixtureDef();
 	       fixtureDef.shape = polygonShape;
@@ -174,31 +231,29 @@ public class WorldController extends InputAdapter implements Disposable
 	
 	private void createPlatforms()
 	{	
-		float x=-4, y=3;
+		
 		Vector2 origin = new Vector2();
- 	   	for (int i=0; i<platform.length; i++) 
+ 	   	for (Platform plat : level.platforms) 
  	   	{
  	   		    
  	   	     
  	   		   BodyDef bodyDef = new BodyDef();
- 	   		   bodyDef.type = BodyType.KinematicBody;
- 	   		   platform[i].position.x=x; 
- 	   		   platform[i].position.y=y; 
- 	   		   bodyDef.position.set(platform[i].position);
+ 	   		   bodyDef.type = BodyType.KinematicBody; 
+ 	   		   bodyDef.position.set(plat.position);
  	   		   Body body = b2world.createBody(bodyDef);
  	   		   //body.setUserData(platform[i]);
- 	   		   platform[i].body = body;
+ 	   		   plat.body = body;
  	       
  	   		   PolygonShape polygonShape = new PolygonShape();
- 	   		   origin.x = platform[i].dimension.x / 2.0f;
- 	   		   origin.y = platform[i].dimension.y / 2.0f;
- 	   		   polygonShape.setAsBox(platform[i].dimension.x/ 2.0f, platform[i].dimension.y/ 2.0f, origin, 0);
+ 	   		   origin.x = plat.dimension.x / 2.0f;
+ 	   		   origin.y = plat.dimension.y / 2.0f;
+ 	   		   polygonShape.setAsBox(plat.dimension.x/ 2.0f, plat.dimension.y/ 2.0f, origin, 0);
  	       
  	   		   FixtureDef fixtureDef = new FixtureDef();
  	   		   fixtureDef.shape = polygonShape;
  	   		   body.createFixture(fixtureDef);
  	   		   polygonShape.dispose();
- 	   		   x++; 
+ 	   		    
  	   	   
  	        
  	   }
