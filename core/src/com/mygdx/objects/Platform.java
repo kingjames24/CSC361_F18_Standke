@@ -3,16 +3,18 @@ package com.mygdx.objects;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.game.Assets;
 
-public class Platform 
+public class Platform extends AbstractGameObject 
 {
 	private TextureRegion platform; 
-	//private int length=4;
+	private int length;
+	public Rectangle bounds;
 	
 	private final float FLOAT_CYCLE_TIME = 2.0f;
     private final float FLOAT_AMPLITUDE = 3.0f;
@@ -21,13 +23,8 @@ public class Platform
     private Vector2 floatTargetPosition;
     
     public Vector2 linearVelocity = new Vector2(); 
-	public Vector2 position = new Vector2(1,1);
-	public Vector2 dimension = new Vector2(1,1.5f);
-	public Vector2 origin = new Vector2();
-	public Vector2 scale = new Vector2(1,1);
-	public Body body;
-	public float rotation;
-	public float deltatime; 
+	
+	 
     
     public Platform()
     {
@@ -37,7 +34,12 @@ public class Platform
     
     private void init()
     {
+    	dimension.set(1,1.5f);
+    	bounds= new Rectangle(); 
     	platform = Assets.instance.plat.middle;
+    	
+    	setLength(1); 
+    	
     	floatingDownwards = false;
    	 	floatCycleTimeLeft = MathUtils.random(0, FLOAT_CYCLE_TIME / 2);
    	 	floatTargetPosition = null;
@@ -51,22 +53,26 @@ public class Platform
     }
     
     
-    /*public void increaseLength (int amount) 
+    public void increaseLength (int amount) 
     {
       setLength(length + amount);
-    }*/
+    }
     
     public void render(SpriteBatch batch)
     {
     	TextureRegion reg = null;
-    	//float relX = 0;
-    	//float relY = 0; 
+    	float relX = 0;
+    	float relY = 0; 
         reg = platform; 
         position= body.getPosition();
         
-     batch.draw(reg.getTexture(), position.x, position.y, origin.x, origin.y, dimension.x, dimension.y,
+        for (int i = 0; i < length; i++) 
+        {
+        batch.draw(reg.getTexture(), position.x+ relX, position.y+relY, origin.x, origin.y, dimension.x+ 0.1f, dimension.y,
            		 scale.x, scale.y, rotation, reg.getRegionX(), reg.getRegionY(),
            		 reg.getRegionWidth(), reg.getRegionHeight(), false, false);
+        relX += dimension.x;
+        }
       
     }
     
@@ -86,6 +92,13 @@ public class Platform
  	   {
  		   body.setLinearVelocity(body.getLinearVelocity().scl(.98f));
  	   }
+    }
+
+    public void setLength (int length) 
+    {
+      this.length = length;
+      bounds.set(0, 0, dimension.x * length, dimension.y);
+      
     }
 	
 
