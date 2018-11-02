@@ -53,7 +53,7 @@ public class People extends AbstractGameObject
 		manoneLength += MathUtils.ceil(0.5f + offsetX);
 		for(int i=0; i<manoneLength; i++)
 		{
-			reg=man1; 
+			reg=woman1; 
 			batch.draw(reg.getTexture(), origin.x + xRel + position.x * parrallaxSpeedX,
 					origin.y + yRel + position.y,
 					origin.x, origin.y,
@@ -63,7 +63,7 @@ public class People extends AbstractGameObject
 					reg.getRegionX(), reg.getRegionY(),
 					reg.getRegionWidth(), reg.getRegionHeight(), 
 					false, false);
-			xRel += dimension.x;
+			xRel += dimension.x+5;
 		}
 	}
 
@@ -87,7 +87,7 @@ public class People extends AbstractGameObject
 					reg.getRegionX(), reg.getRegionY(),
 					reg.getRegionWidth(), reg.getRegionHeight(), 
 					false, false);
-			xRel += dimension.x;
+			xRel += dimension.x+5;
 		}
 	}
 
@@ -102,7 +102,7 @@ public class People extends AbstractGameObject
 		manoneLength += MathUtils.ceil(0.5f + offsetX);
 		for(int i=0; i<manoneLength; i++)
 		{
-			reg=woman1; 
+			reg=man1; 
 			batch.draw(reg.getTexture(), origin.x + xRel + position.x * parralexSpeedX,
 					origin.y + yRel + position.y,
 					origin.x, origin.y,
@@ -112,7 +112,7 @@ public class People extends AbstractGameObject
 					reg.getRegionX(), reg.getRegionY(),
 					reg.getRegionWidth(), reg.getRegionHeight(), 
 					false, false);
-			xRel += dimension.x;
+			xRel += dimension.x+5;
 		}
 		
 	}

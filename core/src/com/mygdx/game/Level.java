@@ -173,11 +173,11 @@ public class Level
 				
 		// decoration
 		people = new People(pixmap.getWidth());
-		people.position.set(0, 2);
+		people.position.set(0, 1);
 		background = new City(pixmap.getWidth());
-		background.position.set(0, 0);
+		background.position.set(0, -5);
 		chop = new Chopper(pixmap.getWidth());
-		chop.position.set(0, 3.75f);
+		chop.position.set(0, 2.0f);
 				
 		// free memory
 		pixmap.dispose();
@@ -203,14 +203,13 @@ public class Level
 			up.render(batch);
 		
 		
-		// Draw Player Character
-		tim.render(batch);
-		
 		// Draw background people
 		people.render(batch);
 		
 		// Draw choppers
 		chop.render(batch);
+		
+		tim.render(batch);
 	}
 	
 	

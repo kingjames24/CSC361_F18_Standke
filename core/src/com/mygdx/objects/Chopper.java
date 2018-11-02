@@ -49,9 +49,9 @@ public class Chopper extends AbstractGameObject
 
 	private void intit() 
 	{
-		dimension.set(3.0f, 1.5f);
+		dimension.set(3.0f, 2.0f);
 		chopper= Assets.instance.leveldecoration.chopper;
-		int distFac = 20;
+		int distFac = 10;
     	int numChoppers = (int)(length / distFac);
 		choppers = new Array<Helicopter>(2*numChoppers); 
 		for(int i=0; i<numChoppers; i++)
@@ -73,7 +73,7 @@ public class Chopper extends AbstractGameObject
 		
 		Vector2 pos = new Vector2(); 
 		pos.x= length+10; 
-		pos.y+=4;
+		pos.y+=2.5f;
 		pos.y+= MathUtils.random(0.0f, 0.2f)*(MathUtils.randomBoolean()?1:-1); 
 		cop.position.set(pos); 
 		return cop;

@@ -45,6 +45,7 @@ public class WorldRenderer implements Disposable
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		worldController.level.render(batch);
+		//worldController.rain.render(batch);
 		batch.end();
 		
 		if (DEBUG_DRAW_BOX2D_WORLD)

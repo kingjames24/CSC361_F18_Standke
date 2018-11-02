@@ -3,6 +3,7 @@ package com.mygdx.objects;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -13,6 +14,7 @@ public class Platform extends AbstractGameObject
 {
 	private TextureRegion platform; 
 	private int length;
+	public Rectangle bounds;
 	
 	private final float FLOAT_CYCLE_TIME = 2.0f;
     private final float FLOAT_AMPLITUDE = 3.0f;
@@ -32,7 +34,8 @@ public class Platform extends AbstractGameObject
     
     private void init()
     {
-    	dimension.set(1,1.5f); 
+    	dimension.set(1,1.5f);
+    	bounds= new Rectangle(); 
     	platform = Assets.instance.plat.middle;
     	
     	setLength(1); 
@@ -58,16 +61,17 @@ public class Platform extends AbstractGameObject
     public void render(SpriteBatch batch)
     {
     	TextureRegion reg = null;
-    	//float relX = 0;
-    	//float relY = 0; 
+    	float relX = 0;
+    	float relY = 0; 
         reg = platform; 
         position= body.getPosition();
         
         for (int i = 0; i < length; i++) 
         {
-        batch.draw(reg.getTexture(), position.x, position.y, origin.x, origin.y, dimension.x, dimension.y,
+        batch.draw(reg.getTexture(), position.x+ relX, position.y+relY, origin.x, origin.y, dimension.x+ 0.1f, dimension.y,
            		 scale.x, scale.y, rotation, reg.getRegionX(), reg.getRegionY(),
            		 reg.getRegionWidth(), reg.getRegionHeight(), false, false);
+        relX += dimension.x;
         }
       
     }
@@ -93,6 +97,7 @@ public class Platform extends AbstractGameObject
     public void setLength (int length) 
     {
       this.length = length;
+      bounds.set(0, 0, dimension.x * length, dimension.y);
       
     }
 	

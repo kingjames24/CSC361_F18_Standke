@@ -38,7 +38,7 @@ public class Raindrops extends AbstractGameObject
 	public class RainDrop //have not created an abstract class yet
     {
 		private TextureRegion rainDrop;
-		public Vector2 position=new Vector2(0,10);
+		public Vector2 position=new Vector2(0,6);
 		public Vector2 dimension=new Vector2();
 		public Vector2 origin=new Vector2();
 		public Vector2 scale=new Vector2(1,1);
@@ -93,7 +93,7 @@ public class Raindrops extends AbstractGameObject
    
    public void init()
    {
-	   dimension.set(0.5f, 0.5f);
+	   dimension.set(0.25f, 0.25f);
 	   origin.set(new Vector2(dimension.x/2.0f, dimension.y/2.0f)); 
 	   rainDrops= new Array<TextureRegion>();
 	   rainDrops.add(Assets.instance.drop.rain01);
@@ -116,8 +116,8 @@ public class Raindrops extends AbstractGameObject
      drop.setRegion(rainDrops.random());
      drop.dimension.set(dimension);
      
-     float x = MathUtils.random(0, 1);
-     float y = MathUtils.random(5,15);
+     float x = MathUtils.random(0, 5);
+     float y = MathUtils.random(0,1);
      float rotation = MathUtils.random(0.0f, 5.0f)* MathUtils.degreesToRadians; 
      
      BodyDef bodyDef = new BodyDef();
@@ -128,7 +128,7 @@ public class Raindrops extends AbstractGameObject
      body.setType(BodyType.DynamicBody);
      body.setUserData(drop);
      body.setFixedRotation(true);
-     body.setGravityScale(0.07f);
+     body.setGravityScale(0.05f);
      drop.body=body;
  
      

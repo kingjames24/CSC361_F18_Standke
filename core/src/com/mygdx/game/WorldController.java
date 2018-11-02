@@ -69,7 +69,7 @@ public class WorldController extends InputAdapter implements Disposable
 		
 		b2world.step(deltaTime, 8, 3);
 		
-		if(!b2world.isLocked()) 
+		/*if(!b2world.isLocked()) 
 		{
 			int x= rain.raindropScheduledForRemoval.size;
 			for(int j=0; j<x; j++)
@@ -89,7 +89,7 @@ public class WorldController extends InputAdapter implements Disposable
 				
 			}
 			rain.raindropScheduledForRemoval.clear();
-		}
+		}*/
 				
 		cameraHelper.update(deltaTime);
 		level.people.updateScrollPosition(cameraHelper.getPosition());
@@ -119,7 +119,7 @@ public class WorldController extends InputAdapter implements Disposable
 	       // Bunny Jump
 	       if ( Gdx.input.isKeyPressed(Keys.SPACE))
 	       {
-	    	   level.tim.body.applyLinearImpulse(new Vector2(0,sprMoveSpeed), level.tim.body.getWorldCenter(), true);
+	    	   level.tim.body.applyLinearImpulse(new Vector2(0,6), level.tim.body.getWorldCenter(), true);
 	       } 
 	
 	     } 
@@ -245,9 +245,9 @@ public class WorldController extends InputAdapter implements Disposable
  	   		   plat.body = body;
  	       
  	   		   PolygonShape polygonShape = new PolygonShape();
- 	   		   origin.x = plat.dimension.x / 2.0f;
- 	   		   origin.y = plat.dimension.y / 2.0f;
- 	   		   polygonShape.setAsBox(plat.dimension.x/ 2.0f, plat.dimension.y/ 2.0f, origin, 0);
+ 	   		   origin.x = plat.bounds.width / 2.0f;
+ 	   		   origin.y = plat.bounds.height / 2.0f;
+ 	   		   polygonShape.setAsBox(plat.bounds.width/ 2.0f, plat.bounds.height/ 2.0f, origin, 0);
  	       
  	   		   FixtureDef fixtureDef = new FixtureDef();
  	   		   fixtureDef.shape = polygonShape;
