@@ -110,11 +110,13 @@ public class WorldController extends InputAdapter implements Disposable
 	       float sprMoveSpeed = 1;
 	       if (Gdx.input.isKeyPressed(Keys.LEFT)) 
 	       {
+	    	   if(numFootContacts<1)return;
 	    	   level.people.timmyLeft(false);
 	    	   level.tim.body.applyLinearImpulse(new Vector2(-sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
 	       } 
 	       else if (Gdx.input.isKeyPressed(Keys.RIGHT)) 
 	       {
+	    	   if(numFootContacts<1)return;
 	    	   level.people.timmyLeft(true);
 	    	   level.tim.body.applyLinearImpulse(new Vector2(sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
 	       }
@@ -232,15 +234,13 @@ public class WorldController extends InputAdapter implements Disposable
 	       fixtureDef.shape = polygonShape;
 	       fixtureDef.density =30;
 	       fixtureDef.restitution = 0.1f;
-	       fixtureDef.friction = 0f;
+	       fixtureDef.friction = 0.1f;
 	       body.createFixture(fixtureDef);
 	       
 	       polygonShape.setAsBox(0.3f, 0.3f, new Vector2(0.5f,-0.1f), 0);
 	       fixtureDef.isSensor=true; 
 	       Fixture footSensor= body.createFixture(fixtureDef);
 	       footSensor.setUserData(3);
-	       
-	       
 	       polygonShape.dispose(); 
 	       createPlatforms();       
     }
