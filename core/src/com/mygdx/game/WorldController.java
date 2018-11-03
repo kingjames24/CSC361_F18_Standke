@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.mygdx.contacts.MyContactListener;
 import com.mygdx.objects.Platform;
 import com.mygdx.objects.Raindrops;
@@ -32,6 +33,8 @@ public class WorldController extends InputAdapter implements Disposable
 	private Game game;
 	public CameraHelper cameraHelper;
     public static World b2world;
+    public static int numFootContacts=0;
+    public int jumpTimeout=0;
     
     
     public Raindrops rain; 
@@ -68,6 +71,7 @@ public class WorldController extends InputAdapter implements Disposable
 		handleInputGame(deltaTime); 
 		
 		b2world.step(deltaTime, 8, 3);
+		jumpTimeout--; 
 		
 		if(!b2world.isLocked()) 
 		{
@@ -118,10 +122,13 @@ public class WorldController extends InputAdapter implements Disposable
 	       {
 	    	   ;
 	       }
-	       // Bunny Jump
+	       // Tim Jump
 	       if ( Gdx.input.isKeyPressed(Keys.SPACE))
 	       {
-	    	   level.tim.body.applyLinearImpulse(new Vector2(0,6), level.tim.body.getWorldCenter(), true);
+	    	   if(numFootContacts<1)return;
+	    	   if(jumpTimeout>0)return; 
+	    	   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*5), level.tim.body.getWorldCenter(), true);
+	    	   jumpTimeout=15; 
 	       } 
 	
 	     } 
@@ -197,6 +204,7 @@ public class WorldController extends InputAdapter implements Disposable
 		if (b2world != null) b2world.dispose();
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void initPhysics () 
     {
     	   if (b2world != null) b2world.dispose();
@@ -226,11 +234,19 @@ public class WorldController extends InputAdapter implements Disposable
 	       fixtureDef.restitution = 0.1f;
 	       fixtureDef.friction = 0f;
 	       body.createFixture(fixtureDef);
+	       
+	       polygonShape.setAsBox(0.3f, 0.3f, new Vector2(0.5f,-0.1f), 0);
+	       fixtureDef.isSensor=true; 
+	       Fixture footSensor= body.createFixture(fixtureDef);
+	       footSensor.setUserData(3);
+	       
+	       
 	       polygonShape.dispose(); 
 	       createPlatforms();       
     }
 	
 	
+	@SuppressWarnings("deprecation")
 	private void createPlatforms()
 	{	
 		
