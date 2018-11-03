@@ -116,19 +116,27 @@ public class Raindrops extends AbstractGameObject
      drop.setRegion(rainDrops.random());
      drop.dimension.set(dimension);
      
-     float x = MathUtils.random(0, 30);
+     float x = MathUtils.random(0, 118);
      float y = MathUtils.random(0,1);
      float rotation = MathUtils.random(0.0f, 5.0f)* MathUtils.degreesToRadians; 
      
      BodyDef bodyDef = new BodyDef();
      bodyDef.position.set(drop.position);
-     bodyDef.position.add(x, y); 
+     bodyDef.position.add(x, y);
      bodyDef.angle=rotation;
      Body body = WorldController.b2world.createBody(bodyDef); 
      body.setType(BodyType.DynamicBody);
      body.setUserData(drop);
      body.setFixedRotation(true);
-     body.setGravityScale(0.05f);
+     if(x>50)
+     {
+    	 body.setGravityScale(0.5f);
+     }
+     else
+     {
+    	 body.setGravityScale(0.05f); 
+     }
+     
      drop.body=body;
  
      

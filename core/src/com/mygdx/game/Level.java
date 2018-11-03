@@ -183,7 +183,11 @@ public class Level
 		pixmap.dispose();
 		Gdx.app.debug(TAG, "level '" + filename + "' loaded");
 	}
-	
+	public void update(float deltatime)
+	{
+		for (Platform plat : platforms)
+			plat.update(deltatime);
+	}
 	
 	public void render (SpriteBatch batch)
 	{
@@ -207,7 +211,7 @@ public class Level
 		people.render(batch);
 		
 		/*// Draw choppers
-		chop.render(batch);*/
+		chop.render(batch);*/ 
 		
 		tim.render(batch);
 	}

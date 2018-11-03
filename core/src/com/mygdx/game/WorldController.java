@@ -11,9 +11,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.mygdx.contacts.MyContactListener;
 import com.mygdx.objects.Platform;
@@ -35,8 +40,10 @@ public class WorldController extends InputAdapter implements Disposable
     public static World b2world;
     public static int numFootContacts=0;
     public int jumpTimeout=0;
+    public boolean attached=false; 
     
-    
+    public RevoluteJoint joint;
+    public RevoluteJoint joint2; 
     public Raindrops rain; 
     public Level level;
 	
@@ -53,15 +60,17 @@ public class WorldController extends InputAdapter implements Disposable
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
 		initlevel(); 
-		rain= new Raindrops(30);
+		rain= new Raindrops(50);
 		
 	}
 	
 	private void initlevel()
 	{
+		
 		level = new Level(Constants.LEVEL_01);
 		cameraHelper.setTarget(level.tim);
-		initPhysics(); 
+		initPhysics();
+		
 	}
 	
 	public void update(float deltaTime)
@@ -69,7 +78,7 @@ public class WorldController extends InputAdapter implements Disposable
 		handleDebugInput(deltaTime);
 		
 		handleInputGame(deltaTime); 
-		
+		level.update(deltaTime);
 		b2world.step(deltaTime, 8, 3);
 		jumpTimeout--; 
 		
@@ -129,9 +138,9 @@ public class WorldController extends InputAdapter implements Disposable
 	       {
 	    	   if(numFootContacts<1)return;
 	    	   if(jumpTimeout>0)return; 
-	    	   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*5), level.tim.body.getWorldCenter(), true);
+	    	   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*2), level.tim.body.getWorldCenter(), true);
 	    	   jumpTimeout=15; 
-	       } 
+	       }
 	
 	     } 
 	 }
@@ -206,13 +215,25 @@ public class WorldController extends InputAdapter implements Disposable
 		if (b2world != null) b2world.dispose();
 	}
 	
-	@SuppressWarnings("deprecation")
+	
 	private void initPhysics () 
     {
     	   if (b2world != null) b2world.dispose();
     	   b2world = new World(new Vector2(0, -5f), true);
     	   b2world.setContactListener(new MyContactListener());
     	   Vector2 origin = new Vector2();
+    	   
+    	   BodyDef bodyDef2 = new BodyDef();
+		   bodyDef2.type = BodyType.StaticBody;
+		   bodyDef2.position.set(new Vector2(0f, -10f));
+		   Body body1 = b2world.createBody(bodyDef2); 
+		   EdgeShape boundary = new EdgeShape();
+		   boundary.set(new Vector2(0f, 0f), new Vector2(128f, 0));
+		   FixtureDef fixtureDef2 = new FixtureDef();
+		   fixtureDef2.shape=boundary;
+		   body1.createFixture(fixtureDef2); 
+		   boundary.dispose();
+    	   
 
     	 
     	   // Timmy
@@ -242,10 +263,14 @@ public class WorldController extends InputAdapter implements Disposable
 	       Fixture footSensor= body.createFixture(fixtureDef);
 	       footSensor.setUserData(3);
 	       polygonShape.dispose(); 
-	       createPlatforms();       
+	       createPlatforms();
+	       
     }
 	
 	
+
+
+
 	@SuppressWarnings("deprecation")
 	private void createPlatforms()
 	{	

@@ -17,7 +17,7 @@ public class Platform extends AbstractGameObject
 	public Rectangle bounds;
 	
 	private final float FLOAT_CYCLE_TIME = 2.0f;
-    private final float FLOAT_AMPLITUDE = 3.0f;
+    private final float FLOAT_AMPLITUDE = 1.5f;
     private float floatCycleTimeLeft;
     private boolean floatingDownwards;
     private Vector2 floatTargetPosition;
@@ -86,7 +86,7 @@ public class Platform extends AbstractGameObject
  	   {
  		   floatCycleTimeLeft = FLOAT_CYCLE_TIME;
  		   floatingDownwards = !floatingDownwards;
- 		   body.setLinearVelocity(0, FLOAT_AMPLITUDE * (floatingDownwards ? 1 : -1));
+ 		   body.setLinearVelocity(0, FLOAT_AMPLITUDE * (floatingDownwards ? -1 : 1));
  	   }
  	   else
  	   {
