@@ -23,7 +23,7 @@ public class People extends AbstractGameObject
 
 	private void init() 
 	{
-		dimension.set(1.5f,1.5f);
+		dimension.set(1f,1f);
 		
 		man1=Assets.instance.leveldecoration.chopper; 
 		woman1=Assets.instance.leveldecoration.woman1; 
@@ -73,7 +73,7 @@ public class People extends AbstractGameObject
 		
 		TextureRegion reg = null;
 		float xRel = dimension.x * offsetX;
-		float yRel = dimension.y * offsetY;
+		float yRel = (dimension.y+15) * offsetY;
 		int manoneLength = 0;
 		manoneLength += MathUtils.ceil(length / (2 * dimension.x) * (1 - parralexSpeedX));
 		manoneLength += MathUtils.ceil(0.5f + offsetX);
@@ -83,7 +83,7 @@ public class People extends AbstractGameObject
 			batch.draw(reg.getTexture(), origin.x + xRel + position.x * parralexSpeedX,
 					origin.y + yRel + position.y,
 					origin.x, origin.y,
-					dimension.x, dimension.y,
+					dimension.x+2, dimension.y+1,
 					scale.x, scale.y,
 					rotation,
 					reg.getRegionX(), reg.getRegionY(),

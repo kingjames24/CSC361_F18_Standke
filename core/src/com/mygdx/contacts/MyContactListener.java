@@ -48,8 +48,8 @@ public class MyContactListener implements ContactListener
 			}
 			else
 			{
-				RainDrop rain = (RainDrop)body1; //timmy colliding with rain
-				rain.startContact();
+				/*RainDrop rain = (RainDrop)body1; //timmy colliding with rain
+				rain.startContact();*/
 			}
 			
 		}
