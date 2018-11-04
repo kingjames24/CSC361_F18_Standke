@@ -54,7 +54,7 @@ public class Points extends AbstractGameObject
 		PolygonShape polygonShape = new PolygonShape();
 		origin.x = this.dimension.x/2; 
 		origin.y = this.dimension.y/2; 
-		polygonShape.setAsBox(this.dimension.x/2,this.dimension.y , origin, 0);
+		polygonShape.setAsBox(this.dimension.x/2,this.dimension.y/2, origin, 0);
 		FixtureDef fixtureDef = new FixtureDef();
 	    fixtureDef.shape = polygonShape; 
 	    Fixture f= body.createFixture(fixtureDef);
