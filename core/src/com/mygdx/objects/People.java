@@ -105,4 +105,10 @@ public class People extends AbstractGameObject
 		position.set(camPosition.x, position.y);
 	}
 
+	@Override
+	public void createBody(Vector2 position) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

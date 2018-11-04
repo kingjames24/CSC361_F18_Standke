@@ -15,6 +15,7 @@ public class Timmy extends AbstractGameObject
 	
 	public float rotation; 
 	public TextureRegion regTim;
+	public boolean left; 
 	
 	public Timmy()
 	{
@@ -40,7 +41,13 @@ public class Timmy extends AbstractGameObject
 				position.y, origin.x, origin.y, dimension.x,
 				dimension.y, scale.x, scale.y, rotation, reg.getRegionX(),
 				reg.getRegionY(), reg.getRegionWidth(),
-				reg.getRegionHeight(), false, false);
+				reg.getRegionHeight(), left, false);
+	}
+
+	@Override
+	public void createBody(Vector2 position) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

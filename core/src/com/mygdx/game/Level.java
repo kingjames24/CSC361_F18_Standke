@@ -142,20 +142,21 @@ public class Level
 				// Adds feathers to the map
 				else if (BLOCK_TYPE.POWERUP.sameColor(currentPixel)) 
 				{
-					/*obj = new Star();
+					obj = new Star();
 					offsetHeight = -1.5f;
 					obj.position.set(pixelX, baseHeight * obj.dimension.y +
 							offsetHeight);
-					enhancement.add((Star)obj);*/
+					enhancement.add((Star)obj);
 				}		
 				// Adds gold coins to the map
 				else if (BLOCK_TYPE.ITEMS.sameColor(currentPixel)) 
 				{
-					/*obj = new Points();
+					obj = new Points();
 					offsetHeight = -1.5f;
 					obj.position.set(pixelX, baseHeight * obj.dimension.y +
 							offsetHeight);
-					point.add((Points)obj);*/
+					obj.createBody(obj.position);
+					point.add((Points)obj);
 				}
 				// unknown object/pixel color
 				else 

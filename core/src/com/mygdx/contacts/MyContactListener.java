@@ -46,10 +46,23 @@ public class MyContactListener implements ContactListener
 			{
 				return; 
 			}
-			else
+			else if(body1 instanceof Raindrops.RainDrop && body instanceof Points || body1 instanceof Points && body instanceof Raindrops.RainDrop)
 			{
-				/*RainDrop rain = (RainDrop)body1; //timmy colliding with rain
-				rain.startContact();*/
+				return; 
+			}
+			else if(body1 instanceof Timmy && body instanceof Points || body1 instanceof Points && body instanceof Timmy)
+			{
+				if(body1 instanceof Points)
+				{
+					
+					Points point = (Points)body1;
+					point.startContract();
+				}
+				else
+				{
+					Points point = (Points)body;
+					point.startContract();
+				}
 			}
 			
 		}
@@ -77,6 +90,7 @@ public class MyContactListener implements ContactListener
 		{
 			WorldController.numFootContacts--; 
 		}
+		
 	}
 		
 	

@@ -17,7 +17,7 @@ public class Platform extends AbstractGameObject
 	public Rectangle bounds;
 	
 	private final float FLOAT_CYCLE_TIME = 2.0f;
-    private final float FLOAT_AMPLITUDE = 1.5f;
+    private final float FLOAT_AMPLITUDE = 1f;
     private float floatCycleTimeLeft;
     private boolean floatingDownwards;
     private Vector2 floatTargetPosition;
@@ -100,6 +100,12 @@ public class Platform extends AbstractGameObject
       bounds.set(0, 0, dimension.x * length, dimension.y);
       
     }
+
+	@Override
+	public void createBody(Vector2 position) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 
 }

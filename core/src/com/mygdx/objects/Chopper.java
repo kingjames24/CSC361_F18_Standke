@@ -43,6 +43,14 @@ public class Chopper extends AbstractGameObject
     				false, false);
 			
 		}
+
+
+
+		@Override
+		public void createBody(Vector2 position) {
+			// TODO Auto-generated method stub
+			
+		}
 		
 	}
 	
@@ -132,6 +140,12 @@ public class Chopper extends AbstractGameObject
 		{
 			cop.render(batch);
 		}
+		
+	}
+
+	@Override
+	public void createBody(Vector2 position) {
+		// TODO Auto-generated method stub
 		
 	}
 
