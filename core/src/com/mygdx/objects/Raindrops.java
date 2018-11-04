@@ -169,6 +169,12 @@ public class Raindrops extends AbstractGameObject
 	   rainDrop.remove(drop);
 	   rainDrop.add(spawnRainDrop());
    }
+
+@Override
+public void createBody(Vector2 position) {
+	// TODO Auto-generated method stub
+	
+}
    
    
 	

@@ -19,6 +19,14 @@ public abstract class AbstractGameObject
 		public float rotation;
 		public Body body;
 		
+		
+		
+		
+		
+		
+		public abstract void createBody(Vector2 position); 
+		
+		
 		/*
 		 * Starts the animation time
 		 */

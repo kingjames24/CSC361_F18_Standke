@@ -22,6 +22,7 @@ import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.mygdx.contacts.MyContactListener;
 import com.mygdx.objects.Platform;
+import com.mygdx.objects.Points;
 import com.mygdx.objects.Raindrops;
 import com.mygdx.objects.Raindrops.RainDrop;
 import com.mygdx.objects.Timmy;
@@ -59,6 +60,9 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
+		if (b2world != null) b2world.dispose();
+ 	   	b2world = new World(new Vector2(0, -5f), true);
+ 	   	b2world.setContactListener(new MyContactListener());
 		initlevel(); 
 		rain= new Raindrops(50);
 		
@@ -103,6 +107,27 @@ public class WorldController extends InputAdapter implements Disposable
 			}
 			rain.raindropScheduledForRemoval.clear();
 		}
+		if(!b2world.isLocked()) 
+		{
+			int x= Points.pointScheduledForRemoval.size;
+			for(int j=0; j<x; j++)
+			{
+			
+				Points point= Points.pointScheduledForRemoval.pop(); 
+				if(point!=null)
+				{
+					if(point.collected)
+					{
+						
+						point.body.getWorld().destroyBody(point.body);
+						
+					}
+					
+				}
+				
+			}
+			Points.pointScheduledForRemoval.clear();
+		}
 				
 		cameraHelper.update(deltaTime);
 		level.people.updateScrollPosition(cameraHelper.getPosition());
@@ -121,12 +146,14 @@ public class WorldController extends InputAdapter implements Disposable
 	       {
 	    	   if(numFootContacts<1)return;
 	    	   level.people.timmyLeft(false);
+	    	   level.tim.left=true; 
 	    	   level.tim.body.applyLinearImpulse(new Vector2(-sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
 	       } 
 	       else if (Gdx.input.isKeyPressed(Keys.RIGHT)) 
 	       {
 	    	   if(numFootContacts<1)return;
 	    	   level.people.timmyLeft(true);
+	    	   level.tim.left=false;
 	    	   level.tim.body.applyLinearImpulse(new Vector2(sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
 	       }
 	       else 
@@ -218,11 +245,8 @@ public class WorldController extends InputAdapter implements Disposable
 	
 	private void initPhysics () 
     {
-    	   if (b2world != null) b2world.dispose();
-    	   b2world = new World(new Vector2(0, -5f), true);
-    	   b2world.setContactListener(new MyContactListener());
+    	  
     	   Vector2 origin = new Vector2();
-    	   
     	   BodyDef bodyDef2 = new BodyDef();
 		   bodyDef2.type = BodyType.StaticBody;
 		   bodyDef2.position.set(new Vector2(0f, -10f));

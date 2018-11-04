@@ -3,6 +3,7 @@ package com.mygdx.objects;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Assets;
 
 public class City extends AbstractGameObject 
@@ -49,6 +50,12 @@ public class City extends AbstractGameObject
 					false, false);
 	        xRel += dimension.x;
 	    }
+		
+	}
+
+	@Override
+	public void createBody(Vector2 position) {
+		// TODO Auto-generated method stub
 		
 	}
 
