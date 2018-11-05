@@ -90,10 +90,7 @@ public class WorldController extends InputAdapter implements Disposable
 		
 		handleInputGame(deltaTime);
 		
-		if(Ability.fire)
-		{
-			ability.update(deltaTime);
-		}
+	
 		
 		
 		level.update(deltaTime);
@@ -181,20 +178,18 @@ public class WorldController extends InputAdapter implements Disposable
 	       if(Gdx.input.isButtonPressed(Input.Buttons.LEFT))
 	       {
 	    	   int x = Gdx.input.getX(); 
-	    	   int y = Gdx.input.getY(); 
-	    	  
+	    	   int y = Gdx.input.getY();
 	    	   
+	    	  
 	    	   if(Star.collected)
 	    	   {
 	    		   
 	    		   Vector3 screen = new Vector3(x,y,0); 
-	    		   Vector3 world = WorldRenderer.camera.unproject(screen); 
-	    		   float startingVy= ability.calulateStartingVelocity(world.y, deltaTime);
-	    		   ability.setVelocity(new Vector2(0, -startingVy));
-	    		   float xcor = level.tim.position.x+.5f;
-	    		   float ycor = level.tim.position.y+1;
-	    		   ability.setStartingPos(new Vector2(xcor, ycor));
-	    		   ability.setTimeSpan(ability.getMaxHeight(deltaTime));
+	    		   Vector3 world = WorldRenderer.camera.unproject(screen);
+	    		   ability.body.setTransform(new Vector2(level.tim.position.x+.5f, level.tim.position.y+1f), 0);
+	    		   ability.body.setLinearVelocity(new Vector2(world.x, world.y));
+	    		   float angle = (float) Math.atan(y/x); 
+	    		   ability.body.setAngularVelocity((float) Math.toRadians(angle));
 	    		   ability.setFire(true); 
 	    		    
 	    	   }
