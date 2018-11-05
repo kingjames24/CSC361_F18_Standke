@@ -183,13 +183,19 @@ public class WorldController extends InputAdapter implements Disposable
 	    	  
 	    	   if(Star.collected)
 	    	   {
-	    		   
+	    		   float angle = (float) Math.atan(y/x); 
 	    		   Vector3 screen = new Vector3(x,y,0); 
 	    		   Vector3 world = WorldRenderer.camera.unproject(screen);
-	    		   ability.body.setTransform(new Vector2(level.tim.position.x+.5f, level.tim.position.y+1f), 0);
-	    		   ability.body.setLinearVelocity(new Vector2(world.x, world.y));
-	    		   float angle = (float) Math.atan(y/x); 
+	    		   //ability.body.setTransform(new Vector2(level.tim.position.x+.5f, level.tim.position.y+1f), 0);
+	    		   Body launcher=joint.getBodyB();
+	    		   launcher.setTransform((launcher.getPosition()), (float) Math.toRadians(angle));
+	    		   launcher.setAngularVelocity((float) Math.toRadians(angle));
+	    		   ability.body.setTransform(launcher.getPosition(), (float)Math.toRadians(angle));
 	    		   ability.body.setAngularVelocity((float) Math.toRadians(angle));
+	    		   
+	    		   ability.body.setLinearVelocity(new Vector2(world.x, world.y));
+	    
+	    		   ability.body.setGravityScale(0);
 	    		   ability.setFire(true); 
 	    		    
 	    	   }
@@ -314,7 +320,28 @@ public class WorldController extends InputAdapter implements Disposable
 	       fixtureDef.isSensor=true; 
 	       Fixture footSensor= body.createFixture(fixtureDef);
 	       footSensor.setUserData(3);
-	       polygonShape.dispose(); 
+	       polygonShape.dispose();
+	       
+	       BodyDef circle = new BodyDef(); 
+	       circle.type= BodyType.DynamicBody; 
+	       circle.position.set(level.tim.position.x+1, level.tim.position.y+1); 
+	       Body launcher = b2world.createBody(circle);
+	       CircleShape cir = new CircleShape();
+	       cir.setRadius(.1f);
+	       fixtureDef.shape = cir; 
+	       Fixture circleFixture = launcher.createFixture(fixtureDef); 
+	       
+	       RevoluteJointDef joint1 = new RevoluteJointDef();
+	       joint1.initialize(body, launcher, body.getWorldCenter()); 
+	       joint1.enableMotor=true;
+	       joint1.maxMotorTorque=150; 
+	       joint1.motorSpeed=0; 
+	       joint =(RevoluteJoint) b2world.createJoint(joint1); 
+	       
+	       
+	       
+	       
+	       
 	       createPlatforms();
 	       
     }

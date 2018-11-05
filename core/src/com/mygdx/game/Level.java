@@ -187,8 +187,8 @@ public class Level
 	}
 	public void update(float deltatime)
 	{
-		/*for (Platform plat : platforms)
-			plat.update(deltatime);*/
+		for (Platform plat : platforms)
+			plat.update(deltatime);
 	}
 	
 	public void render (SpriteBatch batch)
