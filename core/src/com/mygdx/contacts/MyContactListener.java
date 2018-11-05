@@ -50,6 +50,10 @@ public class MyContactListener implements ContactListener
 			{
 				return; 
 			}
+			else if(body1 instanceof Raindrops.RainDrop && body instanceof Star || body1 instanceof Star && body instanceof Raindrops.RainDrop)
+			{
+				return; 
+			}
 			else if(body1 instanceof Timmy && body instanceof Points || body1 instanceof Points && body instanceof Timmy)
 			{
 				if(body1 instanceof Points)
@@ -62,6 +66,20 @@ public class MyContactListener implements ContactListener
 				{
 					Points point = (Points)body;
 					point.startContract();
+				}
+			}
+			else if(body1 instanceof Timmy && body instanceof Star || body1 instanceof Star && body instanceof Timmy)
+			{
+				if(body1 instanceof Star)
+				{
+					
+					Star up = (Star)body1;
+					up.startContract();
+				}
+				else
+				{
+					Star up = (Star)body;
+					up.startContract();
 				}
 			}
 			
