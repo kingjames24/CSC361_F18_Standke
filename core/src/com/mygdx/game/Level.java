@@ -146,6 +146,7 @@ public class Level
 					offsetHeight = -1.5f;
 					obj.position.set(pixelX, baseHeight * obj.dimension.y +
 							offsetHeight);
+					obj.createBody(obj.position);
 					enhancement.add((Star)obj);
 				}		
 				// Adds gold coins to the map

@@ -6,13 +6,14 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Disposable;
+import com.mygdx.objects.Ability;
 import com.mygdx.util.Constants;
 
 
 
 public class WorldRenderer implements Disposable 
 {
-	private OrthographicCamera camera;
+	public static OrthographicCamera camera;
 	private SpriteBatch batch;
 	private WorldController worldController;
 	private static final boolean DEBUG_DRAW_BOX2D_WORLD = true;
@@ -46,6 +47,10 @@ public class WorldRenderer implements Disposable
 		batch.begin();
 		worldController.level.render(batch);
 		worldController.rain.render(batch);
+		if(Ability.fire)
+		{
+			worldController.ability.render(batch);
+		}
 		batch.end();
 		
 		if (DEBUG_DRAW_BOX2D_WORLD)

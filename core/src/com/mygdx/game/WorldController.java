@@ -2,12 +2,14 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -21,10 +23,12 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.mygdx.contacts.MyContactListener;
+import com.mygdx.objects.Ability;
 import com.mygdx.objects.Platform;
 import com.mygdx.objects.Points;
 import com.mygdx.objects.Raindrops;
 import com.mygdx.objects.Raindrops.RainDrop;
+import com.mygdx.objects.Star;
 import com.mygdx.objects.Timmy;
 import com.mygdx.util.CameraHelper;
 import com.mygdx.util.Constants;
@@ -45,7 +49,8 @@ public class WorldController extends InputAdapter implements Disposable
     
     public RevoluteJoint joint;
     public RevoluteJoint joint2; 
-    public Raindrops rain; 
+    public Raindrops rain;
+    public Ability ability; 
     public Level level;
 	
 	public WorldController(Game game) 
@@ -65,6 +70,8 @@ public class WorldController extends InputAdapter implements Disposable
  	   	b2world.setContactListener(new MyContactListener());
 		initlevel(); 
 		rain= new Raindrops(50);
+		ability = new Ability(); 
+		ability.createBody(level.tim.body.getPosition());
 		
 	}
 	
@@ -81,7 +88,11 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		handleDebugInput(deltaTime);
 		
-		handleInputGame(deltaTime); 
+		handleInputGame(deltaTime);
+		
+	
+		
+		
 		level.update(deltaTime);
 		b2world.step(deltaTime, 8, 3);
 		jumpTimeout--; 
@@ -142,32 +153,54 @@ public class WorldController extends InputAdapter implements Disposable
 	     {
 	       // Player Movement
 	       float sprMoveSpeed = 1;
-	       if (Gdx.input.isKeyPressed(Keys.LEFT)) 
+	       if (Gdx.input.isKeyPressed(Keys.A)) 
 	       {
 	    	   if(numFootContacts<1)return;
 	    	   level.people.timmyLeft(false);
 	    	   level.tim.left=true; 
 	    	   level.tim.body.applyLinearImpulse(new Vector2(-sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
 	       } 
-	       else if (Gdx.input.isKeyPressed(Keys.RIGHT)) 
+	       else if (Gdx.input.isKeyPressed(Keys.D)) 
 	       {
 	    	   if(numFootContacts<1)return;
 	    	   level.people.timmyLeft(true);
 	    	   level.tim.left=false;
 	    	   level.tim.body.applyLinearImpulse(new Vector2(sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
 	       }
-	       else 
-	       {
-	    	   ;
-	       }
 	       // Tim Jump
-	       if ( Gdx.input.isKeyPressed(Keys.SPACE))
+	       if ( Gdx.input.isKeyPressed(Keys.W))
 	       {
 	    	   if(numFootContacts<1)return;
 	    	   if(jumpTimeout>0)return; 
-	    	   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*2), level.tim.body.getWorldCenter(), true);
+	    	   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*2.5f), level.tim.body.getWorldCenter(), true);
 	    	   jumpTimeout=15; 
 	       }
+	       if(Gdx.input.isButtonPressed(Input.Buttons.LEFT))
+	       {
+	    	   int x = Gdx.input.getX(); 
+	    	   int y = Gdx.input.getY();
+	    	   
+	    	  
+	    	   if(Star.collected)
+	    	   {
+	    		    
+	    		   Vector3 screen = new Vector3(x,y,0); 
+	    		   Vector3 world = WorldRenderer.camera.unproject(screen);
+	    		   Vector2 camera = new Vector2(world.x, world.y);
+	    		   Vector2 launcher=joint.getBodyB().getPosition();
+	    		   Vector2 distance = new Vector2(); 
+	    		   distance.x= camera.x-launcher.x; 
+	    		   distance.y= camera.y-launcher.y; 
+	    		   ability.body.setTransform(joint.getBodyB().getPosition(), 0);
+	    		   //ability.body.setAngularVelocity((float) Math.toRadians(angle));
+	    		   ability.body.setLinearVelocity(distance);
+	    		   ability.body.setGravityScale(0);
+	    		   ability.setFire(true); 
+	    		  
+	    	   }
+	    	   
+	       }
+
 	
 	     } 
 	 }
@@ -277,7 +310,7 @@ public class WorldController extends InputAdapter implements Disposable
 	       
 	       FixtureDef fixtureDef = new FixtureDef();
 	       fixtureDef.shape = polygonShape;
-	       fixtureDef.density =30;
+	       fixtureDef.density =20;
 	       fixtureDef.restitution = 0.1f;
 	       fixtureDef.friction = 0.1f;
 	       body.createFixture(fixtureDef);
@@ -286,7 +319,30 @@ public class WorldController extends InputAdapter implements Disposable
 	       fixtureDef.isSensor=true; 
 	       Fixture footSensor= body.createFixture(fixtureDef);
 	       footSensor.setUserData(3);
-	       polygonShape.dispose(); 
+	       polygonShape.dispose();
+	       
+	       BodyDef circle = new BodyDef(); 
+	       circle.type= BodyType.DynamicBody; 
+	       circle.position.set(level.tim.position.x+1, level.tim.position.y+1); 
+	       Body launcher= b2world.createBody(circle);
+	       CircleShape cir = new CircleShape();
+	       cir.setRadius(.1f);
+	       fixtureDef.shape = cir;
+	       fixtureDef.isSensor=true; 
+	       Fixture circleFixture = launcher.createFixture(fixtureDef);
+	      
+	       
+	       RevoluteJointDef joint1 = new RevoluteJointDef();
+	       joint1.initialize(body, launcher, body.getWorldCenter()); 
+	       joint1.enableMotor=true;
+	       joint1.maxMotorTorque=150; 
+	       joint1.motorSpeed=0; 
+	       joint =(RevoluteJoint) b2world.createJoint(joint1); 
+	       
+	       
+	       
+	       
+	       
 	       createPlatforms();
 	       
     }

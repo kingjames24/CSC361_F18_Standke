@@ -61,8 +61,9 @@ public class CameraHelper
     	  camera.position.x = position.x;
     	  camera.position.y = position.y;
     	  camera.zoom = zoom;
-    	   camera.update();
+    	  camera.update();
     }
+    
     
     
 }

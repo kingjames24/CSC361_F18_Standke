@@ -1,5 +1,6 @@
 package com.mygdx.objects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -11,44 +12,40 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.mygdx.game.Assets;
 import com.mygdx.game.WorldController;
 
-public class Star extends AbstractGameObject{
+public class Ability extends AbstractGameObject
+{
 
-	private TextureRegion star; 
-	public static boolean collected; 
+	private TextureRegion star;
+	public static boolean fire=false;
+	public float time;
+	public float step; 
+	public Vector2 startingVelocity;
+	public Vector2 startingPosition;
+	public Vector2 traject; 
+	 
 	
-	public Star()
+	public Ability()
 	{
 		init(); 
 	}
 	
 	private void init() 
 	{
-		dimension.set(0.5f, 0.5f); 
-		star=Assets.instance.up.power; 
-		collected=false; 
-		
+		dimension.set(.5f, .5f); 
+		star=Assets.instance.up.power;
+		traject = new Vector2();
+		step=0; 
+		 
 	}
 
-	@Override
-	public void render(SpriteBatch batch) 
-	{
-		if (collected) return;
-		
-		TextureRegion reg = null;
-		reg = star;
-		batch.draw(reg.getTexture(), position.x, position.y,
-				origin.x, origin.y, dimension.x, dimension.y,
-				scale.x, scale.y, rotation, reg.getRegionX(), 
-				reg.getRegionY(), reg.getRegionWidth(),
-				reg.getRegionHeight(), false, false);
-		
-	}
-
+	
+	
 	@Override
 	public void createBody(Vector2 position) 
 	{
+		
 		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.StaticBody;
+		bodyDef.type = BodyType.DynamicBody;
 		bodyDef.fixedRotation=true;
 		bodyDef.position.set(position); 
 		body = WorldController.b2world.createBody(bodyDef);
@@ -60,16 +57,37 @@ public class Star extends AbstractGameObject{
 		polygonShape.setAsBox(this.dimension.x/2,this.dimension.y/2, origin, 0);
 		FixtureDef fixtureDef = new FixtureDef();
 	    fixtureDef.shape = polygonShape; 
-	    Fixture f= body.createFixture(fixtureDef);
-	    f.setSensor(true);
+	    body.createFixture(fixtureDef);
 	    polygonShape.dispose();
 		
 	}
 
-	public void startContract() 
+	@Override
+	public void render(SpriteBatch batch) 
 	{
-		collected=true; 
+		if(!fire) return; 
+		TextureRegion reg = null;
+		reg = star;
+		position = body.getPosition(); 
+		
+		batch.draw(reg.getTexture(), position.x, position.y,
+				origin.x, origin.y, dimension.x, dimension.y,
+				scale.x, scale.y, rotation, reg.getRegionX(), 
+				reg.getRegionY(), reg.getRegionWidth(),
+				reg.getRegionHeight(), false, false);
 		
 	}
+
+
+	
+	
+
+	public void setFire(boolean b) 
+	{
+		this.fire=b; 
+		
+	}
+	
+	
 
 }
