@@ -153,14 +153,14 @@ public class WorldController extends InputAdapter implements Disposable
 	     {
 	       // Player Movement
 	       float sprMoveSpeed = 1;
-	       if (Gdx.input.isKeyPressed(Keys.LEFT)) 
+	       if (Gdx.input.isKeyPressed(Keys.A)) 
 	       {
 	    	   if(numFootContacts<1)return;
 	    	   level.people.timmyLeft(false);
 	    	   level.tim.left=true; 
 	    	   level.tim.body.applyLinearImpulse(new Vector2(-sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
 	       } 
-	       else if (Gdx.input.isKeyPressed(Keys.RIGHT)) 
+	       else if (Gdx.input.isKeyPressed(Keys.D)) 
 	       {
 	    	   if(numFootContacts<1)return;
 	    	   level.people.timmyLeft(true);
@@ -168,11 +168,11 @@ public class WorldController extends InputAdapter implements Disposable
 	    	   level.tim.body.applyLinearImpulse(new Vector2(sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
 	       }
 	       // Tim Jump
-	       if ( Gdx.input.isKeyPressed(Keys.SPACE))
+	       if ( Gdx.input.isKeyPressed(Keys.W))
 	       {
 	    	   if(numFootContacts<1)return;
 	    	   if(jumpTimeout>0)return; 
-	    	   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*2), level.tim.body.getWorldCenter(), true);
+	    	   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*2.5f), level.tim.body.getWorldCenter(), true);
 	    	   jumpTimeout=15; 
 	       }
 	       if(Gdx.input.isButtonPressed(Input.Buttons.LEFT))
@@ -183,21 +183,20 @@ public class WorldController extends InputAdapter implements Disposable
 	    	  
 	    	   if(Star.collected)
 	    	   {
-	    		   float angle = (float) Math.atan(y/x); 
+	    		    
 	    		   Vector3 screen = new Vector3(x,y,0); 
 	    		   Vector3 world = WorldRenderer.camera.unproject(screen);
-	    		   //ability.body.setTransform(new Vector2(level.tim.position.x+.5f, level.tim.position.y+1f), 0);
-	    		   Body launcher=joint.getBodyB();
-	    		   launcher.setTransform((launcher.getPosition()), (float) Math.toRadians(angle));
-	    		   launcher.setAngularVelocity((float) Math.toRadians(angle));
-	    		   ability.body.setTransform(launcher.getPosition(), (float)Math.toRadians(angle));
-	    		   ability.body.setAngularVelocity((float) Math.toRadians(angle));
-	    		   
-	    		   ability.body.setLinearVelocity(new Vector2(world.x, world.y));
-	    
+	    		   Vector2 camera = new Vector2(world.x, world.y);
+	    		   Vector2 launcher=joint.getBodyB().getPosition();
+	    		   Vector2 distance = new Vector2(); 
+	    		   distance.x= camera.x-launcher.x; 
+	    		   distance.y= camera.y-launcher.y; 
+	    		   ability.body.setTransform(joint.getBodyB().getPosition(), 0);
+	    		   //ability.body.setAngularVelocity((float) Math.toRadians(angle));
+	    		   ability.body.setLinearVelocity(distance);
 	    		   ability.body.setGravityScale(0);
 	    		   ability.setFire(true); 
-	    		    
+	    		  
 	    	   }
 	    	   
 	       }
@@ -311,7 +310,7 @@ public class WorldController extends InputAdapter implements Disposable
 	       
 	       FixtureDef fixtureDef = new FixtureDef();
 	       fixtureDef.shape = polygonShape;
-	       fixtureDef.density =30;
+	       fixtureDef.density =20;
 	       fixtureDef.restitution = 0.1f;
 	       fixtureDef.friction = 0.1f;
 	       body.createFixture(fixtureDef);
@@ -325,11 +324,13 @@ public class WorldController extends InputAdapter implements Disposable
 	       BodyDef circle = new BodyDef(); 
 	       circle.type= BodyType.DynamicBody; 
 	       circle.position.set(level.tim.position.x+1, level.tim.position.y+1); 
-	       Body launcher = b2world.createBody(circle);
+	       Body launcher= b2world.createBody(circle);
 	       CircleShape cir = new CircleShape();
 	       cir.setRadius(.1f);
-	       fixtureDef.shape = cir; 
-	       Fixture circleFixture = launcher.createFixture(fixtureDef); 
+	       fixtureDef.shape = cir;
+	       fixtureDef.isSensor=true; 
+	       Fixture circleFixture = launcher.createFixture(fixtureDef);
+	      
 	       
 	       RevoluteJointDef joint1 = new RevoluteJointDef();
 	       joint1.initialize(body, launcher, body.getWorldCenter()); 

@@ -31,7 +31,7 @@ public class Ability extends AbstractGameObject
 	
 	private void init() 
 	{
-		dimension.set(.2f, .2f); 
+		dimension.set(.5f, .5f); 
 		star=Assets.instance.up.power;
 		traject = new Vector2();
 		step=0; 
