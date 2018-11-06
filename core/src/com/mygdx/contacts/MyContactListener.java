@@ -1,5 +1,6 @@
 package com.mygdx.contacts;
 import com.mygdx.game.WorldController;
+
 import com.mygdx.objects.*;
 import com.mygdx.objects.Raindrops.RainDrop;
 
@@ -68,6 +69,21 @@ public class MyContactListener implements ContactListener
 			{
 				return; 
 			}
+			else if(body1 instanceof Raindrops.RainDrop && body instanceof Ability || body1 instanceof Ability && body instanceof Raindrops.RainDrop)
+			{
+				if(body1 instanceof Raindrops.RainDrop)
+				{
+					
+					RainDrop rain = (RainDrop)body1;
+					rain.startContact();
+				}
+				else
+				{
+					RainDrop rain = (RainDrop)body;
+					rain.startContact();
+				}
+				 
+			}
 			else if(body1 instanceof Timmy && body instanceof Points || body1 instanceof Points && body instanceof Timmy)
 			{
 				if(body1 instanceof Points)
@@ -96,8 +112,30 @@ public class MyContactListener implements ContactListener
 					up.startContract();
 				}
 			}
+			else if(body1 instanceof Raindrops.RainDrop && body instanceof Timmy || body1 instanceof Timmy && body instanceof Raindrops.RainDrop)
+			{
+				if(body1 instanceof Timmy)
+				{
+					
+					Timmy up = (Timmy)body1;
+					up.startContract();
+					RainDrop rain = (RainDrop)body;
+					rain.startContact();
+					
+				}
+				else
+				{
+					Timmy up = (Timmy)body;
+					up.startContract();
+					
+					RainDrop rain = (RainDrop)body1;
+					rain.startContact();
+					
+				} 
+			}
 			
 		}
+		
 		if(body!=null && body instanceof Timmy)
 		{
 			WorldController.numFootContacts++; 

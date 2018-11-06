@@ -80,6 +80,7 @@ public class Ability extends AbstractGameObject
 		if(!fire) return; 
 		TextureRegion reg = null;
 		reg = star;
+		if(body== null) return; 
 		position = body.getPosition(); 
 		
 		batch.draw(reg.getTexture(), position.x, position.y,

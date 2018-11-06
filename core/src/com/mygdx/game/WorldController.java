@@ -49,13 +49,19 @@ public class WorldController extends InputAdapter implements Disposable
     public static World b2world;
     public static int numFootContacts=0;
     public int jumpTimeout=0;
+    public int shootTimeout=15; 
     public boolean attached=false; 
     public RevoluteJoint joint;
     public RevoluteJoint joint2; 
     public Raindrops rain;
     public Ability ability; 
     public Level level;
-	
+    public int score;
+	private int lives=3;
+	private int first; 
+     
+    
+    
     /**
      * Constructor that takes in an object of the Game Class
      * and then calls a helper method to set up the game's
@@ -87,7 +93,8 @@ public class WorldController extends InputAdapter implements Disposable
 		initlevel(); 
 		rain= new Raindrops(50);
 		ability = new Ability(); 
-		ability.createBody(level.tim.body.getPosition());
+		
+		 
 		
 	}
 	/**
@@ -97,7 +104,7 @@ public class WorldController extends InputAdapter implements Disposable
 	 */
 	private void initlevel()
 	{
-		
+		score=0; 
 		level = new Level(Constants.LEVEL_01);
 		cameraHelper.setTarget(level.tim);
 		initPhysics();
@@ -121,7 +128,8 @@ public class WorldController extends InputAdapter implements Disposable
 		
 		level.update(deltaTime);
 		b2world.step(deltaTime, 8, 3);
-		jumpTimeout--; 
+		jumpTimeout--;
+		shootTimeout--; 
 		
 		if(!b2world.isLocked()) 
 		{
@@ -155,7 +163,7 @@ public class WorldController extends InputAdapter implements Disposable
 				{
 					if(point.collected)
 					{
-						
+						updateScore(point); 
 						point.body.getWorld().destroyBody(point.body);
 						
 					}
@@ -165,9 +173,36 @@ public class WorldController extends InputAdapter implements Disposable
 			}
 			Points.pointScheduledForRemoval.clear();
 		}
-				
+		if(!b2world.isLocked()) 
+		{
+			Star star = Star.starScheduledforRemoval; 
+			if(star != null)
+			{
+				if(Star.collected)
+				{
+					star.body.getWorld().destroyBody(star.body);
+				}
+			}
+			Star.starScheduledforRemoval=null; 
+		}		
 		cameraHelper.update(deltaTime);
 		level.people.updateScrollPosition(cameraHelper.getPosition());
+		if (isGameOver() || didTimmyfall()|| isTimmyDead())
+		{
+			
+			lives--;
+			if (isGameOver())
+			{
+				
+				init();
+			}
+			else
+			{
+				
+				init();
+			}
+			
+		}
 	}
 	
 	/**
@@ -214,26 +249,44 @@ public class WorldController extends InputAdapter implements Disposable
 	    	  
 	    	   if(Star.collected)
 	    	   {
-	    		    
-	    		   Vector3 screen = new Vector3(x,y,0); 
-	    		   Vector3 world = WorldRenderer.camera.unproject(screen);
-	    		   Vector2 camera = new Vector2(world.x, world.y);
-	    		   Vector2 launcher=joint.getBodyB().getPosition();
-	    		   Vector2 distance = new Vector2(); 
-	    		   distance.x= camera.x-launcher.x; 
-	    		   distance.y= camera.y-launcher.y; 
-	    		   ability.body.setTransform(joint.getBodyB().getPosition(), 0);
-	    		   //ability.body.setAngularVelocity((float) Math.toRadians(angle));
-	    		   ability.body.setLinearVelocity(distance);
-	    		   ability.body.setGravityScale(0);
-	    		   ability.setFire(true); 
+	    		   if(shootTimeout>0)return;
+	    		   if(first==0)
+	    		   {
+	    			   ability.createBody(level.tim.body.getPosition());
+	    			   Vector3 screen = new Vector3(x,y,0); 
+		    		   Vector3 world = WorldRenderer.camera.unproject(screen);
+		    		   Vector2 camera = new Vector2(world.x, world.y);
+		    		   Vector2 launcher=joint.getBodyB().getPosition();
+		    		   Vector2 distance = new Vector2(); 
+		    		   distance.x= camera.x-launcher.x; 
+		    		   distance.y= camera.y-launcher.y; 
+		    		   ability.body.setTransform(joint.getBodyB().getPosition(), 0);
+		    		   ability.body.setLinearVelocity(distance);
+		    		   ability.body.setGravityScale(0);
+		    		   ability.setFire(true); 
+		    		   shootTimeout=120; 
+	    		   }
+	    		   else
+	    		   {
+	    			   Vector3 screen = new Vector3(x,y,0); 
+		    		   Vector3 world = WorldRenderer.camera.unproject(screen);
+		    		   Vector2 camera = new Vector2(world.x, world.y);
+		    		   Vector2 launcher=joint.getBodyB().getPosition();
+		    		   Vector2 distance = new Vector2(); 
+		    		   distance.x= camera.x-launcher.x; 
+		    		   distance.y= camera.y-launcher.y; 
+		    		   ability.body.setTransform(joint.getBodyB().getPosition(), 0);
+		    		   ability.body.setLinearVelocity(distance);
+		    		   ability.body.setGravityScale(0);
+		    		   ability.setFire(true); 
+		    		   shootTimeout=120; 
+	    		   }
 	    		  
-	    	   }
 	    	   
-	       }
+	    	   }
 
-	
-	     } 
+	       }
+	     }
 	 }
 	
 	/**
@@ -375,8 +428,8 @@ public class WorldController extends InputAdapter implements Disposable
 	       //Timmy's foot-sensor to disallow him from jumping while in the air
 	       polygonShape.setAsBox(0.3f, 0.3f, new Vector2(0.5f,-0.1f), 0);
 	       fixtureDef.isSensor=true; 
-	       Fixture footSensor= body.createFixture(fixtureDef);
-	       footSensor.setUserData(3);
+	       body.createFixture(fixtureDef);
+	       //footSensor.setUserData(3);
 	       polygonShape.dispose();
 	       //Timmy's fire-launcher that allows him to fire an object when the star is collected 
 	       BodyDef circle = new BodyDef(); 
@@ -388,9 +441,15 @@ public class WorldController extends InputAdapter implements Disposable
 	       fixtureDef.shape = cir;
 	       fixtureDef.isSensor=true; 
 	       launcher.createFixture(fixtureDef);
+	       cir.dispose();
 	       //A revoluteJoint is created between timmy and the launcher 
 	       RevoluteJointDef joint1 = new RevoluteJointDef();
-	       joint1.initialize(body, launcher, body.getWorldCenter()); 
+	       //joint1.initialize(body, launcher, body.getWorldCenter());
+	       joint1.bodyA=body; 
+	       joint1.bodyB=launcher; 
+	       joint1.localAnchorA.set(1f, 1f); 
+	       joint1.localAnchorB.set(.1f, 0f); 
+	       joint1.collideConnected=false; 
 	       joint1.enableMotor=true;
 	       joint1.maxMotorTorque=150; 
 	       joint1.motorSpeed=0; 
@@ -425,7 +484,31 @@ public class WorldController extends InputAdapter implements Disposable
 		
 	}
 	
+	public void updateScore(Points point)
+	{
+		score+=point.getScore(); 
+		Gdx.app.log("10 points added collected", null);
+	}
 	
+	public boolean didTimmyfall() 
+	{
+		    return level.tim.position.y < -4;
+	}
+	
+	public boolean isGameOver ()
+	{
+		   return lives < 0;
+	}
+	
+	public boolean isTimmyDead()
+	{
+		 if(level.tim.life<=0)
+		 {
+			 lives--; 
+			 return true; 
+		 }
+		 return false; 
+	}
 	
 		
 	

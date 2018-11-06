@@ -16,6 +16,8 @@ public class Timmy extends AbstractGameObject
 	public float rotation; 
 	public TextureRegion regTim;
 	public boolean left; 
+	public boolean hit;
+	public int life=100; 
 	
 	public Timmy()
 	{
@@ -50,8 +52,15 @@ public class Timmy extends AbstractGameObject
 		
 	}
 	
+	public void startContract()
+	{ 
+		life-=10; 	
+	}
 	
-	
+	public int getLife()
+	{
+		return life; 
+	}
 	
 	
 	

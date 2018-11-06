@@ -76,5 +76,10 @@ public class Points extends AbstractGameObject
 	    		  reg.getRegionWidth(), reg.getRegionHeight(), false, false);
 		
 	}
+	
+	 public int getScore() 
+	    {
+	        return 10;
+	    } 
 
 }

@@ -41,7 +41,7 @@ public class City extends AbstractGameObject
 		
 		city=Assets.instance.leveldecoration.city; 
 		
-		origin.x = -dimension.x / 2;
+		origin.x = -dimension.x;
 		length += dimension.x * 2;
 	}
 

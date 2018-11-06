@@ -14,7 +14,8 @@ import com.mygdx.game.WorldController;
 public class Star extends AbstractGameObject{
 
 	private TextureRegion star; 
-	public static boolean collected; 
+	public static boolean collected;
+	public static Star starScheduledforRemoval; 
 	
 	public Star()
 	{
@@ -68,7 +69,8 @@ public class Star extends AbstractGameObject{
 
 	public void startContract() 
 	{
-		collected=true; 
+		collected=true;
+		starScheduledforRemoval=this; 
 		
 	}
 
