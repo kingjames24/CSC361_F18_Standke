@@ -11,11 +11,25 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
 
-
+/**
+ * Class that implements Box2d's ContactListener feature 
+ * by handling/resolving collision events that happen in the
+ * game  
+ * @author adam
+ *
+ */
 public class MyContactListener implements ContactListener
 {
 	 
-	
+	/**
+	 * Method that is called when a collision has just started between
+	 * bodies in the game. The method receives the beginning contact points
+	 * of the two bodies and determines what type of bodies just collided. If 
+	 * a dynamic body collided with a static/kinematic body(which box2d considers null) the 
+	 * body is flagged for removal after exiting the Box2d simulation. If a dynamic
+	 * body collided with another dynamic body the method will determine what should happen
+	 * next in the game.     
+	 */
 	@Override
 	public void beginContact(Contact contact) 
 	{
@@ -95,6 +109,12 @@ public class MyContactListener implements ContactListener
 		
 	}
 
+	/**
+	 * Method that is called when a collision between two bodies has 
+	 * been resolved/ended by the Box2d simulation. Currently, the method 
+	 * is used to stop the player from jumping in the air by keeping
+	 * track of the player on static surfaces(which in the game are platforms).   
+	 */
 	@Override
 	public void endContact(Contact contact) 
 	{

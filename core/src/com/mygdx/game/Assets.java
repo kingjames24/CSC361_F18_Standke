@@ -16,7 +16,12 @@ import com.mygdx.util.Constants;
 
 
 
-
+/*
+* By Adam Standke
+* Class that contains the asset manager that loads 
+* textures from the texture atlas to their respective
+* inner classes for use by other classes in the game  
+*/
 public class Assets implements Disposable, AssetErrorListener  
 {
 	public AssetLevelDecoration leveldecoration; 
@@ -26,12 +31,25 @@ public class Assets implements Disposable, AssetErrorListener
 	public AssetPlatform plat; 
 	public AssetTimmy timmy; 
 	public static final String TAG = Assets.class.getName();
+	//static object that holds the only instance of the class
 	public static final Assets instance = new Assets();
     private AssetManager assetManager;
     
+    /**
+     * Private constructor since the Assets' class is modeled after
+     * the singleton design pattern, in that only one instance of the 
+     * class will be created to which all of the other classes in the
+     * game will have access to. When the class is loaded into the jvm
+     * one single instance of this class will be created for all to use. 
+     */
     private Assets () {}
     
-    
+    /**
+	 * Inner class that holds a reference to the various Timmy image files 
+	 * used in the game to animate Timmy. Each image is loaded from the 
+	 * TextureAtlas and assigned to a specific variable to keep track of it for 
+	 * later use. 
+	 */
     public class AssetTimmy
     {	
     	public final AtlasRegion frame1; 
@@ -42,7 +60,13 @@ public class Assets implements Disposable, AssetErrorListener
     	}	
     }
     
-    
+    /**
+     * Inner class that holds a reference to a Platform image file 
+	 * used in the game to texture the game's platform. The image is loaded from the 
+	 * TextureAtlas and assigned to a specific variable to keep track of it for 
+	 * later use.  
+     *
+     */
     public class AssetPlatform
     {
     	
@@ -55,7 +79,13 @@ public class Assets implements Disposable, AssetErrorListener
     	}
     }
     
-    
+    /**
+     * Inner class that holds references to three RainDrop image files 
+	 * used in the game to texture rain drops. The images are loaded from the 
+	 * TextureAtlas and assigned to specific variables for later use by other 
+	 * classes.  
+     *
+     */
     public class AssetRainDrop
     {
     	
@@ -72,6 +102,13 @@ public class Assets implements Disposable, AssetErrorListener
     	}
     }
     
+    /**
+     * Inner class that holds a reference to a Star image file 
+	 * used in the game to represent a player's power up. The image is loaded from the 
+	 * TextureAtlas and assigned to a specific variable to keep track of it for 
+	 * later use.  
+     *
+     */
     public class AssetPowerUp
     {
     	
@@ -84,6 +121,14 @@ public class Assets implements Disposable, AssetErrorListener
     	}
     }
     
+    /**
+     * Inner class that holds a reference to a Point's image file 
+	 * used in the game to represent a collectible item that
+	 * the player can collect. The image is loaded from the 
+	 * TextureAtlas and assigned to a specific variable to keep track of it for 
+	 * later use.  
+     *
+     */
     public class AssetPoints
     {
     	
@@ -96,12 +141,16 @@ public class Assets implements Disposable, AssetErrorListener
     	}
     }
     
+    /**
+     * Inner class for handling background images in the game 
+     * that don't interact with the player but provide aesthetics  
+     * to the game.
+     */
     public class AssetLevelDecoration
     {
     	
     	public final AtlasRegion chopper;
     	public final AtlasRegion city;
-    	
     	public final AtlasRegion woman1;
     	
     	public AssetLevelDecoration (TextureAtlas atlas)
@@ -115,7 +164,11 @@ public class Assets implements Disposable, AssetErrorListener
     
     
     
-    
+    /*
+     * Method that uses an AssetManager to interface with 
+     * various asset types, such as textures, sound, and music
+     * and load them for use by other part of the program.  
+     */
     public void init (AssetManager assetManager) 
     {
         this.assetManager = assetManager;
@@ -157,20 +210,36 @@ public class Assets implements Disposable, AssetErrorListener
 	    leveldecoration = new AssetLevelDecoration(atlas); 
     	 
    }
-
+    
+    /**
+     * Error method that may be called after the AssetErrorListener
+     * has had a problem loading an asset, due to an external input/output 
+     * failure
+     * @param filename a string that represent the filename of the asset
+     * @param type an object of a generic class that is the class associated with the error
+     * @param throwable an object of the Throwable class that the jvm throws to the method 
+     */
     public void error (String filename, Class type, Throwable throwable) 
     {
     	     Gdx.app.error(TAG, "Couldn't load asset '"
     	       + filename + "'", (Exception)throwable);
     }
     
+    /**
+     * Error method that may be called after the AssetErrorListener
+     * has had a problem loading an asset, due to an external input/output 
+     * failure
+     */
 	@Override
 	public void error(AssetDescriptor asset, Throwable throwable) 
 	{
 		Gdx.app.error(TAG, "Couldn't load asset '" + asset.fileName + "'", (Exception)throwable);
 		
 	}
-
+	
+	/**
+	 * Disposes the assets loaded in main memory
+	 */
 	@Override
 	public void dispose() 
 	{

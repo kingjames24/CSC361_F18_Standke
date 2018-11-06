@@ -99,6 +99,7 @@ public class People extends AbstractGameObject
 		this.left=left; 
 	}
 	
+	
 	public void updateScrollPosition(Vector2 camPosition)
 	{
 		// set the camera's x, y position.
