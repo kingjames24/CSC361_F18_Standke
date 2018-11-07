@@ -1,5 +1,6 @@
 package com.mygdx.objects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -10,66 +11,49 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.mygdx.game.Assets;
 import com.mygdx.game.WorldController;
+
 /**
  * Class that represents the star object that 
- * the player is allowed collect to unlock a special
- * ability of firing stars 
+ * the player is allowed to fire when collected 
  * @author adam
  *
  */
-public class Star extends AbstractGameObject{
+public class Ability extends AbstractGameObject
+{
 
-	private TextureRegion star; 
-	public static boolean collected;
-	public static Star starScheduledforRemoval; 
+	private TextureRegion star;
+	public static boolean fire=false;
 	
 	 
 	/**
 	 * Constructor that calls a helper method to set up the star object
 	 */
-	public Star()
+	public Ability()
 	{
 		init(); 
 	}
+	
 	/**
 	 * Method that initializes a star object to be .5 meters wide and .5 meters tall. 
-	 * Also loads in the star image file. And sets the boolean of collected to false
+	 * Also loads in the star image file. 
 	 */
 	private void init() 
 	{
-		dimension.set(0.5f, 0.5f); 
-		star=Assets.instance.up.power; 
-		collected=false; 
-		
+		dimension.set(.5f, .5f); 
+		star=Assets.instance.up.power;
+		 
 	}
 	
 	/**
-	 * Method that renders the star image. Together, the texture's position and other 
-	 * attributes are stored in SpriteBatch's vertex array
-	 */
-	@Override
-	public void render(SpriteBatch batch) 
-	{
-		if (collected) return;
-		
-		TextureRegion reg = null;
-		reg = star;
-		batch.draw(reg.getTexture(), position.x, position.y,
-				origin.x, origin.y, dimension.x, dimension.y,
-				scale.x, scale.y, rotation, reg.getRegionX(), 
-				reg.getRegionY(), reg.getRegionWidth(),
-				reg.getRegionHeight(), false, false);
-		
-	}
-	/**
 	 * Method that creates the Box2d body for the star object to be 
-	 * a static type.  
+	 * a dynamic type.  
 	 */
 	@Override
 	public void createBody(Vector2 position) 
 	{
+		
 		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.StaticBody;
+		bodyDef.type = BodyType.DynamicBody;
 		bodyDef.fixedRotation=true;
 		bodyDef.position.set(position); 
 		body = WorldController.b2world.createBody(bodyDef);
@@ -81,21 +65,42 @@ public class Star extends AbstractGameObject{
 		polygonShape.setAsBox(this.dimension.x/2,this.dimension.y/2, origin, 0);
 		FixtureDef fixtureDef = new FixtureDef();
 	    fixtureDef.shape = polygonShape; 
-	    Fixture f= body.createFixture(fixtureDef);
-	    f.setSensor(true);
+	    body.createFixture(fixtureDef);
 	    polygonShape.dispose();
 		
 	}
+
 	/**
-	 * Method that is called by the ContactListener when 
-	 * Timmy collects a star object. If so this method says that 
-	 * the player has collected the item and is flagged for removal. 
+	 * Method that renders the star image. Together, the texture's position and other 
+	 * attributes are stored in SpriteBatch's vertex array
 	 */
-	public void startContract() 
+	@Override
+	public void render(SpriteBatch batch) 
 	{
-		collected=true;
-		starScheduledforRemoval=this; 
+		if(!fire) return; 
+		TextureRegion reg = null;
+		reg = star;
+		if(body== null) return; 
+		position = body.getPosition(); 
+		
+		batch.draw(reg.getTexture(), position.x, position.y,
+				origin.x, origin.y, dimension.x, dimension.y,
+				scale.x, scale.y, rotation, reg.getRegionX(), 
+				reg.getRegionY(), reg.getRegionWidth(),
+				reg.getRegionHeight(), false, false);
 		
 	}
+	/**
+	 * Method that determines whether the player can shoot other game objects 
+	 * or not
+	 * @param b a boolean that represents either true or false
+	 */
+	public void setFire(boolean b) 
+	{
+		Ability.fire=b; 
+		
+	}
+	
+	
 
 }
