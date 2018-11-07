@@ -91,7 +91,7 @@ public class WorldController extends InputAdapter implements Disposable
  	   	b2world = new World(new Vector2(0, -5f), true);
  	   	b2world.setContactListener(new MyContactListener());
 		initlevel(); 
-		rain= new Raindrops(50);
+		rain= new Raindrops(100);
 		ability = new Ability(); 
 		
 		 
@@ -193,12 +193,13 @@ public class WorldController extends InputAdapter implements Disposable
 			lives--;
 			if (isGameOver())
 			{
-				
+				lives=3; 
 				init();
+				
 			}
 			else
 			{
-				
+
 				init();
 			}
 			
@@ -483,23 +484,40 @@ public class WorldController extends InputAdapter implements Disposable
  	   }
 		
 	}
-	
+	/**
+	 * Method that updates the player's score as it collects points in the game
+	 * @param point an object that represents things timmy can collect in the game
+	 */
 	public void updateScore(Points point)
 	{
 		score+=point.getScore(); 
-		Gdx.app.log("10 points added collected", null);
+		Gdx.app.log("10 points added collected",":)");
 	}
-	
+	/**
+	 * Method that keeps track of whether the player fell off a platform
+	 * If so, true will be returned and the game starts over
+	 * @return a boolean that represents whether Timmy fell or not
+	 */
 	public boolean didTimmyfall() 
 	{
 		    return level.tim.position.y < -4;
 	}
 	
+	/**
+	 * Method that keeps track of whether the game is over due to the
+	 * player exhausting the number of lives allowed
+	 * @return a boolean that represents whether Timmy has no more lives
+	 */
 	public boolean isGameOver ()
 	{
 		   return lives < 0;
 	}
 	
+	/**
+	 * Method that keeps track of whether Timmy died from being hit by too many 
+	 * rain drops
+	 * @return a boolean that represents whether timmy took too many hits from the rain
+	 */
 	public boolean isTimmyDead()
 	{
 		 if(level.tim.life<=0)

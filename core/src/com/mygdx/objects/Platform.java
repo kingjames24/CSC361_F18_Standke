@@ -9,7 +9,12 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.game.Assets;
-
+/**
+ * Class that represents the platform object that 
+ * the player jumps to and from
+ * @author adam
+ *
+ */
 public class Platform extends AbstractGameObject 
 {
 	private TextureRegion platform; 
@@ -25,13 +30,24 @@ public class Platform extends AbstractGameObject
     public Vector2 linearVelocity = new Vector2(); 
 	
 	 
-    
+    /*
+     * Constructor that is
+     * calls the actual helper method
+     * init() which initializes 
+     * the construction of the platform object 
+     */
     public Platform()
     {
     	 
     	init(); 
     }
-    
+    /**
+     * Method that sets the dimension of the 
+     * platform to be 1 meter wide and 1.5 meters high; 
+     * also method pulls in the texture for the platform
+     * and determines how big the platform should initially be. Also
+     * has a random time assigned to it for floating purposes.
+     */
     private void init()
     {
     	dimension.set(1,1.5f);
@@ -45,6 +61,11 @@ public class Platform extends AbstractGameObject
    	 	floatTargetPosition = null;
     }
     
+    /**
+     * Method that sets the dimension of the platform in the game
+     * @param dimension a 2d vector representing the height and width of a
+     * platform
+     */
     public void setdimension (Vector2 dimension) 
     {
        this.dimension.x=dimension.x; 
@@ -52,12 +73,19 @@ public class Platform extends AbstractGameObject
       		  
     }
     
-    
+    /**
+     * Method to change the length of a platform
+     * @param amount an int that represents how much longer a platform object should be
+     */
     public void increaseLength (int amount) 
     {
       setLength(length + amount);
     }
     
+    /**
+	 * Method that renders the platform image. Together, the texture's position and other 
+	 * attributes are stored in SpriteBatch's vertex array
+	 */
     public void render(SpriteBatch batch)
     {
     	TextureRegion reg = null;
@@ -75,8 +103,13 @@ public class Platform extends AbstractGameObject
         }
       
     }
-    
-    public void update(float deltaTime) //work on fixing this for game to have different moving platforms
+    /**
+     * Method that updates the floating up and down movement of
+     * the platforms according to their random floatCycle. Then
+     * each platforms' linear velocity is set to make the platforms move 
+     * from a range of -1 to 1 meters in the y-direction 
+     */
+    public void update(float deltaTime) 
     {
  	   
  	   
@@ -94,6 +127,11 @@ public class Platform extends AbstractGameObject
  	   }
     }
 
+    /**
+     * Method that sets the length of the platform; ie., the 
+     * greater the length the longer the platform object
+     * @param length an int that represents how much longer the platform object should be
+     */
     public void setLength (int length) 
     {
       this.length = length;
@@ -101,6 +139,9 @@ public class Platform extends AbstractGameObject
       
     }
 
+    /**
+	 * Method that creates additional Box2d bodies for a platform 
+	 */
 	@Override
 	public void createBody(Vector2 position) {
 		// TODO Auto-generated method stub

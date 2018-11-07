@@ -5,22 +5,32 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Assets;
-
+/**
+ * Class that contains the background objects of the scene such
+ * as the helicopter and the girl with an umbrella 
+ * @author adam
+ *
+ */
 public class People extends AbstractGameObject 
 {
 	private TextureRegion man1; 
-	private TextureRegion man2; 
 	private TextureRegion woman1; 
 	private int length;
 	public boolean left=true; 
-	
+	/**
+	 * Constructor that sets how long the background elements should be
+	 * appear in the game. Also, calls helper method that instantiates the object
+	 * @param width
+	 */
 	public People(int width) 
 	{
 		this.length=width; 
-		init(); 
-		
+		init(); 	
 	}
-
+	/**
+	 * Method sets the dimension of each object to be 2 by 2 meters. Also, loads in 
+	 * both images and sets the origin and length of each object in the game. 
+	 */
 	private void init() 
 	{
 		dimension.set(1f,1f);
@@ -32,14 +42,16 @@ public class People extends AbstractGameObject
 		length += dimension.x * 2;
 		
 	}
-
+	
+	/**
+	 * 
+	 */
 	@Override
 	public void render(SpriteBatch batch) 
 	{
 		drawmanone(batch, 0.5f, 0.5f, 0.8f); 
 		drawwoman(batch, 0.0f, 0.0f, 0.3f); 
-		
-		
+
 	}
 
 	private void drawwoman(SpriteBatch batch, float offsetX, float offsetY, float parrallaxSpeedX) 
