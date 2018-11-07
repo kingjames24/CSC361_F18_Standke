@@ -16,10 +16,12 @@ import com.mygdx.game.Assets;
 import com.mygdx.game.WorldController;
 import com.mygdx.objects.Raindrops.RainDrop;
 
-
-
-
-
+/**
+ * Class that represents all of the rain drops that fall from 
+ * the sky
+ * @author adam
+ *
+ */
 public class Raindrops extends AbstractGameObject
 {
 	
@@ -34,8 +36,12 @@ public class Raindrops extends AbstractGameObject
 	public float rotation;
 	public int count; 
 	
-	
-	public class RainDrop //have not created an abstract class yet
+	/**
+	 * Inner Class that represents a single rain droplet 
+	 * @author adam
+	 *
+	 */
+	public class RainDrop 
     {
 		private TextureRegion rainDrop;
 		public Vector2 position=new Vector2(0,6);
@@ -48,22 +54,33 @@ public class Raindrops extends AbstractGameObject
 		public int key; 
 	
 	
-		
+	/**
+	 * Method that is called by the ContactListener when 
+	 * a rain drop hits a Box2d body(ie., either a dynamic or static body).
+	 * If so this method says that the raindrop has hit something
+	 * and is also added to an array that schedules the removal of the object 
+	 * at a later time 
+	*/	
 	public void startContact() 
 	{
 		hit=true;
 		raindropScheduledForRemoval.add(this);	  	
 	}
 
-	
-	
-	
+	/**
+	 * Method is used to set the type of raindrop image file that 
+	 * will be attached to this object  
+	 * @param region an object of the TextureRegion Class that represents an image file
+	 */
 	public void setRegion (TextureRegion region) 
 	{
 		rainDrop = region;
 	}
 	
-	
+	/**
+	 * Method that renders a raindrop texture. Together, the texture's position and other 
+	 * attributes are stored in SpriteBatch's vertex array
+	 */
 	public void render(SpriteBatch batch) 
 	{
 		
@@ -83,7 +100,12 @@ public class Raindrops extends AbstractGameObject
   
    }
 	
-	
+   /**
+    * Constructor that takes in the number of raindrops the game should continuously spawn. 
+    * Also, the constructor initializes a new Array of RainDrop objects and calls the helper 
+    * method to set various other parameters.  
+    * @param amount
+    */
    public Raindrops(int amount)
    {
     	this.amount=count=amount;
@@ -91,6 +113,13 @@ public class Raindrops extends AbstractGameObject
     	init();
    }
    
+   /**
+    * Method sets the dimension of each raindrop to be .25 meters wide and .25 meters high, with 
+    * an origin that is half the size of the listed dimensions. Next an array containing TextureRegion
+    * objects is created that will hold the three different rain images. Depending on the amount of 
+    * raindrops created, as dictated by the class' constructor, a for loop is run in which a single 
+    * raindrop is added to an array containing raindrop objects
+    */
    public void init()
    {
 	   dimension.set(0.25f, 0.25f);
@@ -110,6 +139,14 @@ public class Raindrops extends AbstractGameObject
    	   }    
    }
    
+   /**
+    * Method that sets the Box2d body, shape, and fixture of a single raindrop. A raindrop's
+    * position and rotation is generated randomly using a uniform probability distribution.
+    * After which, a fixture and polygon shape are attached to a raindrop. To make the game 
+    * more interesting different raindrops fall at a different speeds as the player progresses 
+    * through out the game. This is done through Box2d's set gravity feature and density calculation.  
+    * @return
+    */
    private RainDrop spawnRainDrop () 
    {
      RainDrop drop = new RainDrop();
@@ -156,25 +193,35 @@ public class Raindrops extends AbstractGameObject
    
      return drop;
    }
-   
+   /**
+    * Method that calls each individual raindrop's render/draw method 
+    * to render the raindrops on screen 
+    */
    public void render (SpriteBatch batch) 
    {
      for (RainDrop drop : rainDrop)
          drop.render(batch);
    }
    
-   
+   /**
+    * Method that spawns a new raindrop after a raindrop's body has been destroyed
+    * (due to colliding with a static or dynamic object) 
+    * @param drop
+    */
    public void destroy(RainDrop drop)
    {
 	   rainDrop.remove(drop);
 	   rainDrop.add(spawnRainDrop());
    }
 
-@Override
-public void createBody(Vector2 position) {
+   	/**
+	 * Method that creates additional Box2d bodies, if need be
+	 */
+   @Override
+   public void createBody(Vector2 position) {
 	// TODO Auto-generated method stub
 	
-}
+   }
    
    
 	
