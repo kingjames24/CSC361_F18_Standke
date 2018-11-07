@@ -10,17 +10,31 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.mygdx.game.Assets;
 import com.mygdx.game.WorldController;
-
+/**
+ * Class that represents the star object that 
+ * the player is allowed collect to unlock a special
+ * ability of firing stars 
+ * @author adam
+ *
+ */
 public class Star extends AbstractGameObject{
 
 	private TextureRegion star; 
-	public static boolean collected; 
+	public static boolean collected;
+	public static Star starScheduledforRemoval; 
 	
+	 
+	/**
+	 * Constructor that calls a helper method to set up the star object
+	 */
 	public Star()
 	{
 		init(); 
 	}
-	
+	/**
+	 * Method that initializes a star object to be .5 meters wide and .5 meters tall. 
+	 * Also loads in the star image file. And sets the boolean of collected to false
+	 */
 	private void init() 
 	{
 		dimension.set(0.5f, 0.5f); 
@@ -28,7 +42,11 @@ public class Star extends AbstractGameObject{
 		collected=false; 
 		
 	}
-
+	
+	/**
+	 * Method that renders the star image. Together, the texture's position and other 
+	 * attributes are stored in SpriteBatch's vertex array
+	 */
 	@Override
 	public void render(SpriteBatch batch) 
 	{
@@ -43,7 +61,10 @@ public class Star extends AbstractGameObject{
 				reg.getRegionHeight(), false, false);
 		
 	}
-
+	/**
+	 * Method that creates the Box2d body for the star object to be 
+	 * a static type.  
+	 */
 	@Override
 	public void createBody(Vector2 position) 
 	{
@@ -65,10 +86,15 @@ public class Star extends AbstractGameObject{
 	    polygonShape.dispose();
 		
 	}
-
+	/**
+	 * Method that is called by the ContactListener when 
+	 * Timmy collects a star object. If so this method says that 
+	 * the player has collected the item and is flagged for removal. 
+	 */
 	public void startContract() 
 	{
-		collected=true; 
+		collected=true;
+		starScheduledforRemoval=this; 
 		
 	}
 

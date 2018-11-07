@@ -7,12 +7,22 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 import com.mygdx.rainmaker.RainMaker;
 
 
-
+/*
+ * Class that launches the application
+ * by Adam Standke
+ */
 public class DesktopLauncher {
 	
 	private static boolean rebuildAtlas = false;
 	private static boolean drawDebugOutline = false;
 	
+	/*
+	 *Main method that is called first that potentially uses the texture 
+	 *packer to rebuild a texture atlas for the images in the game
+	 *and/or ui images. Method also configures the title and
+	 *window size of the application in pixels and then calls the RainMaker
+	 *class to create the game  
+	 */
 	public static void main (String[] arg) {
 		
 		//if needed rebuild the image atlas

@@ -12,34 +12,42 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.mygdx.game.Assets;
 import com.mygdx.game.WorldController;
 
+/**
+ * Class that represents the star object that 
+ * the player is allowed to fire when collected 
+ * @author adam
+ *
+ */
 public class Ability extends AbstractGameObject
 {
 
 	private TextureRegion star;
 	public static boolean fire=false;
-	public float time;
-	public float step; 
-	public Vector2 startingVelocity;
-	public Vector2 startingPosition;
-	public Vector2 traject; 
-	 
 	
+	 
+	/**
+	 * Constructor that calls a helper method to set up the star object
+	 */
 	public Ability()
 	{
 		init(); 
 	}
 	
+	/**
+	 * Method that initializes a star object to be .5 meters wide and .5 meters tall. 
+	 * Also loads in the star image file. 
+	 */
 	private void init() 
 	{
 		dimension.set(.5f, .5f); 
 		star=Assets.instance.up.power;
-		traject = new Vector2();
-		step=0; 
 		 
 	}
-
 	
-	
+	/**
+	 * Method that creates the Box2d body for the star object to be 
+	 * a dynamic type.  
+	 */
 	@Override
 	public void createBody(Vector2 position) 
 	{
@@ -62,12 +70,17 @@ public class Ability extends AbstractGameObject
 		
 	}
 
+	/**
+	 * Method that renders the star image. Together, the texture's position and other 
+	 * attributes are stored in SpriteBatch's vertex array
+	 */
 	@Override
 	public void render(SpriteBatch batch) 
 	{
 		if(!fire) return; 
 		TextureRegion reg = null;
 		reg = star;
+		if(body== null) return; 
 		position = body.getPosition(); 
 		
 		batch.draw(reg.getTexture(), position.x, position.y,
@@ -77,14 +90,14 @@ public class Ability extends AbstractGameObject
 				reg.getRegionHeight(), false, false);
 		
 	}
-
-
-	
-	
-
+	/**
+	 * Method that determines whether the player can shoot other game objects 
+	 * or not
+	 * @param b a boolean that represents either true or false
+	 */
 	public void setFire(boolean b) 
 	{
-		this.fire=b; 
+		Ability.fire=b; 
 		
 	}
 	

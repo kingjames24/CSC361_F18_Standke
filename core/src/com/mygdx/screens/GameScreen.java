@@ -9,7 +9,12 @@ import com.mygdx.game.Assets;
 import com.mygdx.game.WorldController;
 import com.mygdx.game.WorldRenderer;
 
-
+/**
+ * This handles the events that could take place
+ * when the game is running.
+ * Adam Standke
+ * 
+ */
 public class GameScreen implements Screen 
 {
 
@@ -18,7 +23,13 @@ public class GameScreen implements Screen
 	protected Game game;
 	private boolean paused;
 	
-	
+	/**
+	 * Method that shows the game screen, by instantiating two of the
+	 * most important classes; namely, WorldController which handles the 
+	 * game's logic and WorldRender, which handles the actual rendering of 
+	 * the frames to the user's display. Called by the Game class as part of 
+	 * LIBGdx's application life cycle 
+	 */
 	@Override
 	public void show() 
 	{
@@ -26,7 +37,13 @@ public class GameScreen implements Screen
 		worldRenderer = new WorldRenderer(worldController);
 		
 	}
-
+	
+	/**
+	 * Method that forms the game loop of the application that is constantly called by 
+	 * the Game class while the game is in progress. During which, the game logic is updated
+	 * for the current frame based on previous action taken in previous frame. Then the updated 
+	 * actions for the current frame are rendered to screen  
+	 */
 	@Override
 	public void render(float delta) 
 	{
@@ -44,26 +61,36 @@ public class GameScreen implements Screen
 		worldRenderer.render();
 	}
 
+	/**
+	 * Method that resizes the screen
+	 */
 	@Override
 	public void resize(int width, int height) 
 	{
-		// TODO Auto-generated method stub
+		worldRenderer.resize(width, height);
 		
 	}
-
+	/**
+	 * Method that pauses the game 
+	 */
 	@Override
 	public void pause() 
 	{
 		paused = true;
 	}
-
+	/**
+	 * Method that resume the game after being paused
+	 */
 	@Override
 	public void resume() 
 	{
 		paused=false; 
 		
 	}
-
+	/**
+	 * Method that hides the gamescreen when the player 
+	 * clicks to display the menuscreen
+	 */
 	@Override
 	public void hide() 
 	{
@@ -71,7 +98,10 @@ public class GameScreen implements Screen
 	    Assets.instance.dispose();
 		
 	}
-
+	/**
+	 * Method that deallocates the memory allocated objects of the worldRender class, such as 
+	 * vertex arrays, and various assets held in main memory, like sound, textures, and music 
+	 */
 	@Override
 	public void dispose() 
 	{

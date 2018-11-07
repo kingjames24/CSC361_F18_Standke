@@ -6,6 +6,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
+/**
+ * Abstract Class that all game objects extend to have 
+ * access to common  and methods used in the game
+ * @author adam
+ *
+ */
 public abstract class AbstractGameObject 
 {
 	
@@ -19,13 +25,13 @@ public abstract class AbstractGameObject
 		public float rotation;
 		public Body body;
 		
-		
-		
-		
-		
-		
+		/**
+		 * Abstract method that each subclass implements in their own 
+		 * way. Used to create the box2d bodies for objects in the game. 
+		 * @param position an object of the Vector2 class that represents the (x,y) position of 
+		 * an object in view coordinate space
+		 */
 		public abstract void createBody(Vector2 position); 
-		
 		
 		/*
 		 * Starts the animation time
@@ -35,7 +41,6 @@ public abstract class AbstractGameObject
 			this.animation = animation;
 			stateTime = 0;
 		}
-		
 		/**
 		 * All game objects should have instantiated 
 		 * variables to work with.
@@ -46,9 +51,7 @@ public abstract class AbstractGameObject
 			dimension = new Vector2(1, 1);
 			origin = new Vector2();
 			scale = new Vector2(1, 1);
-			rotation = 0;
-			
-			
+			rotation = 0;	
 		}
 		
 		public abstract void render(SpriteBatch batch);
