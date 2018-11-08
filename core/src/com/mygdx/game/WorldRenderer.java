@@ -1,11 +1,20 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.objects.Ability;
 import com.mygdx.util.Constants;
 
@@ -19,10 +28,15 @@ public class WorldRenderer implements Disposable
 {
 	public static OrthographicCamera camera;
 	private SpriteBatch batch;
-	private WorldController worldController;
-	private HudDisplay hud; 
+	private WorldController worldController; 
 	private static final boolean DEBUG_DRAW_BOX2D_WORLD = false;
 	private Box2DDebugRenderer b2debugRenderer;
+	public Stage stage; 
+	private Viewport viewport;
+	private Skin hudSkin; 
+	
+	private ProgressBar healthBar;
+	private Label healthScore;
 	
 	/**
 	 * Constructor that takes in an object of the WorldController class and also 
@@ -48,7 +62,30 @@ public class WorldRenderer implements Disposable
 		camera.position.set(0, 0, 0);
 		camera.update();
 		
+		viewport = new FitViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT, new OrthographicCamera()); 
+		stage = new Stage(viewport, batch);
+		buildHudSkin();
+		Table progressBar = buildPrograssBar();
+		stage.addActor(progressBar);
 		b2debugRenderer = new Box2DDebugRenderer();
+	}
+	
+	private Table buildPrograssBar() 
+	{
+		Table bar = new Table();
+		bar.top().left(); 
+		bar.setFillParent(true);
+		bar.add(new Label("Health:", hudSkin, "title", Color.LIGHT_GRAY));
+		healthBar= new ProgressBar(0f, 100f, 10f, false, hudSkin);
+		bar.add(healthBar);
+		return bar;
+	}
+	
+	private void buildHudSkin() 
+	{
+		hudSkin = new Skin(Gdx.files.internal(Constants.SKIN_LIBGDX_UI),
+			     new TextureAtlas(Constants.TEXTURE_ATLAS_LIBGDX_UI));
+		
 	}
 	
 	/**
@@ -61,10 +98,14 @@ public class WorldRenderer implements Disposable
 		
 	}
 	private void renderHud(SpriteBatch batch2)
+	{ 
+		batch.setProjectionMatrix(stage.getCamera().combined);
+		stage.draw();
+		
+	}
+	
+	public void update(float deltaTime)//updates the hud based on game
 	{
-		hud = new HudDisplay(batch2); 
-		batch.setProjectionMatrix(hud.stage.getCamera().combined);
-		hud.stage.draw();
 		
 	}
 
@@ -109,6 +150,7 @@ public class WorldRenderer implements Disposable
 	{
 		batch.dispose();
 		b2debugRenderer.dispose();
+		stage.dispose();
 		
 	}
 	

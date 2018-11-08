@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.mygdx.game.Assets;
-import com.mygdx.game.HudDisplay;
 import com.mygdx.game.WorldController;
 import com.mygdx.game.WorldRenderer;
 
@@ -34,8 +33,9 @@ public class GameScreen implements Screen
 	@Override
 	public void show() 
 	{
-		worldController = new WorldController(game);
+		worldController = new WorldController();
 		worldRenderer = new WorldRenderer(worldController);
+		worldController.setUpdate(worldRenderer); 
 		
 	}
 	

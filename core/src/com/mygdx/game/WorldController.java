@@ -44,7 +44,8 @@ import com.badlogic.gdx.utils.Disposable;
  */
 public class WorldController extends InputAdapter implements Disposable
 {
-	private Game game;
+	
+	public WorldRenderer hud; 
 	public CameraHelper cameraHelper;
     public static World b2world;
     public static int numFootContacts=0;
@@ -68,9 +69,8 @@ public class WorldController extends InputAdapter implements Disposable
      * logic/gameplay
      * @param game an object of the Game class that determines how the application should operate
      */
-	public WorldController(Game game) 
+	public WorldController() 
 	{
-		this.game = game;
 		init();
 	}
 	/**
@@ -187,6 +187,7 @@ public class WorldController extends InputAdapter implements Disposable
 		}		
 		cameraHelper.update(deltaTime);
 		level.people.updateScrollPosition(cameraHelper.getPosition());
+		hud.update(deltaTime);//updates the on screen hud
 		if (isGameOver() || didTimmyfall()|| isTimmyDead())
 		{
 			
@@ -526,6 +527,12 @@ public class WorldController extends InputAdapter implements Disposable
 			 return true; 
 		 }
 		 return false; 
+	}
+	
+	public void setUpdate(WorldRenderer worldRenderer) 
+	{
+		
+		this.hud=worldRenderer; 
 	}
 	
 		
