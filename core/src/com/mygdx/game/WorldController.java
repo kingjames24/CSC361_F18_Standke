@@ -398,23 +398,23 @@ public class WorldController extends InputAdapter implements Disposable
     	   //edgeShapped boundary
     	   Vector2 origin = new Vector2();
     	   BodyDef bodyDef2 = new BodyDef();
-		   bodyDef2.type = BodyType.StaticBody;
-		   bodyDef2.position.set(new Vector2(0f, -10f));
+		   bodyDef2.type = BodyType.StaticBody;//static body type for boundary
+		   bodyDef2.position.set(new Vector2(0f, -10f));//set 10 meters below scene
 		   Body body1 = b2world.createBody(bodyDef2); 
-		   EdgeShape boundary = new EdgeShape();
-		   boundary.set(new Vector2(0f, 0f), new Vector2(128f, 0));
+		   EdgeShape boundary = new EdgeShape();//use an edge as shape
+		   boundary.set(new Vector2(0f, 0f), new Vector2(128f, 0));//extends 128 meters in lenght
 		   FixtureDef fixtureDef2 = new FixtureDef();
 		   fixtureDef2.shape=boundary;
 		   body1.createFixture(fixtureDef2); 
 		   boundary.dispose();
     	   // Timmy's main body 
     	   BodyDef bodyDef = new BodyDef();
-		   bodyDef.type = BodyType.DynamicBody;
+		   bodyDef.type = BodyType.DynamicBody;//dynamic body type for main character 
 		   bodyDef.fixedRotation=true;
-		   bodyDef.position.set(level.tim.position);
+		   bodyDef.position.set(level.tim.position);//the level design sets the body's position
 		   bodyDef.linearVelocity.set(new Vector2(0,0)); 
 		   Body body = b2world.createBody(bodyDef);
-		   body.setUserData(level.tim);
+		   body.setUserData(level.tim);//body is given main character's info for later querying the world
     	   level.tim.body=body; 
     	   PolygonShape polygonShape = new PolygonShape();
     	   origin.x = level.tim.dimension.x/2;
@@ -422,37 +422,37 @@ public class WorldController extends InputAdapter implements Disposable
 	       polygonShape.setAsBox(level.tim.dimension.x/2.5f, level.tim.dimension.y/2.5f, origin, 0);
 	       FixtureDef fixtureDef = new FixtureDef();
 	       fixtureDef.shape = polygonShape;
-	       fixtureDef.density =20;
-	       fixtureDef.restitution = 0.1f;
-	       fixtureDef.friction = 0.1f;
+	       fixtureDef.density =20;//set the main character's weight to 20 kg/m^2
+	       fixtureDef.restitution = 0.1f;//low restitution to not make the main character bounce
+	       fixtureDef.friction = 0.1f;//low friction so the main character slides on the platform
 	       body.createFixture(fixtureDef);
 	       //Timmy's foot-sensor to disallow him from jumping while in the air
-	       polygonShape.setAsBox(0.3f, 0.3f, new Vector2(0.5f,-0.1f), 0);
+	       polygonShape.setAsBox(0.3f, 0.3f, new Vector2(0.5f,-0.1f), 0);//fixture sits right below main characters hit box 
 	       fixtureDef.isSensor=true; 
 	       body.createFixture(fixtureDef);
 	       //footSensor.setUserData(3);
 	       polygonShape.dispose();
 	       //Timmy's fire-launcher that allows him to fire an object when the star is collected 
 	       BodyDef circle = new BodyDef(); 
-	       circle.type= BodyType.DynamicBody; 
+	       circle.type= BodyType.DynamicBody; //launcher is a dynamic body type
 	       circle.position.set(level.tim.position.x+1, level.tim.position.y+1); 
 	       Body launcher= b2world.createBody(circle);
-	       CircleShape cir = new CircleShape();
+	       CircleShape cir = new CircleShape();//launcher is a circle shape 
 	       cir.setRadius(.1f);
 	       fixtureDef.shape = cir;
 	       fixtureDef.isSensor=true; 
 	       launcher.createFixture(fixtureDef);
 	       cir.dispose();
 	       //A revoluteJoint is created between timmy and the launcher 
-	       RevoluteJointDef joint1 = new RevoluteJointDef();
+	       RevoluteJointDef joint1 = new RevoluteJointDef();//create a revolute joint between launcher and timmy
 	       //joint1.initialize(body, launcher, body.getWorldCenter());
 	       joint1.bodyA=body; 
 	       joint1.bodyB=launcher; 
-	       joint1.localAnchorA.set(1f, 1f); 
-	       joint1.localAnchorB.set(.1f, 0f); 
-	       joint1.collideConnected=false; 
-	       joint1.enableMotor=true;
-	       joint1.maxMotorTorque=150; 
+	       joint1.localAnchorA.set(1f, 1f);//main character's anchor is located at the top right corner of body 
+	       joint1.localAnchorB.set(.1f, 0f);//launcher's anchor is located at the radi point of the circle
+	       joint1.collideConnected=false;//set to false so that joint bodies should not affect each other  
+	       joint1.enableMotor=true;//creates a joint moter with the anchors to make the launcher continuously rotate
+	       joint1.maxMotorTorque=150;//max motor speed for Timmy's launcher measured in N-m 
 	       joint1.motorSpeed=0; 
 	       joint =(RevoluteJoint) b2world.createJoint(joint1); 
 	       //Creates the box2d bodies for the platforms 
@@ -468,12 +468,12 @@ public class WorldController extends InputAdapter implements Disposable
  	   	for (Platform plat : level.platforms) 
  	   	{
  	   		   BodyDef bodyDef = new BodyDef();
- 	   		   bodyDef.type = BodyType.KinematicBody; 
+ 	   		   bodyDef.type = BodyType.KinematicBody;//each platform is a kinematic body type 
  	   		   bodyDef.position.set(plat.position);
  	   		   Body body = b2world.createBody(bodyDef);
  	   		   plat.body = body;
- 	   		   PolygonShape polygonShape = new PolygonShape();
- 	   		   origin.x = plat.bounds.width / 2.0f;
+ 	   		   PolygonShape polygonShape = new PolygonShape();//platform's shape is determined by a rectangular bounding box
+ 	   		   origin.x = plat.bounds.width / 2.0f;//platform's origin is half of the platform's rectangular bounding box
  	   		   origin.y = plat.bounds.height / 2.0f;
  	   		   polygonShape.setAsBox(plat.bounds.width/ 2.0f, plat.bounds.height/ 2.0f, origin, 0);
  	   		   FixtureDef fixtureDef = new FixtureDef();
