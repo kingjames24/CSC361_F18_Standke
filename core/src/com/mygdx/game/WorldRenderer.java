@@ -20,6 +20,7 @@ public class WorldRenderer implements Disposable
 	public static OrthographicCamera camera;
 	private SpriteBatch batch;
 	private WorldController worldController;
+	private HudDisplay hud; 
 	private static final boolean DEBUG_DRAW_BOX2D_WORLD = false;
 	private Box2DDebugRenderer b2debugRenderer;
 	
@@ -46,6 +47,7 @@ public class WorldRenderer implements Disposable
 		camera = new OrthographicCamera(Constants.VIEWPORT_WIDTH,Constants.VIEWPORT_HEIGHT);
 		camera.position.set(0, 0, 0);
 		camera.update();
+		
 		b2debugRenderer = new Box2DDebugRenderer();
 	}
 	
@@ -55,8 +57,17 @@ public class WorldRenderer implements Disposable
 	public void render () 
 	{ 
 		renderWorld(batch);
+		renderHud(batch); 
 		
 	}
+	private void renderHud(SpriteBatch batch2)
+	{
+		hud = new HudDisplay(batch2); 
+		batch.setProjectionMatrix(hud.stage.getCamera().combined);
+		hud.stage.draw();
+		
+	}
+
 	/**
 	 * Method that render's the game to the screen by composing the
 	 * camera-view matrix with the orthographic projection matrix to get

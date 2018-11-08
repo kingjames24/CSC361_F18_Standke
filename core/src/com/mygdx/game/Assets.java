@@ -36,7 +36,7 @@ public class Assets implements Disposable, AssetErrorListener
 	//static object that holds the only instance of the class
 	public static final Assets instance = new Assets();
     private AssetManager assetManager;
-	private AssetFonts fonts;
+	
     
     /**
      * Private constructor since the Assets' class is modeled after
@@ -205,7 +205,7 @@ public class Assets implements Disposable, AssetErrorListener
 	    }
 	    
 	    // create game resource objects
-	    fonts = new AssetFonts();
+	    
 	    timmy = new AssetTimmy(atlas);
 	    plat = new AssetPlatform(atlas); 
 	    drop = new AssetRainDrop(atlas); 
@@ -241,39 +241,7 @@ public class Assets implements Disposable, AssetErrorListener
 		
 	}
 	
-	/**
-     * Inner class that stores references to three different font sizes of BitmapFonts. 
-     * First a BMF file is read in and mapped into a 2D array of pixels representing the 
-     * arial size 15 font. Then the 2D pixel array is scaled accordingly.   
-     * After which linear filtering is applied to scaled 2d pixel array to make sure the 
-     * amount of jagged edges is reduced    
-     * @author adam
-     *
-     */
-    public class AssetFonts
-    {
-    	public final BitmapFont defaultSmall;
-    	public final BitmapFont defaultNormal;
-    	public final BitmapFont defaultBig;
-    	
-    	public AssetFonts()
-    	{
-    		//create three fonts using Libgdx's 15px bitmap font
-    		defaultSmall = new BitmapFont(Gdx.files.internal("images/arial-15.fnt"), true);
-    		defaultNormal = new BitmapFont(Gdx.files.internal("images/arial-15.fnt"), true);
-    		defaultBig = new BitmapFont(Gdx.files.internal("images/arial-15.fnt"), true);
-    		
-    		//set font sizes
-    		defaultSmall.getData().setScale(0.75f);
-    		defaultNormal.getData().setScale(1.0f);
-    		defaultBig.getData().setScale(2.0f);
-    		
-    		//enable linear textrue filtering for smooth fonts
-    		defaultSmall.getRegion().getTexture().setFilter(TextureFilter.Linear,  TextureFilter.Linear);
-    		defaultNormal.getRegion().getTexture().setFilter(TextureFilter.Linear,  TextureFilter.Linear);
-    		defaultBig.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-    	}
-    }
+	
 	
 	/**
 	 * Disposes the assets loaded in main memory
@@ -282,9 +250,7 @@ public class Assets implements Disposable, AssetErrorListener
 	public void dispose() 
 	{
 		assetManager.dispose();
-		fonts.defaultSmall.dispose();
-	    fonts.defaultNormal.dispose();
-	    fonts.defaultBig.dispose();
+		
 		
 	}
 

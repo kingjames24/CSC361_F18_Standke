@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.mygdx.game.Assets;
+import com.mygdx.game.HudDisplay;
 import com.mygdx.game.WorldController;
 import com.mygdx.game.WorldRenderer;
 
@@ -17,7 +18,7 @@ import com.mygdx.game.WorldRenderer;
  */
 public class GameScreen implements Screen 
 {
-
+	
 	private WorldController worldController;
 	private WorldRenderer worldRenderer;
 	protected Game game;
