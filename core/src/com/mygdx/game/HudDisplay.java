@@ -38,9 +38,9 @@ public class HudDisplay implements Disposable
 		Table bar = new Table();
 		bar.top().left(); 
 		bar.setFillParent(true);
-		bar.add(new Label("Health:", hudSkin, "font-title-export", Color.BLACK));
+		bar.add(new Label("Health:", hudSkin, "font", Color.GRAY));
 		healthBar= new ProgressBar(0f, 100f, 10f, false, hudSkin); 
-		bar.add(healthBar).expandX();
+		bar.add(healthBar);
 		return bar;
 	}
 
