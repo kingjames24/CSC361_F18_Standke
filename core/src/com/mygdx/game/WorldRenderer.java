@@ -81,10 +81,8 @@ public class WorldRenderer implements Disposable
 		leftCorner = new Table(); 
 		buildHudSkin();
 		Table progressBar = buildPrograssBar();
-		Table progressBar2 = buildPrograssBar2(); 
 		Label label = new Label("Health:", hudSkin, "title", Color.LIGHT_GRAY);
 		stack.add(progressBar);
-		stack.add(progressBar2);
 		leftCorner.add(label);
 		leftCorner.add(stack);
 		leftCorner.top().left(); 
@@ -93,36 +91,13 @@ public class WorldRenderer implements Disposable
 		b2debugRenderer = new Box2DDebugRenderer();
 	}
 	
-	private Table buildPrograssBar2() 
-	{
-		Table bar = new Table();
-		
-		Pixmap pixmap = new Pixmap(2, 7, Format.RGB888);
-		pixmap.setColor(Color.GOLD);
-		pixmap.fill();
-		
-		TextureRegionDrawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-		pixmap.dispose();
-		drawable.setBottomHeight(0);
-		drawable.setTopHeight(7);
-		drawable.setLeftWidth(0);
-		drawable.setRightWidth(18);
-		
-		ProgressBarStyle progressBarStyle = new ProgressBarStyle();
-		progressBarStyle.background = drawable;
-		
-		
-		ProgressBar progress = new ProgressBar(0f, 100f, 10f, false,  progressBarStyle);
-		//progress.setBounds(0, 0, 0, 0);
-		
-		bar.add(progress);
-		return bar;
-	}
+
 
 	private Table buildPrograssBar() 
 	{
 		Table bar = new Table();
 		healthBar= new ProgressBar(0f, 100f, 10f, false,  hudSkin);
+		healthBar.setValue(100); 
 		bar.add(healthBar);
 		return bar;
 	}
