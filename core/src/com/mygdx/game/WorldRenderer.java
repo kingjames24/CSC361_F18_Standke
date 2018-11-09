@@ -3,15 +3,25 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -32,11 +42,14 @@ public class WorldRenderer implements Disposable
 	private static final boolean DEBUG_DRAW_BOX2D_WORLD = false;
 	private Box2DDebugRenderer b2debugRenderer;
 	public Stage stage; 
+	public Stack stack; 
+	public Table leftCorner; 
 	private Viewport viewport;
 	private Skin hudSkin; 
 	
 	private ProgressBar healthBar;
 	private Label healthScore;
+	private Image fullHealth; 
 	
 	/**
 	 * Constructor that takes in an object of the WorldController class and also 
@@ -64,19 +77,52 @@ public class WorldRenderer implements Disposable
 		
 		viewport = new FitViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT, new OrthographicCamera()); 
 		stage = new Stage(viewport, batch);
+		stack = new Stack();
+		leftCorner = new Table(); 
 		buildHudSkin();
 		Table progressBar = buildPrograssBar();
-		stage.addActor(progressBar);
+		Table progressBar2 = buildPrograssBar2(); 
+		Label label = new Label("Health:", hudSkin, "title", Color.LIGHT_GRAY);
+		stack.add(progressBar);
+		stack.add(progressBar2);
+		leftCorner.add(label);
+		leftCorner.add(stack);
+		leftCorner.top().left(); 
+		leftCorner.setFillParent(true);
+		stage.addActor(leftCorner);
 		b2debugRenderer = new Box2DDebugRenderer();
 	}
 	
+	private Table buildPrograssBar2() 
+	{
+		Table bar = new Table();
+		
+		Pixmap pixmap = new Pixmap(2, 7, Format.RGB888);
+		pixmap.setColor(Color.GOLD);
+		pixmap.fill();
+		
+		TextureRegionDrawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+		pixmap.dispose();
+		drawable.setBottomHeight(0);
+		drawable.setTopHeight(7);
+		drawable.setLeftWidth(0);
+		drawable.setRightWidth(18);
+		
+		ProgressBarStyle progressBarStyle = new ProgressBarStyle();
+		progressBarStyle.background = drawable;
+		
+		
+		ProgressBar progress = new ProgressBar(0f, 100f, 10f, false,  progressBarStyle);
+		//progress.setBounds(0, 0, 0, 0);
+		
+		bar.add(progress);
+		return bar;
+	}
+
 	private Table buildPrograssBar() 
 	{
 		Table bar = new Table();
-		bar.top().left(); 
-		bar.setFillParent(true);
-		bar.add(new Label("Health:", hudSkin, "title", Color.LIGHT_GRAY));
-		healthBar= new ProgressBar(0f, 100f, 10f, false, hudSkin);
+		healthBar= new ProgressBar(0f, 100f, 10f, false,  hudSkin);
 		bar.add(healthBar);
 		return bar;
 	}
