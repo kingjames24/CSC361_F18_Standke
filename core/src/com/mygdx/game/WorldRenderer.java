@@ -1,11 +1,30 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.objects.Ability;
 import com.mygdx.util.Constants;
 
@@ -19,9 +38,18 @@ public class WorldRenderer implements Disposable
 {
 	public static OrthographicCamera camera;
 	private SpriteBatch batch;
-	private WorldController worldController;
+	private WorldController worldController; 
 	private static final boolean DEBUG_DRAW_BOX2D_WORLD = false;
 	private Box2DDebugRenderer b2debugRenderer;
+	public Stage stage; 
+	public Stack stack; 
+	public Table leftCorner; 
+	private Viewport viewport;
+	private Skin hudSkin; 
+	
+	private ProgressBar healthBar;
+	private Label healthScore;
+	private Image fullHealth; 
 	
 	/**
 	 * Constructor that takes in an object of the WorldController class and also 
@@ -46,7 +74,39 @@ public class WorldRenderer implements Disposable
 		camera = new OrthographicCamera(Constants.VIEWPORT_WIDTH,Constants.VIEWPORT_HEIGHT);
 		camera.position.set(0, 0, 0);
 		camera.update();
+		
+		viewport = new FitViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT, new OrthographicCamera()); 
+		stage = new Stage(viewport, batch);
+		stack = new Stack();
+		leftCorner = new Table(); 
+		buildHudSkin();
+		Table progressBar = buildPrograssBar();
+		Label label = new Label("Health:", hudSkin, "title", Color.LIGHT_GRAY);
+		stack.add(progressBar);
+		leftCorner.add(label);
+		leftCorner.add(stack);
+		leftCorner.top().left(); 
+		leftCorner.setFillParent(true);
+		stage.addActor(leftCorner);
 		b2debugRenderer = new Box2DDebugRenderer();
+	}
+	
+
+
+	private Table buildPrograssBar() 
+	{
+		Table bar = new Table();
+		healthBar= new ProgressBar(0f, 100f, 10f, false,  hudSkin);
+		healthBar.setValue(100); 
+		bar.add(healthBar);
+		return bar;
+	}
+	
+	private void buildHudSkin() 
+	{
+		hudSkin = new Skin(Gdx.files.internal(Constants.SKIN_LIBGDX_UI),
+			     new TextureAtlas(Constants.TEXTURE_ATLAS_LIBGDX_UI));
+		
 	}
 	
 	/**
@@ -55,8 +115,21 @@ public class WorldRenderer implements Disposable
 	public void render () 
 	{ 
 		renderWorld(batch);
+		renderHud(batch); 
 		
 	}
+	private void renderHud(SpriteBatch batch2)
+	{ 
+		batch.setProjectionMatrix(stage.getCamera().combined);
+		stage.draw();
+		
+	}
+	
+	public void update(float deltaTime)//updates the hud based on game
+	{
+		
+	}
+
 	/**
 	 * Method that render's the game to the screen by composing the
 	 * camera-view matrix with the orthographic projection matrix to get
@@ -98,6 +171,7 @@ public class WorldRenderer implements Disposable
 	{
 		batch.dispose();
 		b2debugRenderer.dispose();
+		stage.dispose();
 		
 	}
 	

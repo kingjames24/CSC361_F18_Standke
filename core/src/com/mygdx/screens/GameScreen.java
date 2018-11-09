@@ -17,7 +17,7 @@ import com.mygdx.game.WorldRenderer;
  */
 public class GameScreen implements Screen 
 {
-
+	
 	private WorldController worldController;
 	private WorldRenderer worldRenderer;
 	protected Game game;
@@ -33,8 +33,9 @@ public class GameScreen implements Screen
 	@Override
 	public void show() 
 	{
-		worldController = new WorldController(game);
+		worldController = new WorldController();
 		worldRenderer = new WorldRenderer(worldController);
+		worldController.setUpdate(worldRenderer); 
 		
 	}
 	
