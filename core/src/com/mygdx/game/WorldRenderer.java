@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.objects.Ability;
+import com.mygdx.objects.Star;
 import com.mygdx.util.Constants;
 
 
@@ -88,7 +89,7 @@ public class WorldRenderer implements Disposable
 		leftCorner.add(progressBar).top().left(); 
 		leftCorner.add(score1).top().right(); 
 		leftCorner.row(); 
-		leftCorner.add(powerUp).align(Align.topLeft).expand(); 
+		leftCorner.add(powerUp).align(Align.bottomLeft).expand(); 
 		leftCorner.setFillParent(true);
 		stage.addActor(leftCorner);
 		
@@ -154,16 +155,26 @@ public class WorldRenderer implements Disposable
 		score.setText("Score:"+ WorldController.score);
 		if (WorldController.visible)
 		{
-			
-				TextureRegionDrawable drawable = new TextureRegionDrawable(Assets.instance.up.power); 
-				powerUp.setDrawable(drawable);
+			TextureRegionDrawable drawable = new TextureRegionDrawable(Assets.instance.up.power);
 				
+				if (WorldController.shootTimeout<2)
+				{
+					 
+					powerUp.setDrawable(drawable);
+					powerUp.setSize(24, 24);
+				}
+				else
+				{
+					powerUp.setDrawable(null);
+				}
 			
 		}
 		else
 		{
+			
 			powerUp.setDrawable(null);
 		}
+		
 		
 		
 		

@@ -183,6 +183,7 @@ public class WorldController extends InputAdapter implements Disposable
 				if(Star.collected)
 				{
 					star.body.getWorld().destroyBody(star.body);
+					visible=true; 
 				}
 			}
 			Star.starScheduledforRemoval=null; 
@@ -190,11 +191,13 @@ public class WorldController extends InputAdapter implements Disposable
 		cameraHelper.update(deltaTime);
 		level.people.updateScrollPosition(cameraHelper.getPosition());
 		healthStatus(); 
-		hud.update(deltaTime);//updates the on screen hud
+		hud.update(deltaTime);
 		if (isGameOver() || didTimmyfall()|| isTimmyDead())
 		{
 			
+			
 			lives--;
+			visible=false;
 			if (isGameOver())
 			{
 				lives=3; 
@@ -208,6 +211,8 @@ public class WorldController extends InputAdapter implements Disposable
 			}
 			
 		}
+		
+		
 	}
 	
 	/**
@@ -254,14 +259,15 @@ public class WorldController extends InputAdapter implements Disposable
 	    	  
 	    	   if(Star.collected)
 	    	   {
+	    		   
 	    		   if(shootTimeout>0)
 	    		   {
-	    			   visible=true; 
+	    			  
 	    			   return;
 	    		   }
 	    		   if(first==0)
 	    		   {
-	    			   visible=false; 
+	    			    
 	    			   ability.createBody(level.tim.body.getPosition());
 	    			   Vector3 screen = new Vector3(x,y,0); 
 		    		   Vector3 world = WorldRenderer.camera.unproject(screen);
@@ -274,11 +280,12 @@ public class WorldController extends InputAdapter implements Disposable
 		    		   ability.body.setLinearVelocity(distance);
 		    		   ability.body.setGravityScale(0);
 		    		   ability.setFire(true); 
-		    		   shootTimeout=120; 
+		    		   shootTimeout=120;
+		    		   
 	    		   }
 	    		   else
 	    		   {
-	    			   visible=false; 
+	    			    
 	    			   Vector3 screen = new Vector3(x,y,0); 
 		    		   Vector3 world = WorldRenderer.camera.unproject(screen);
 		    		   Vector2 camera = new Vector2(world.x, world.y);
@@ -290,7 +297,8 @@ public class WorldController extends InputAdapter implements Disposable
 		    		   ability.body.setLinearVelocity(distance);
 		    		   ability.body.setGravityScale(0);
 		    		   ability.setFire(true); 
-		    		   shootTimeout=120; 
+		    		   shootTimeout=120;
+		    		    
 	    		   }
 	    		  
 	    	   
