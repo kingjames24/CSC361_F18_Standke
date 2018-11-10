@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -44,7 +46,8 @@ public class WorldRenderer implements Disposable
 	
 	private ProgressBar healthBar;
 	private Label score;
-	private Image fullHealth; 
+	private Image fullHealth;
+	public Table powerUpDisplay;  
 	
 	/**
 	 * Constructor that takes in an object of the WorldController class and also 
@@ -79,9 +82,12 @@ public class WorldRenderer implements Disposable
 		
 		Table progressBar = buildPrograssBar();
 		Table score1 = buildScoreBox();
+		Table powerUp = buildPowerBox(); 
 		
-		leftCorner.add(progressBar).top().left().expand();  
-		leftCorner.add(score1).top().right();
+		leftCorner.add(progressBar).top().left(); 
+		leftCorner.add(score1).top().right(); 
+		leftCorner.row(); 
+		leftCorner.add(powerUp).align(Align.topLeft).expand(); 
 		leftCorner.setFillParent(true);
 		stage.addActor(leftCorner);
 		
@@ -89,6 +95,16 @@ public class WorldRenderer implements Disposable
 	}
 	
 
+
+	private Table buildPowerBox() 
+	{
+		powerUpDisplay = new Table();
+		
+		TextureRegionDrawable drawable = new TextureRegionDrawable((Assets.instance.up.power));
+		powerUpDisplay.background(drawable);
+		
+		return powerUpDisplay;
+	}
 
 	private Table buildScoreBox() 
 	{
