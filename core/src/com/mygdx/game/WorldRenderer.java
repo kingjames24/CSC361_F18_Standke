@@ -3,25 +3,20 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -48,7 +43,7 @@ public class WorldRenderer implements Disposable
 	private Skin hudSkin; 
 	
 	private ProgressBar healthBar;
-	private Label healthScore;
+	private Label score;
 	private Image fullHealth; 
 	
 	/**
@@ -79,25 +74,37 @@ public class WorldRenderer implements Disposable
 		stage = new Stage(viewport, batch);
 		stack = new Stack();
 		leftCorner = new Table(); 
+		
 		buildHudSkin();
+		
 		Table progressBar = buildPrograssBar();
-		Label label = new Label("Health:", hudSkin, "title", Color.LIGHT_GRAY);
-		stack.add(progressBar);
-		leftCorner.add(label);
-		leftCorner.add(stack);
-		leftCorner.top().left(); 
+		Table score1 = buildScoreBox();
+		
+		leftCorner.add(progressBar).top().left().expand();  
+		leftCorner.add(score1).top().right();
 		leftCorner.setFillParent(true);
 		stage.addActor(leftCorner);
+		
 		b2debugRenderer = new Box2DDebugRenderer();
 	}
 	
 
 
+	private Table buildScoreBox() 
+	{
+		Table bar = new Table();
+		score = new Label("Score: " + WorldController.score + "" , hudSkin, "title", Color.LIGHT_GRAY);
+		bar.add(score);
+		return bar;
+	}
+
 	private Table buildPrograssBar() 
 	{
 		Table bar = new Table();
+		Label label = new Label("Health:", hudSkin, "title", Color.LIGHT_GRAY);
 		healthBar= new ProgressBar(0f, 100f, 10f, false,  hudSkin);
-		healthBar.setValue(100); 
+		healthBar.setValue(100);
+		bar.add(label); 
 		bar.add(healthBar);
 		return bar;
 	}
@@ -127,6 +134,8 @@ public class WorldRenderer implements Disposable
 	
 	public void update(float deltaTime)//updates the hud based on game
 	{
+		healthBar.setValue(WorldController.health);
+		score.setText("Score:"+ WorldController.score);
 		
 	}
 

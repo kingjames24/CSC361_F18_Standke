@@ -50,15 +50,16 @@ public class WorldController extends InputAdapter implements Disposable
     public static World b2world;
     public static int numFootContacts=0;
     public int jumpTimeout=0;
-    public int shootTimeout=15; 
+    public static int shootTimeout=15; 
     public boolean attached=false; 
     public RevoluteJoint joint;
     public RevoluteJoint joint2; 
     public Raindrops rain;
     public Ability ability; 
     public Level level;
-    public int score;
-	private int lives=3;
+    public static int score;
+	private static int lives=3;
+	public static int health; 
 	private int first; 
      
     
@@ -187,6 +188,7 @@ public class WorldController extends InputAdapter implements Disposable
 		}		
 		cameraHelper.update(deltaTime);
 		level.people.updateScrollPosition(cameraHelper.getPosition());
+		healthStatus(); 
 		hud.update(deltaTime);//updates the on screen hud
 		if (isGameOver() || didTimmyfall()|| isTimmyDead())
 		{
@@ -485,6 +487,12 @@ public class WorldController extends InputAdapter implements Disposable
  	   }
 		
 	}
+	
+	public void healthStatus()
+	{
+		health=level.tim.getLife(); 
+	}
+	
 	/**
 	 * Method that updates the player's score as it collects points in the game
 	 * @param point an object that represents things timmy can collect in the game
