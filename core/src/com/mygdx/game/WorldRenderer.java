@@ -109,7 +109,7 @@ public class WorldRenderer implements Disposable
 	private Table buildScoreBox() 
 	{
 		Table bar = new Table();
-		score = new Label("Score: " + WorldController.score + "" , hudSkin, "title", Color.LIGHT_GRAY);
+		score = new Label("Score: " + WorldController.score + "" , hudSkin, "title", Color.RED);
 		bar.add(score);
 		return bar;
 	}
@@ -117,9 +117,10 @@ public class WorldRenderer implements Disposable
 	private Table buildPrograssBar() 
 	{
 		Table bar = new Table();
-		Label label = new Label("Health:", hudSkin, "title", Color.LIGHT_GRAY);
+		Label label = new Label("Health:", hudSkin, "title", Color.RED);
 		healthBar= new ProgressBar(0f, 100f, 10f, false,  hudSkin);
 		healthBar.setValue(100);
+		healthBar.setColor(Color.RED);
 		bar.add(label); 
 		bar.add(healthBar);
 		return bar;
