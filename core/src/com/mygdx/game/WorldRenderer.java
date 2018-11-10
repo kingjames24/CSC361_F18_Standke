@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -47,7 +48,7 @@ public class WorldRenderer implements Disposable
 	private ProgressBar healthBar;
 	private Label score;
 	private Image fullHealth;
-	public Table powerUpDisplay;  
+	public Image powerUp;   
 	
 	/**
 	 * Constructor that takes in an object of the WorldController class and also 
@@ -98,11 +99,9 @@ public class WorldRenderer implements Disposable
 
 	private Table buildPowerBox() 
 	{
-		powerUpDisplay = new Table();
-		
-		TextureRegionDrawable drawable = new TextureRegionDrawable((Assets.instance.up.power));
-		powerUpDisplay.background(drawable);
-		
+		Table powerUpDisplay = new Table();
+	    powerUp= new Image(); 
+	    powerUpDisplay.add(powerUp);
 		return powerUpDisplay;
 	}
 
@@ -153,6 +152,20 @@ public class WorldRenderer implements Disposable
 	{
 		healthBar.setValue(WorldController.health);
 		score.setText("Score:"+ WorldController.score);
+		if (WorldController.visible)
+		{
+			
+				TextureRegionDrawable drawable = new TextureRegionDrawable(Assets.instance.up.power); 
+				powerUp.setDrawable(drawable);
+				
+			
+		}
+		else
+		{
+			powerUp.setDrawable(null);
+		}
+		
+		
 		
 	}
 

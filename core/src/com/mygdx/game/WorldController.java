@@ -60,7 +60,8 @@ public class WorldController extends InputAdapter implements Disposable
     public static int score;
 	private static int lives=3;
 	public static int health; 
-	private int first; 
+	private int first;
+	public static boolean visible=false; 
      
     
     
@@ -253,9 +254,14 @@ public class WorldController extends InputAdapter implements Disposable
 	    	  
 	    	   if(Star.collected)
 	    	   {
-	    		   if(shootTimeout>0)return;
+	    		   if(shootTimeout>0)
+	    		   {
+	    			   visible=true; 
+	    			   return;
+	    		   }
 	    		   if(first==0)
 	    		   {
+	    			   visible=false; 
 	    			   ability.createBody(level.tim.body.getPosition());
 	    			   Vector3 screen = new Vector3(x,y,0); 
 		    		   Vector3 world = WorldRenderer.camera.unproject(screen);
@@ -272,6 +278,7 @@ public class WorldController extends InputAdapter implements Disposable
 	    		   }
 	    		   else
 	    		   {
+	    			   visible=false; 
 	    			   Vector3 screen = new Vector3(x,y,0); 
 		    		   Vector3 world = WorldRenderer.camera.unproject(screen);
 		    		   Vector2 camera = new Vector2(world.x, world.y);
