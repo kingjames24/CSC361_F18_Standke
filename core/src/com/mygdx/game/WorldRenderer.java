@@ -3,7 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -48,8 +48,9 @@ public class WorldRenderer implements Disposable
 	
 	private ProgressBar healthBar;
 	private Label score;
-	private Image fullHealth;
-	public Image powerUp;   
+	public Image powerUp;
+	public Image lives;
+	public Label gameOver; 
 	
 	/**
 	 * Constructor that takes in an object of the WorldController class and also 
@@ -84,12 +85,12 @@ public class WorldRenderer implements Disposable
 		
 		Table progressBar = buildPrograssBar();
 		Table score1 = buildScoreBox();
-		Table powerUp = buildPowerBox(); 
+		Table powerUp = buildPowerBox();
 		
-		leftCorner.add(progressBar).top().left(); 
+		leftCorner.add(progressBar).top().left();
 		leftCorner.add(score1).top().right(); 
 		leftCorner.row(); 
-		leftCorner.add(powerUp).align(Align.bottomLeft).expand(); 
+		leftCorner.add(powerUp).align(Align.bottomLeft).expand();
 		leftCorner.setFillParent(true);
 		stage.addActor(leftCorner);
 		
@@ -145,40 +146,57 @@ public class WorldRenderer implements Disposable
 	private void renderHud(SpriteBatch batch2)
 	{ 
 		batch.setProjectionMatrix(stage.getCamera().combined);
-		stage.draw();
-		
-	}
-	
-	public void update(float deltaTime)//updates the hud based on game
-	{
 		healthBar.setValue(WorldController.health);
 		score.setText("Score:"+ WorldController.score);
+		batch.begin();
 		if (WorldController.visible)
 		{
 			TextureRegionDrawable drawable = new TextureRegionDrawable(Assets.instance.up.power);
-				
-				if (WorldController.shootTimeout<2)
-				{
+			powerUp.setDrawable(drawable);
+			powerUp.setSize(32,32); 
+			if (WorldController.shootTimeout<2)
+			{
 					 
-					powerUp.setDrawable(drawable);
-					powerUp.setSize(24, 24);
-				}
-				else
-				{
+					batch.draw(Assets.instance.up.power, powerUp.getImageX(), powerUp.getImageY(), powerUp.getOriginX(), powerUp.getOriginY(), powerUp.getWidth(), powerUp.getHeight(), powerUp.getScaleX(), powerUp.getScaleY(), powerUp.getRotation());
+					
+			}
+			else
+			{
+					
 					powerUp.setDrawable(null);
-				}
+			}
 			
 		}
 		else
 		{
-			
 			powerUp.setDrawable(null);
 		}
 		
-		
-		
+		float x = viewport.getWorldWidth()-50-(2.3f*50); 
+		float y = viewport.getWorldHeight()-100; 
+		for (int i = 0; i < 3; i++) 
+		{
+				 if (worldController.lives <= i) batch.setColor(0.5f, 0.5f, 0.5f, 0.5f);
+				 batch.draw(Assets.instance.timmy.frame1,  x + i * 50, y, 50, 50, 120, 100, .30f, .30f, 0);
+				 batch.setColor(1, 1, 1, 1);
+				
+		}
+		batch.end();
+		gameOver = new Label("GAME OVER", hudSkin, "title", Color.RED); 
+		if(WorldController.isGameOver())
+		{
+			 
+			leftCorner.add(gameOver).setActorHeight(50);
+			 
+		}
+		stage.draw();
 		
 	}
+	
+		
+		
+		
+	
 
 	/**
 	 * Method that render's the game to the screen by composing the

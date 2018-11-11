@@ -45,7 +45,7 @@ import com.badlogic.gdx.utils.Disposable;
 public class WorldController extends InputAdapter implements Disposable
 {
 	
-	public WorldRenderer hud; 
+	
 	public CameraHelper cameraHelper;
     public static World b2world;
     public static int numFootContacts=0;
@@ -58,7 +58,7 @@ public class WorldController extends InputAdapter implements Disposable
     public Ability ability; 
     public Level level;
     public static int score;
-	private static int lives=3;
+	public static int lives=3;
 	public static int health; 
 	private int first;
 	public static boolean visible=false; 
@@ -128,7 +128,7 @@ public class WorldController extends InputAdapter implements Disposable
 	
 		
 		
-		level.update(deltaTime);
+		//level.update(deltaTime);
 		b2world.step(deltaTime, 8, 3);
 		jumpTimeout--;
 		shootTimeout--; 
@@ -191,7 +191,6 @@ public class WorldController extends InputAdapter implements Disposable
 		cameraHelper.update(deltaTime);
 		level.people.updateScrollPosition(cameraHelper.getPosition());
 		healthStatus(); 
-		hud.update(deltaTime);
 		if (isGameOver() || didTimmyfall()|| isTimmyDead())
 		{
 			
@@ -200,8 +199,8 @@ public class WorldController extends InputAdapter implements Disposable
 			visible=false;
 			if (isGameOver())
 			{
-				lives=3; 
-				init();
+				//lives=3; 
+				return; 
 				
 			}
 			else
@@ -532,7 +531,7 @@ public class WorldController extends InputAdapter implements Disposable
 	 * player exhausting the number of lives allowed
 	 * @return a boolean that represents whether Timmy has no more lives
 	 */
-	public boolean isGameOver ()
+	public static boolean isGameOver ()
 	{
 		   return lives < 0;
 	}
@@ -552,11 +551,7 @@ public class WorldController extends InputAdapter implements Disposable
 		 return false; 
 	}
 	
-	public void setUpdate(WorldRenderer worldRenderer) 
-	{
-		
-		this.hud=worldRenderer; 
-	}
+	
 	
 		
 	

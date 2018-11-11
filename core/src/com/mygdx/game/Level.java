@@ -216,11 +216,11 @@ public class Level
 	 * @param a float that represents the time-span between the
 	 * previously rendered frame and currently rendered frame
 	 */
-	public void update(float deltatime)
+	/*public void update(float deltatime)
 	{
 		for (Platform plat : platforms)
 			plat.update(deltatime);
-	}
+	}*/
 	
 	/**
 	 * Method that draws the level in the order specified; namely,
