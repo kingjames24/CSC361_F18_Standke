@@ -143,6 +143,7 @@ public class WorldRenderer implements Disposable
 		renderHud(batch); 
 		
 	}
+	
 	private void renderHud(SpriteBatch batch2)
 	{ 
 		batch.setProjectionMatrix(stage.getCamera().combined);
@@ -182,11 +183,13 @@ public class WorldRenderer implements Disposable
 				
 		}
 		batch.end();
-		gameOver = new Label("GAME OVER", hudSkin, "title", Color.RED); 
+		gameOver = new Label("GAME-OVER", hudSkin, "title", Color.RED); 
 		if(WorldController.isGameOver())
 		{
+			
+			leftCorner.clear();
+			leftCorner.add(gameOver).align(Align.center);
 			 
-			leftCorner.add(gameOver).setActorHeight(50);
 			 
 		}
 		stage.draw();
