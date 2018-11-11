@@ -199,7 +199,7 @@ public class WorldController extends InputAdapter implements Disposable
 			visible=false;
 			if (isGameOver())
 			{
-				//lives=3; 
+ 
 				return; 
 				
 			}
