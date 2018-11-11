@@ -6,7 +6,7 @@ filter: Nearest,Nearest
 repeat: none
 5points
   rotate: false
-  xy: 524, 88
+  xy: 2, 37
   size: 26, 14
   orig: 26, 14
   offset: 0, 0
@@ -76,7 +76,7 @@ platform
   index: 2
 raindrop01
   rotate: false
-  xy: 1002, 454
+  xy: 524, 82
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
@@ -90,16 +90,16 @@ raindrop02
   index: -1
 raindrop03
   rotate: false
-  xy: 2, 29
+  xy: 964, 452
   size: 21, 22
   orig: 21, 22
   offset: 0, 0
   index: -1
 special_power
   rotate: false
-  xy: 964, 441
-  size: 36, 33
-  orig: 36, 33
+  xy: 964, 435
+  size: 15, 15
+  orig: 15, 15
   offset: 0, 0
   index: -1
 woman_rain

@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -16,11 +18,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.objects.Ability;
+import com.mygdx.objects.Star;
 import com.mygdx.util.Constants;
 
 
@@ -44,7 +48,8 @@ public class WorldRenderer implements Disposable
 	
 	private ProgressBar healthBar;
 	private Label score;
-	private Image fullHealth; 
+	private Image fullHealth;
+	public Image powerUp;   
 	
 	/**
 	 * Constructor that takes in an object of the WorldController class and also 
@@ -79,9 +84,12 @@ public class WorldRenderer implements Disposable
 		
 		Table progressBar = buildPrograssBar();
 		Table score1 = buildScoreBox();
+		Table powerUp = buildPowerBox(); 
 		
-		leftCorner.add(progressBar).top().left().expand();  
-		leftCorner.add(score1).top().right();
+		leftCorner.add(progressBar).top().left(); 
+		leftCorner.add(score1).top().right(); 
+		leftCorner.row(); 
+		leftCorner.add(powerUp).align(Align.bottomLeft).expand(); 
 		leftCorner.setFillParent(true);
 		stage.addActor(leftCorner);
 		
@@ -90,10 +98,18 @@ public class WorldRenderer implements Disposable
 	
 
 
+	private Table buildPowerBox() 
+	{
+		Table powerUpDisplay = new Table();
+	    powerUp= new Image(); 
+	    powerUpDisplay.add(powerUp);
+		return powerUpDisplay;
+	}
+
 	private Table buildScoreBox() 
 	{
 		Table bar = new Table();
-		score = new Label("Score: " + WorldController.score + "" , hudSkin, "title", Color.LIGHT_GRAY);
+		score = new Label("Score: " + WorldController.score + "" , hudSkin, "title", Color.RED);
 		bar.add(score);
 		return bar;
 	}
@@ -101,9 +117,10 @@ public class WorldRenderer implements Disposable
 	private Table buildPrograssBar() 
 	{
 		Table bar = new Table();
-		Label label = new Label("Health:", hudSkin, "title", Color.LIGHT_GRAY);
+		Label label = new Label("Health:", hudSkin, "title", Color.RED);
 		healthBar= new ProgressBar(0f, 100f, 10f, false,  hudSkin);
 		healthBar.setValue(100);
+		healthBar.setColor(Color.RED);
 		bar.add(label); 
 		bar.add(healthBar);
 		return bar;
@@ -136,6 +153,30 @@ public class WorldRenderer implements Disposable
 	{
 		healthBar.setValue(WorldController.health);
 		score.setText("Score:"+ WorldController.score);
+		if (WorldController.visible)
+		{
+			TextureRegionDrawable drawable = new TextureRegionDrawable(Assets.instance.up.power);
+				
+				if (WorldController.shootTimeout<2)
+				{
+					 
+					powerUp.setDrawable(drawable);
+					powerUp.setSize(24, 24);
+				}
+				else
+				{
+					powerUp.setDrawable(null);
+				}
+			
+		}
+		else
+		{
+			
+			powerUp.setDrawable(null);
+		}
+		
+		
+		
 		
 	}
 
