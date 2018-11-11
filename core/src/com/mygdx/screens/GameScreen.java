@@ -35,7 +35,7 @@ public class GameScreen implements Screen
 	{
 		worldController = new WorldController();
 		worldRenderer = new WorldRenderer(worldController);
-		worldController.setUpdate(worldRenderer); 
+		 
 		
 	}
 	
