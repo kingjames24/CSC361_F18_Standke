@@ -97,7 +97,7 @@ public class People extends AbstractGameObject
 		
 		TextureRegion reg = null;
 		float xRel = dimension.x * offsetX;
-		float yRel = (dimension.y+15) * offsetY;
+		float yRel = (dimension.y-1) * offsetY;
 		int manoneLength = 0;
 		manoneLength += MathUtils.ceil(length / (2 * dimension.x) * (1 - parralexSpeedX));
 		manoneLength += MathUtils.ceil(0.5f + offsetX);

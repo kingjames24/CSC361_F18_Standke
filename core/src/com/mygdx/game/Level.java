@@ -230,8 +230,7 @@ public class Level
 	 */
 	public void render (SpriteBatch batch)
 	{
-		// Draw City background
-		background.render(batch);
+		
 		
 		// Draw Platform
 		for (Platform plat : platforms)

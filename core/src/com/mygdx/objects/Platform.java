@@ -50,7 +50,7 @@ public class Platform extends AbstractGameObject
      */
     private void init()
     {
-    	dimension.set(1,1.5f);
+    	dimension.set(1f,.5f);
     	bounds= new Rectangle(); 
     	platform = Assets.instance.plat.middle;
     	
