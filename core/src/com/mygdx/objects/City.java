@@ -1,10 +1,18 @@
 package com.mygdx.objects;
 
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.Assets;
+import com.mygdx.util.Constants;
 
 /**
  * Class that represents the City background
@@ -15,8 +23,14 @@ import com.mygdx.game.Assets;
 public class City extends AbstractGameObject 
 {
 	
+	public Stage stage, backStage;
+	public FitViewport viewPort;
+	public ExtendViewport backViewport;
+	public Camera camera; 
+	public Image city2; 
 	private TextureRegion city; 
-	private int length; 
+	private int length;
+	
 	
 	/**
 	 * Constructor that takes an int representing 
@@ -37,12 +51,11 @@ public class City extends AbstractGameObject
 	 */
 	private void init() 
 	{
-		dimension.set(15, 15);
-		
+		dimension.set(15,15);
 		city=Assets.instance.leveldecoration.city; 
-		
 		origin.x = -dimension.x*2;
 		length += dimension.x * 2;
+		
 	}
 
 	/**
@@ -52,6 +65,9 @@ public class City extends AbstractGameObject
 	@Override
 	public void render(SpriteBatch batch) 
 	{
+		
+		
+	
 		TextureRegion reg=null;
 		reg = city;
 		float xRel = 0;

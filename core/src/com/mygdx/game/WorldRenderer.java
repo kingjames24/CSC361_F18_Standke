@@ -21,7 +21,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.objects.Ability;
 import com.mygdx.objects.Star;
@@ -50,7 +52,11 @@ public class WorldRenderer implements Disposable
 	private Label score;
 	public Image powerUp;
 	public Image lives;
-	public Label gameOver; 
+	public Label gameOver;
+	private Image city2;
+	private ExtendViewport backViewport;
+	private Stage backStage;
+	private OrthographicCamera camera2; 
 	
 	/**
 	 * Constructor that takes in an object of the WorldController class and also 
@@ -211,6 +217,15 @@ public class WorldRenderer implements Disposable
 	 */
 	public void renderWorld (SpriteBatch batch)
 	{
+		//drawing of background image
+		camera2 = new OrthographicCamera(Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT); 
+		camera2.setToOrtho(false,Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT );
+		
+		batch.setProjectionMatrix(camera2.combined);
+		batch.begin();
+		batch.draw(Assets.instance.leveldecoration.city,0, 0, Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT ); 
+		batch.end();
+		
 		worldController.cameraHelper.applyTo(camera);
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
