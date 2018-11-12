@@ -41,7 +41,7 @@ public class Points extends AbstractGameObject
 	 */
 	private void init() 
 	{
-		dimension.set(0.5f, 0.5f); 
+		dimension.set(.5f, .5f); 
 		point = Assets.instance.plus.points;
 		pointScheduledForRemoval = new Array<Points>(); 
 		collected=false; 

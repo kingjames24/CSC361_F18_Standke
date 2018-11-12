@@ -144,7 +144,7 @@ public class Level
 					if (lastPixel != currentPixel) 
 					{
 						obj = new Platform();
-						float heightIncreaseFactor = 0.25f;
+						float heightIncreaseFactor = 0.50f;
 						offsetHeight = -2.5f;
 						obj.position.set(pixelX, baseHeight * obj.dimension.y
 								* heightIncreaseFactor + offsetHeight);
