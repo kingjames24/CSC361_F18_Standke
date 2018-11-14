@@ -247,7 +247,7 @@ public class WorldController extends InputAdapter implements Disposable
 	       {
 	    	   if(numFootContacts<1)return;
 	    	   if(jumpTimeout>0)return; 
-	    	   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*4f), level.tim.body.getWorldCenter(), true);
+	    	   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*3.5f), level.tim.body.getWorldCenter(), true);
 	    	   jumpTimeout=60; 
 	       }
 	       if(Gdx.input.isButtonPressed(Input.Buttons.LEFT))

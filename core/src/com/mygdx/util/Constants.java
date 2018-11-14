@@ -22,4 +22,9 @@ public class Constants
 	// Location of description file for skins
 	public static final String SKIN_LIBGDX_UI ="images/neutralizer-ui.json";
 	
+	
+	public static final String TEXTURE_ATLAS_UI = "images-ui/rainmaker-ui.atlas";
+	
+	public static final String SKIN_RainMaker_UI ="images/rainmaker-ui.json";
+	
 }

@@ -27,7 +27,7 @@ public class RainMaker extends Game{
 	{
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		Assets.instance.init(new AssetManager());
-		setScreen(new GameScreen()); 
+		setScreen(new GameScreen(this)); 
 	}
 
 	
