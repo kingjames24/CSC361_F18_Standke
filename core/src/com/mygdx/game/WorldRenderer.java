@@ -56,7 +56,8 @@ public class WorldRenderer implements Disposable
 	private Image city2;
 	private ExtendViewport backViewport;
 	private Stage backStage;
-	private OrthographicCamera camera2; 
+	private OrthographicCamera camera2;
+	private Table powerup2; 
 	
 	/**
 	 * Constructor that takes in an object of the WorldController class and also 
@@ -91,12 +92,12 @@ public class WorldRenderer implements Disposable
 		
 		Table progressBar = buildPrograssBar();
 		Table score1 = buildScoreBox();
-		Table powerUp = buildPowerBox();
+	    powerup2 = buildPowerBox();
 		
 		leftCorner.add(progressBar).top().left();
 		leftCorner.add(score1).top().right(); 
 		leftCorner.row(); 
-		leftCorner.add(powerUp).align(Align.bottomLeft).expand();
+		leftCorner.add(powerup2).align(Align.topLeft).expand();
 		leftCorner.setFillParent(true);
 		stage.addActor(leftCorner);
 		
@@ -160,11 +161,11 @@ public class WorldRenderer implements Disposable
 		{
 			TextureRegionDrawable drawable = new TextureRegionDrawable(Assets.instance.up.power);
 			powerUp.setDrawable(drawable);
-			powerUp.setSize(32,32); 
+			powerUp.setSize(24,24); 
 			if (WorldController.shootTimeout<2)
 			{
 					 
-					batch.draw(Assets.instance.up.power, powerUp.getImageX(), powerUp.getImageY(), powerUp.getOriginX(), powerUp.getOriginY(), powerUp.getWidth(), powerUp.getHeight(), powerUp.getScaleX(), powerUp.getScaleY(), powerUp.getRotation());
+					batch.draw(Assets.instance.up.power, powerUp.getImageX(), powerUp.getImageY(), powerup2.getOriginX(), powerup2.getOriginY(), powerup2.getWidth(), powerup2.getHeight()-50, powerup2.getScaleX(), powerup2.getScaleY(), powerup2.getRotation());
 					
 			}
 			else
