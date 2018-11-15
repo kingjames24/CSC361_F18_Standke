@@ -1,20 +1,36 @@
 package com.mygdx.screens;
 
+import javax.swing.GroupLayout.Alignment;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.util.Constants;
+
 
 
 public class MenuScreen extends AbstractGameScreen 
@@ -31,6 +47,15 @@ public class MenuScreen extends AbstractGameScreen
 	private Button btnLogin;
 	private Button btnMenuLogin;
 	private Button btnMenuHighScore;
+	private FitViewport viewport;
+	private SpriteBatch batch;
+	private OrthographicCamera camera2;
+	private Image imgCloud2;
+	private Image imgCloud3;
+	private Image imgRain;
+	private Image imgRain2;
+	private Image imgRain3;
+	private Image imgRain4;
 
 	public MenuScreen(Game game) 
 	{
@@ -40,8 +65,9 @@ public class MenuScreen extends AbstractGameScreen
 	@Override
 	public void render(float deltaTime) 
 	{
-		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		Gdx.gl.glClearColor(1f, 1f, 1f, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
 		stage.act(deltaTime);
 	    stage.draw();
 	}
@@ -49,14 +75,17 @@ public class MenuScreen extends AbstractGameScreen
 	@Override
 	public void resize(int width, int height) 
 	{
-		stage.getViewport().update(width, height, true);
+		 stage.getViewport().setScreenSize(width, height); 
+		
 		
 	}
 
 	@Override
 	public void show() 
 	{
-		stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT)); 
+		batch = new SpriteBatch();
+		viewport = new FitViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT, new OrthographicCamera());
+		stage = new Stage(viewport); 
 		Gdx.input.setInputProcessor(stage);
 		rebuildStage(); 
 	}
@@ -70,36 +99,71 @@ public class MenuScreen extends AbstractGameScreen
 		skinLibgdx = new Skin(Gdx.files.internal(Constants.SKIN_LIBGDX_UI),
 		     new TextureAtlas(Constants.TEXTURE_ATLAS_LIBGDX_UI)); 
 		
+		
+		
+	
+		
+		
 		Table layerBackground = buildBackgroundLayer();
-	    Table layerObjects = buildObjectsLayer();
+		Table layerClouds = buildCloudsLayer();
+		Table layerRain = buildRainLayer(); 
+	    Table layerObjects = buildTimmyLayer();
 	    Table layerControls = buildControlsLayer();
+	   //Table layerOptionsWindow = buildOptionsWindowLayer();
 	    
-	    Table layerLoginWindow = buildPlayerLoginWindow(); 
-	    Table layerHighScoreWindow= buildHighScroeWindow(); 
-	    Table layerOptionsWindow = buildOptionsWindowLayer();
+	    Label title = new Label("RainMaker", skinLibgdx, "title", Color.SKY);
+	    title.setFontScale(3.5f);
+	    Label name = new Label("By Adam Standke", skinLibgdx, "title", Color.SKY);
+	    name.setFontScale(1f);
+	    Table credit = new Table();
+	    credit.add(title).align(Align.center).expand();
+	    credit.row();
+	    credit.add(name).align(Align.top).expand();
 		
 	    stage.clear();
 	    Stack stack = new Stack();
-	    stage.addActor(stack);
-	    stack.setSize(Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT);
-	    stack.add(layerBackground);
+	    stack.setFillParent(true);
+	    stack.addActor(layerBackground);
+	    stack.addActor(layerClouds);
+	    stack.add(layerRain);
 	    stack.add(layerObjects);
 	    stack.add(layerControls);
-	    stage.addActor(layerLoginWindow);
-	    stage.addActor(layerHighScoreWindow);
-	    stage.addActor(layerOptionsWindow);
+	    stack.add(credit);
+	    stage.addActor(stack);
+	    //stage.addActor(layerOptionsWindow);
 	       
 		
 	}
 
-	private Table buildPlayerLoginWindow() {
-		// TODO Auto-generated method stub
-		return null;
+	
+
+	private Table buildRainLayer() 
+	{
+		Table layer = new Table();
+		imgRain = new Image(skinRainMaker, "raindrops");
+		layer.add(imgRain).align(Align.topLeft);
+		imgRain2 = new Image(skinRainMaker, "raindrops");
+		layer.add(imgRain2).align(Align.center);
+		imgRain3 = new Image(skinRainMaker, "raindrops");
+		layer.add(imgRain3).align(Align.top);
+		imgRain4 = new Image(skinRainMaker, "raindrops");
+		layer.add(imgRain4).align(Align.topRight).expand(); 
+		return layer;
 	}
 
-	private Table buildHighScroeWindow() {
-		// TODO Auto-generated method stub
-		return null;
+	private Table buildCloudsLayer() 
+	{
+		Table layer = new Table(); 
+		imgCloud = new Image(skinRainMaker, "Cloud");
+		imgCloud.scaleBy(.5f);
+		layer.add(imgCloud).align(Align.topLeft).expand().pad(10);
+		imgCloud2 = new Image(skinRainMaker, "Cloud");
+		imgCloud2.scaleBy(.5f);
+		layer.add(imgCloud2).align(Align.top);
+		imgCloud3 = new Image(skinRainMaker, "Cloud");
+		imgCloud3.scaleBy(.5f);
+		layer.add(imgCloud3).align(Align.topRight);
+		return layer;
 	}
 
 	private Table buildOptionsWindowLayer() {
@@ -111,29 +175,10 @@ public class MenuScreen extends AbstractGameScreen
 	{
 		 Table layer = new Table();
 		 
-		//Play Button
-		 layer.right().bottom();
-		 btnMenuPlay = new Button(skinRainMaker, "play");
-		 layer.add(btnMenuPlay);
-		 btnMenuPlay.addListener(new ChangeListener() {
-
-			@Override
-			public void changed(ChangeEvent event, Actor actor) 
-			{
-				onPlayClicked(); 
-				
-			}
-
-			private void onPlayClicked() {
-				// TODO Auto-generated method stub
-				
-			}
-			 
-		 }); 
-		 //options button; 
-		 layer.row(); 
+		 
+		 
 		 btnMenuOptions = new Button(skinRainMaker, "options");
-		 layer.add(btnMenuOptions);
+		 layer.add(btnMenuOptions).align(Align.bottomRight).expand();
 		 btnMenuOptions.addListener(new ChangeListener() {
 
 			@Override
@@ -150,56 +195,40 @@ public class MenuScreen extends AbstractGameScreen
 			}
 			 
 		 }); 
-		 //login Button
-		 layer.left().bottom();
-		 btnMenuLogin = new Button(skinRainMaker, "login");
-		 layer.add(btnMenuLogin);
-		 btnMenuLogin.addListener(new ChangeListener() {
+		 
+		//Play Button
+		 //layer.right().bottom();
+		 layer.add().expand();
+		 btnMenuPlay = new Button(skinRainMaker, "play");
+		 layer.add(btnMenuPlay).align(Align.bottomLeft).expand();
+		 btnMenuPlay.addListener(new ChangeListener() {
 
 			@Override
 			public void changed(ChangeEvent event, Actor actor) 
 			{
-				onLoginClicked(); 
+				onPlayClicked(); 
 				
 			}
 
-			private void onLoginClicked() {
-				// TODO Auto-generated method stub
+			private void onPlayClicked() 
+			{
+				game.setScreen(new GameScreen(game));
 				
 			}
 			 
 		 }); 
-		 //high Score Button
-		 layer.row(); 
-		 btnMenuHighScore = new Button(skinRainMaker, "highscore"); 
-		 layer.add(btnMenuHighScore);
-		 btnMenuHighScore.addListener(new ChangeListener() {
-
-			@Override
-			public void changed(ChangeEvent event, Actor actor) 
-			{
-				onHighScoreClicked(); 
-				
-			}
-
-			private void onHighScoreClicked() 
-			{
-				// TODO Auto-generated method stub
-				
-			}
-			 
-		 }); 
+		
 		 
 		return layer;
 	}
 
-	private Table buildObjectsLayer() 
+	private Table buildTimmyLayer() 
 	{
 		Table layer = new Table();
-		imgCloud = new Image(skinRainMaker, "Cloud"); 
-		layer.add(imgCloud).align(Align.top);
+		
 		imgTim = new Image (skinRainMaker, "Tim");
-		layer.add(imgTim).align(Align.center);
+		imgTim.scaleBy(.01f, .01f);
+		layer.add(imgTim).align(Align.bottom).expand();
 		return layer; 
 		
 	}
@@ -207,14 +236,18 @@ public class MenuScreen extends AbstractGameScreen
 	private Table buildBackgroundLayer() 
 	{
 		Table layer= new Table(); 
-		imgBackground = new Image(skinRainMaker, "superman-city-background-clipart-9");
+		imgBackground = new Image(skinRainMaker, "background");
+		imgBackground.scaleBy(1f, 1f);
 		layer.add(imgBackground);
+		layer.align(Align.bottomLeft);
+		
 		return layer; 
 	}
 
 	@Override
 	public void hide() 
 	{
+		batch.dispose();
 		stage.dispose();
 		skinRainMaker.dispose();
 		skinLibgdx.dispose();

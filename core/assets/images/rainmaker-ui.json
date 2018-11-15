@@ -9,8 +9,9 @@
 	},
 	com.badlogic.gdx.scenes.scene2d.ui.Image:
 	{
-	    superman-city-background-clipart-9: { drawable:superman-city-background-clipart-9 },
+	    	background: { drawable: background },
 		Tim: { drawable: Tim },
+		raindrops: { drawable: raindrops }, 
 		Cloud: { drawable: Cloud }	
 	},
 }

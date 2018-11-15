@@ -83,6 +83,10 @@ public class WorldRenderer implements Disposable
 		camera.position.set(0, 0, 0);
 		camera.update();
 		
+		camera2 = new OrthographicCamera(Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT);
+		camera2.setToOrtho(false,Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT );
+		
+		
 		viewport = new FitViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT, new OrthographicCamera()); 
 		stage = new Stage(viewport, batch);
 		stack = new Stack();
@@ -165,7 +169,7 @@ public class WorldRenderer implements Disposable
 			if (WorldController.shootTimeout<2)
 			{
 					 
-					batch.draw(Assets.instance.up.power, powerUp.getImageX(), powerUp.getImageY(), powerup2.getOriginX(), powerup2.getOriginY(), powerup2.getWidth(), powerup2.getHeight()-50, powerup2.getScaleX(), powerup2.getScaleY(), powerup2.getRotation());
+					batch.draw(Assets.instance.up.power, powerUp.getImageX(), powerUp.getImageY()+450, powerup2.getOriginX(), powerup2.getOriginY(), powerup2.getWidth(), powerup2.getHeight(), powerup2.getScaleX(), powerup2.getScaleY(), powerup2.getRotation());
 					
 			}
 			else
@@ -219,9 +223,6 @@ public class WorldRenderer implements Disposable
 	public void renderWorld (SpriteBatch batch)
 	{
 		//drawing of background image
-		camera2 = new OrthographicCamera(Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT); 
-		camera2.setToOrtho(false,Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT );
-		
 		batch.setProjectionMatrix(camera2.combined);
 		batch.begin();
 		batch.draw(Assets.instance.leveldecoration.city,0, 0, Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT ); 
@@ -269,6 +270,8 @@ public class WorldRenderer implements Disposable
 	{
 		camera.viewportWidth = (Constants.VIEWPORT_HEIGHT / height) * width;
 		camera.update();
+		//resolve resize issue for camera 2
+		stage.getViewport().setScreenSize(width, height);
 		
 	}
 

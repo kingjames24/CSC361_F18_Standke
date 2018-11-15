@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.mygdx.game.Assets;
 import com.mygdx.screens.GameScreen;
+import com.mygdx.screens.MenuScreen;
 
 /**
  * Class that is called by the DesktopLauncher to 
@@ -27,7 +28,8 @@ public class RainMaker extends Game{
 	{
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		Assets.instance.init(new AssetManager());
-		setScreen(new GameScreen(this)); 
+		setScreen(new MenuScreen(this));
+		//setScreen(new GameScreen(this)); 
 	}
 
 	
