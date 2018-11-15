@@ -56,7 +56,8 @@ public class WorldRenderer implements Disposable
 	private Image city2;
 	private ExtendViewport backViewport;
 	private Stage backStage;
-	private OrthographicCamera camera2; 
+	private OrthographicCamera camera2;
+	private Table powerup2; 
 	
 	/**
 	 * Constructor that takes in an object of the WorldController class and also 
@@ -82,6 +83,10 @@ public class WorldRenderer implements Disposable
 		camera.position.set(0, 0, 0);
 		camera.update();
 		
+		camera2 = new OrthographicCamera(Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT);
+		camera2.setToOrtho(false,Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT );
+		
+		
 		viewport = new FitViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT, new OrthographicCamera()); 
 		stage = new Stage(viewport, batch);
 		stack = new Stack();
@@ -91,12 +96,12 @@ public class WorldRenderer implements Disposable
 		
 		Table progressBar = buildPrograssBar();
 		Table score1 = buildScoreBox();
-		Table powerUp = buildPowerBox();
+	    powerup2 = buildPowerBox();
 		
 		leftCorner.add(progressBar).top().left();
 		leftCorner.add(score1).top().right(); 
 		leftCorner.row(); 
-		leftCorner.add(powerUp).align(Align.bottomLeft).expand();
+		leftCorner.add(powerup2).align(Align.topLeft).expand();
 		leftCorner.setFillParent(true);
 		stage.addActor(leftCorner);
 		
@@ -160,11 +165,11 @@ public class WorldRenderer implements Disposable
 		{
 			TextureRegionDrawable drawable = new TextureRegionDrawable(Assets.instance.up.power);
 			powerUp.setDrawable(drawable);
-			powerUp.setSize(32,32); 
+			powerUp.setSize(24,24); 
 			if (WorldController.shootTimeout<2)
 			{
 					 
-					batch.draw(Assets.instance.up.power, powerUp.getImageX(), powerUp.getImageY(), powerUp.getOriginX(), powerUp.getOriginY(), powerUp.getWidth(), powerUp.getHeight(), powerUp.getScaleX(), powerUp.getScaleY(), powerUp.getRotation());
+					batch.draw(Assets.instance.up.power, powerUp.getImageX(), powerUp.getImageY()+450, powerup2.getOriginX(), powerup2.getOriginY(), powerup2.getWidth(), powerup2.getHeight(), powerup2.getScaleX(), powerup2.getScaleY(), powerup2.getRotation());
 					
 			}
 			else
@@ -218,9 +223,6 @@ public class WorldRenderer implements Disposable
 	public void renderWorld (SpriteBatch batch)
 	{
 		//drawing of background image
-		camera2 = new OrthographicCamera(Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT); 
-		camera2.setToOrtho(false,Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT );
-		
 		batch.setProjectionMatrix(camera2.combined);
 		batch.begin();
 		batch.draw(Assets.instance.leveldecoration.city,0, 0, Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT ); 
@@ -268,6 +270,8 @@ public class WorldRenderer implements Disposable
 	{
 		camera.viewportWidth = (Constants.VIEWPORT_HEIGHT / height) * width;
 		camera.update();
+		//resolve resize issue for camera 2
+		stage.getViewport().setScreenSize(width, height);
 		
 	}
 

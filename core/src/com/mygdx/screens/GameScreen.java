@@ -15,9 +15,14 @@ import com.mygdx.game.WorldRenderer;
  * Adam Standke
  * 
  */
-public class GameScreen implements Screen 
+public class GameScreen extends AbstractGameScreen 
 {
 	
+	public GameScreen(Game game) 
+	{
+		super(game);
+		
+	}
 	private WorldController worldController;
 	private WorldRenderer worldRenderer;
 	protected Game game;
@@ -96,19 +101,10 @@ public class GameScreen implements Screen
 	public void hide() 
 	{
 		worldRenderer.dispose();
-	    Assets.instance.dispose();
+	    worldController.dispose();
 		
 	}
-	/**
-	 * Method that deallocates the memory allocated objects of the worldRender class, such as 
-	 * vertex arrays, and various assets held in main memory, like sound, textures, and music 
-	 */
-	@Override
-	public void dispose() 
-	{
-		worldRenderer.dispose();
-	    Assets.instance.dispose();
-		
-	}
+	
+	
 
 }
