@@ -27,4 +27,6 @@ public class Constants
 	
 	public static final String SKIN_RainMaker_UI ="images/rainmaker-ui.json";
 	
+	public static final String PREFERENCES = "rainmaker.prefs";
+	
 }
