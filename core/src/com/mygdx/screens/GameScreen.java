@@ -22,10 +22,10 @@ public class GameScreen extends AbstractGameScreen
 	{
 		super(game);
 		
+		
 	}
 	private WorldController worldController;
 	private WorldRenderer worldRenderer;
-	protected Game game;
 	private boolean paused;
 	
 	/**
@@ -38,7 +38,7 @@ public class GameScreen extends AbstractGameScreen
 	@Override
 	public void show() 
 	{
-		worldController = new WorldController();
+		worldController = new WorldController(game);
 		worldRenderer = new WorldRenderer(worldController);
 		 
 		
@@ -101,7 +101,11 @@ public class GameScreen extends AbstractGameScreen
 	public void hide() 
 	{
 		worldRenderer.dispose();
-	    worldController.dispose();
+	    if(WorldController.b2world !=null) 
+	    {
+	    	WorldController.b2world.dispose();
+	    	WorldController.b2world=null; 
+	    }
 		
 	}
 	

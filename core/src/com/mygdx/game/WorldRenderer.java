@@ -27,6 +27,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.objects.Ability;
 import com.mygdx.objects.Star;
+import com.mygdx.screens.MenuScreen;
 import com.mygdx.util.Constants;
 
 
@@ -105,7 +106,7 @@ public class WorldRenderer implements Disposable
 		leftCorner.setFillParent(true);
 		stage.addActor(leftCorner);
 		
-		b2debugRenderer = new Box2DDebugRenderer();
+		//b2debugRenderer = new Box2DDebugRenderer();
 	}
 	
 
@@ -157,6 +158,7 @@ public class WorldRenderer implements Disposable
 	
 	private void renderHud(SpriteBatch batch2)
 	{ 
+		
 		batch.setProjectionMatrix(stage.getCamera().combined);
 		healthBar.setValue(WorldController.health);
 		score.setText("Score:"+ WorldController.score);
@@ -222,6 +224,7 @@ public class WorldRenderer implements Disposable
 	 */
 	public void renderWorld (SpriteBatch batch)
 	{
+		
 		//drawing of background image
 		batch.setProjectionMatrix(camera2.combined);
 		batch.begin();
@@ -258,7 +261,6 @@ public class WorldRenderer implements Disposable
 	public void dispose() 
 	{
 		batch.dispose();
-		b2debugRenderer.dispose();
 		stage.dispose();
 		
 	}

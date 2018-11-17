@@ -1,5 +1,7 @@
 package com.mygdx.screens;
 
+import java.util.ArrayList;
+
 import javax.swing.GroupLayout.Alignment;
 
 import com.badlogic.gdx.Game;
@@ -14,28 +16,42 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.physics.box2d.DestructionListener;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.WorldController;
 import com.mygdx.util.Constants;
+import com.mygdx.util.GamePreferences;
 
 
 
-public class MenuScreen extends AbstractGameScreen 
+public class MenuScreen  extends AbstractGameScreen implements DestructionListener
 {
-
+	
 	private Stage stage;
 	private Skin skinRainMaker;
 	private Skin skinLibgdx;
@@ -44,23 +60,197 @@ public class MenuScreen extends AbstractGameScreen
 	private Image imgTim;
 	private Button btnMenuPlay;
 	private Button btnMenuOptions;
-	private Button btnLogin;
-	private Button btnMenuLogin;
-	private Button btnMenuHighScore;
 	private FitViewport viewport;
-	private SpriteBatch batch;
-	private OrthographicCamera camera2;
 	private Image imgCloud2;
 	private Image imgCloud3;
 	private Image imgRain;
 	private Image imgRain2;
 	private Image imgRain3;
 	private Image imgRain4;
+	private char[] player; 
+	private CheckBox chkSound;
+    private Slider sldSound;
+    private CheckBox chkMusic;
+    private Slider sldMusic;
+    private TextField login;
+	private Window winOptions;
+	private TextButton btnWinOptSave;
+	private TextButton btnWinOptCancel;
+	private int count; 
 
 	public MenuScreen(Game game) 
 	{
-		super(game);	
+		super(game);
+		
 	}
+	
+	 private void loadSettings() 
+	 {
+		 player= new char[20];
+		 count=0; 
+	     GamePreferences prefs = GamePreferences.instance;
+	     prefs.load();
+	     chkSound.setChecked(prefs.sound);
+	     sldSound.setValue(prefs.volSound);
+	     chkMusic.setChecked(prefs.music);
+	     sldMusic.setValue(prefs.volMusic);
+	     login.setText(prefs.login);
+	 }
+	 
+	 private void saveSettings() 
+	 {
+		 String login = new String(player);
+		 player=null;
+		 count=0; 
+	     GamePreferences prefs = GamePreferences.instance;
+	     prefs.sound = chkSound.isChecked();
+	     prefs.volSound = sldSound.getValue();
+	     prefs.music = chkMusic.isChecked();
+	     prefs.volMusic = sldMusic.getValue();
+	     prefs.login= login; 
+	     prefs.save();
+	 }
+	 
+	 private void onSaveClicked() 
+	 {
+	     saveSettings();
+	     onCancelClicked();
+	}
+	 
+	  private void onCancelClicked() 
+	  {
+		     btnMenuPlay.setVisible(true);
+		     btnMenuOptions.setVisible(true);
+		     winOptions.setVisible(false);
+	  }
+	  
+	  
+		    
+	  
+	  
+	  
+	  private Table buildOptWinAudioSettings () 
+	  {
+		     Table tbl = new Table();
+		     // + Title: "Audio"
+		     tbl.pad(10, 10, 0, 10);
+		     tbl.add(new Label("Audio", skinLibgdx, "font",
+		             Color.GREEN)).colspan(3);
+		     tbl.row();
+		     tbl.columnDefaults(0).padRight(10);
+		     tbl.columnDefaults(1).padRight(10);
+		     // + Checkbox, "Sound" label, sound volume slider
+		     chkSound = new CheckBox("", skinLibgdx);
+		     tbl.add(chkSound);
+		     tbl.add(new Label("Sound", skinLibgdx));
+		     sldSound = new Slider(0.0f, 1.0f, 0.1f, false, skinLibgdx);
+		     tbl.add(sldSound);
+		     tbl.row();
+		     // + Checkbox, "Music" label, music volume slider
+		     chkMusic = new CheckBox("", skinLibgdx);
+		     tbl.add(chkMusic);
+		     tbl.add(new Label("Music", skinLibgdx));
+		     sldMusic = new Slider(0.0f, 1.0f, 0.1f, false, skinLibgdx);
+		     tbl.add(sldMusic);
+		     tbl.row();
+		     return tbl;
+	}
+	 
+	  private Table buildOptWinLoginSettings ()
+	  {
+		  Table tbl = new Table(); 
+		  tbl.pad(10, 10, 0, 10);
+		  tbl.add(new Label("Player Login", skinLibgdx, "font", Color.GREEN)).colspan(2);
+		  tbl.row();
+		  login= new TextField("", skinLibgdx);
+		  login.setProgrammaticChangeEvents(false);
+		  tbl.add(login);
+		  login.addListener(new InputListener() {
+			  		
+					public boolean keyTyped(InputEvent event, char character)
+					{
+						
+						if(event.getCharacter()=='\b')
+						{
+							; 
+						}
+						else
+						{
+							player[count++]=character; 
+							
+						}
+						 
+						return false; 
+					}
+		  	}); 
+				
+			
+		return tbl;
+		  
+	  }
+	  
+	  
+	  private Table buildOptWinButtons () 
+	  {
+		     Table tbl = new Table();
+		     // + Separator
+		     Label lbl = null;
+		     lbl = new Label("", skinLibgdx);
+		     lbl.setColor(0.75f, 0.75f, 0.75f, 1);
+		     lbl.setStyle(new LabelStyle(lbl.getStyle()));
+		     lbl.getStyle().background = skinLibgdx.newDrawable("white");
+		     tbl.add(lbl).colspan(2).height(1).width(220).pad(0, 0, 0, 1);
+		     tbl.row();
+		     lbl = new Label("", skinLibgdx);
+		     lbl.setColor(0.5f, 0.5f, 0.5f, 1);
+		     lbl.setStyle(new LabelStyle(lbl.getStyle()));
+		     lbl.getStyle().background = skinLibgdx.newDrawable("white");
+		     tbl.add(lbl).colspan(2).height(1).width(220).pad(0, 1, 5, 0);
+		     tbl.row();
+		     // + Save Button with event handler
+		     btnWinOptSave = new TextButton("Save", skinLibgdx);
+		     tbl.add(btnWinOptSave).padRight(30);
+		     btnWinOptSave.addListener(new ChangeListener() {
+		       @Override
+		       public void changed (ChangeEvent event, Actor actor) 
+		       {
+		         onSaveClicked();
+		       }
+		     });
+		     // + Cancel Button with event handler
+		     btnWinOptCancel = new TextButton("Cancel", skinLibgdx);
+		     tbl.add(btnWinOptCancel);
+		     btnWinOptCancel.addListener(new ChangeListener() {
+		       @Override
+		       public void changed (ChangeEvent event, Actor actor) 
+		       {
+		         onCancelClicked();
+		       }
+		     });
+		     return tbl; 
+	  }
+	  
+	  
+	  private Table buildOptionsWindowLayer () 
+	  {
+			 winOptions = new Window("Options", skinLibgdx);
+		     // + Audio Settings: Sound/Music CheckBox and Volume Slider
+		     winOptions.add(buildOptWinAudioSettings()).row();
+		     // + Character Skin: Selection Box (White, Gray, Brown)
+		     winOptions.add(buildOptWinLoginSettings()).row();
+		     // + Separator and Buttons (Save, Cancel)
+		     winOptions.add(buildOptWinButtons()).pad(10, 0, 10, 0);
+		     // Make options window slightly transparent
+		     winOptions.setColor(1, 1, 1, 0.8f);
+		     // Hide options window by default
+		     winOptions.setVisible(false);
+		     // Let TableLayout recalculate widget sizes and positions
+		     winOptions.pack();
+		     // Move options window to bottom right corner
+		     winOptions.setPosition(Constants.VIEWPORT_GUI_WIDTH - winOptions.getWidth() - 50, 50);
+		     return winOptions;
+		 }
+	 
 
 	@Override
 	public void render(float deltaTime) 
@@ -83,7 +273,7 @@ public class MenuScreen extends AbstractGameScreen
 	@Override
 	public void show() 
 	{
-		batch = new SpriteBatch();
+		
 		viewport = new FitViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT, new OrthographicCamera());
 		stage = new Stage(viewport); 
 		Gdx.input.setInputProcessor(stage);
@@ -101,15 +291,12 @@ public class MenuScreen extends AbstractGameScreen
 		
 		
 		
-	
-		
-		
 		Table layerBackground = buildBackgroundLayer();
 		Table layerClouds = buildCloudsLayer();
 		Table layerRain = buildRainLayer(); 
 	    Table layerObjects = buildTimmyLayer();
 	    Table layerControls = buildControlsLayer();
-	   //Table layerOptionsWindow = buildOptionsWindowLayer();
+	    Table layerOptionsWindow = buildOptionsWindowLayer();
 	    
 	    Label title = new Label("RainMaker", skinLibgdx, "title", Color.SKY);
 	    title.setFontScale(3.5f);
@@ -130,7 +317,7 @@ public class MenuScreen extends AbstractGameScreen
 	    stack.add(layerControls);
 	    stack.add(credit);
 	    stage.addActor(stack);
-	    //stage.addActor(layerOptionsWindow);
+	    stage.addActor(layerOptionsWindow);
 	       
 		
 	}
@@ -166,10 +353,7 @@ public class MenuScreen extends AbstractGameScreen
 		return layer;
 	}
 
-	private Table buildOptionsWindowLayer() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	private Table buildControlsLayer() 
 	{
@@ -190,7 +374,10 @@ public class MenuScreen extends AbstractGameScreen
 
 			private void onOptionsClicked() 
 			{
-				
+				 loadSettings();
+			     btnMenuPlay.setVisible(false);
+			     btnMenuOptions.setVisible(false);
+			     winOptions.setVisible(true);
 				
 			}
 			 
@@ -212,8 +399,9 @@ public class MenuScreen extends AbstractGameScreen
 
 			private void onPlayClicked() 
 			{
-				game.setScreen(new GameScreen(game));
 				
+				game.setScreen(new GameScreen(game));
+
 			}
 			 
 		 }); 
@@ -247,7 +435,7 @@ public class MenuScreen extends AbstractGameScreen
 	@Override
 	public void hide() 
 	{
-		batch.dispose();
+		
 		stage.dispose();
 		skinRainMaker.dispose();
 		skinLibgdx.dispose();

@@ -30,6 +30,7 @@ import com.mygdx.objects.Raindrops;
 import com.mygdx.objects.Raindrops.RainDrop;
 import com.mygdx.objects.Star;
 import com.mygdx.objects.Timmy;
+import com.mygdx.screens.MenuScreen;
 import com.mygdx.util.CameraHelper;
 import com.mygdx.util.Constants;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -61,6 +62,7 @@ public class WorldController extends InputAdapter implements Disposable
 	public static int lives=3;
 	public static int health; 
 	private int first;
+	private Game game;
 	public static boolean visible=false; 
      
     
@@ -71,8 +73,9 @@ public class WorldController extends InputAdapter implements Disposable
      * logic/gameplay
      * @param game an object of the Game class that determines how the application should operate
      */
-	public WorldController() 
+	public WorldController(Game game) 
 	{
+		this.game=game; 
 		init();
 	}
 	/**
@@ -89,7 +92,6 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
-		if (b2world != null) b2world.dispose();
  	   	b2world = new World(new Vector2(0, -5f), true);
  	   	b2world.setContactListener(new MyContactListener());
 		initlevel(); 
@@ -124,15 +126,13 @@ public class WorldController extends InputAdapter implements Disposable
 		handleDebugInput(deltaTime);
 		
 		handleInputGame(deltaTime);
-		
 	
-		
 		
 		//level.update(deltaTime);
 		b2world.step(deltaTime, 8, 3);
 		jumpTimeout--;
 		shootTimeout--; 
-		
+	
 		if(!b2world.isLocked()) 
 		{
 			int x= rain.raindropScheduledForRemoval.size;
@@ -146,6 +146,7 @@ public class WorldController extends InputAdapter implements Disposable
 					{
 						
 						drop.body.getWorld().destroyBody(drop.body);
+						drop.body=null; 
 						
 					}
 					rain.destroy(drop);
@@ -167,6 +168,7 @@ public class WorldController extends InputAdapter implements Disposable
 					{
 						updateScore(point); 
 						point.body.getWorld().destroyBody(point.body);
+						point.body=null; 
 						
 					}
 					
@@ -183,6 +185,7 @@ public class WorldController extends InputAdapter implements Disposable
 				if(Star.collected)
 				{
 					star.body.getWorld().destroyBody(star.body);
+					star.body=null; 
 					visible=true; 
 				}
 			}
@@ -315,13 +318,8 @@ public class WorldController extends InputAdapter implements Disposable
 	 */
 	public boolean keyUp (int keycode) 
 	{
-      /*// Reset game world
-      if (keycode == Keys.R) 
-      {
-    	  	init();
-    	  	Gdx.app.debug(TAG, "Game world resetted");
-      }*/
-      // Toggle camera follow
+      
+      //camera debug
       if (keycode == Keys.ENTER) 
       {
         cameraHelper.setTarget(cameraHelper.hasTarget()
@@ -329,13 +327,12 @@ public class WorldController extends InputAdapter implements Disposable
         /*Gdx.app.debug(TAG, "Camera follow enabled: "
         			+ cameraHelper.hasTarget());*/
       }
-      
       //Back to menu
-      /*else if(keycode == Keys.ESCAPE || keycode == Keys.BACK)
+      else if(keycode == Keys.ESCAPE || keycode == Keys.BACK)
       {
     	  backToMenu();
       }
-      */
+      
       return false;
 	}
 	
@@ -549,6 +546,12 @@ public class WorldController extends InputAdapter implements Disposable
 			 return true; 
 		 }
 		 return false; 
+	}
+	
+	 private void backToMenu () 
+	 {
+	       // switch to menu screen
+	       game.setScreen(new MenuScreen(game));
 	}
 	
 	
