@@ -194,7 +194,7 @@ public class WorldController extends InputAdapter implements Disposable
 		cameraHelper.update(deltaTime);
 		level.people.updateScrollPosition(cameraHelper.getPosition());
 		healthStatus(); 
-		if (isGameOver() || didTimmyfall()|| isTimmyDead())
+		if (isGameOver() || didTimmyfall()|| isTimmyDead())//portion of update that handles the state of game
 		{
 			
 			
@@ -313,21 +313,19 @@ public class WorldController extends InputAdapter implements Disposable
 	/**
 	 * Method used currently for debugging purposes. When the enter
 	 * key is pressed the camera is allowed to follow any object it wants
-	 * in the game. Later when the menu screen is created this method will 
-	 * either restart the game or return to the menu screen  
+	 * in the game. Also by pressing escape or
+	 * the back key the game returns to the main menu   
 	 */
 	public boolean keyUp (int keycode) 
 	{
-      
       //camera debug
       if (keycode == Keys.ENTER) 
       {
         cameraHelper.setTarget(cameraHelper.hasTarget()
         		? null: level.tim);
-        /*Gdx.app.debug(TAG, "Camera follow enabled: "
-        			+ cameraHelper.hasTarget());*/
+        
       }
-      //Back to menu
+      //Back to main menu
       else if(keycode == Keys.ESCAPE || keycode == Keys.BACK)
       {
     	  backToMenu();
@@ -498,7 +496,9 @@ public class WorldController extends InputAdapter implements Disposable
  	   }
 		
 	}
-	
+	/**
+	 * Method that get's the main player's health during the game
+	 */
 	public void healthStatus()
 	{
 		health=level.tim.getLife(); 
@@ -548,8 +548,11 @@ public class WorldController extends InputAdapter implements Disposable
 		 return false; 
 	}
 	
-	 private void backToMenu () 
-	 {
+	/**
+	 * Method that exits the game screen and returns back to the menu screen
+	 */
+	private void backToMenu () 
+	{
 	       // switch to menu screen
 	       game.setScreen(new MenuScreen(game));
 	}

@@ -74,31 +74,36 @@ public class WorldRenderer implements Disposable
 	/**
 	 * Method that creates an object of the SpriteBatch class that creates a vertex array  
 	 * of 20000 spites and uses the default shader. Method also creates an orthographic camera
-	 * with a given viewport height and width and then recalculates the projection and camera-view matrix
-	 * from an initial 3d world coordinate position.   
+	 * with a given viewport height and width(measured in meters)
+	 * and then multiplies the projection and camera-view matrix to go  
+	 * from an initial 3d world coordinate position to screen space. 
+	 * Also another orthographic camera is created called camera2 thats viewport's width and height
+	 * are the screen's dimension measured in pixels. This camera will be used to solely capture the 
+	 * background image. Lastly, to create a HUD that is displayed during the game play, scene2d's ui 
+	 * is used; namely stage, to add various actors on top of the scene, such as a progress bar. Stage
+	 * also has its own orthographic camera to keep track of only the on-screen HUD     
 	 */
 	private void init () 
 	{ 
+		//main camera that tracks the game play of the player
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera(Constants.VIEWPORT_WIDTH,Constants.VIEWPORT_HEIGHT);
 		camera.position.set(0, 0, 0);
 		camera.update();
-		
+		//secondary camera that only focuses on the background image
 		camera2 = new OrthographicCamera(Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT);
 		camera2.setToOrtho(false,Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT );
-		
-		
+		//Scene 2d ui used to create HUD display in game; the stage also has its own orthographic camera too
 		viewport = new FitViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT, new OrthographicCamera()); 
 		stage = new Stage(viewport, batch);
 		stack = new Stack();
 		leftCorner = new Table(); 
-		
+		//builds skin for HUD
 		buildHudSkin();
 		
 		Table progressBar = buildPrograssBar();
 		Table score1 = buildScoreBox();
 	    powerup2 = buildPowerBox();
-		
 		leftCorner.add(progressBar).top().left();
 		leftCorner.add(score1).top().right(); 
 		leftCorner.row(); 
@@ -110,7 +115,13 @@ public class WorldRenderer implements Disposable
 	}
 	
 
-
+	/**
+	 * Method that holds the a scene 2d widget Image that represents
+	 * a star object that the player is allowed to shoot in the game; 
+	 * will appear in the Hud when the star is collected and/or ready to be 
+	 * shot again
+	 * @return a Table object
+	 */
 	private Table buildPowerBox() 
 	{
 		Table powerUpDisplay = new Table();
@@ -118,7 +129,11 @@ public class WorldRenderer implements Disposable
 	    powerUpDisplay.add(powerUp);
 		return powerUpDisplay;
 	}
-
+	
+	/**
+	 * Method that builds a scene2d label widget that displays the player's current score 
+	 * @return a Table object
+	 */
 	private Table buildScoreBox() 
 	{
 		Table bar = new Table();
@@ -127,6 +142,10 @@ public class WorldRenderer implements Disposable
 		return bar;
 	}
 
+	/**
+	 * Method that builds a scene2d progress bar widget that displays the player's current health 
+	 * @return a Table object
+	 */
 	private Table buildPrograssBar() 
 	{
 		Table bar = new Table();
@@ -139,6 +158,11 @@ public class WorldRenderer implements Disposable
 		return bar;
 	}
 	
+	/**
+	 * Method that loads the skin chosen to display Scene2d's widgets. In this case I used
+	 * the Neutralizer UI Ver.1 created by Raymond Raeleus Buckley, all rights 
+	 * reserved to him 
+	 */
 	private void buildHudSkin() 
 	{
 		hudSkin = new Skin(Gdx.files.internal(Constants.SKIN_LIBGDX_UI),
@@ -148,6 +172,8 @@ public class WorldRenderer implements Disposable
 	
 	/**
 	 * Helper method that is called by the GameScreen class
+	 * to render the world and then render the on screen hud
+	 * display
 	 */
 	public void render () 
 	{ 
@@ -156,6 +182,15 @@ public class WorldRenderer implements Disposable
 		
 	}
 	
+	
+	/**
+	 * Method that renders the HUD display that appears on top of the game, and 
+	 * tracks various game parameters as the player plays the game, such as player's 
+	 * score, health, lives, and whether the main character's special ability can be used
+	 * To do so, first the stage's camera is  and transformed from camera space to screen space. 
+	 * Then all of the in game elements, such as the player's health and score are gathered. 
+	 * After which batch's begin and end method are called to draw most of the HuD.    
+	 */
 	private void renderHud(SpriteBatch batch2)
 	{ 
 		

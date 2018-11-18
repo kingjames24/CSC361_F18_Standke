@@ -36,7 +36,7 @@ public class MyContactListener implements ContactListener
 	{
 		Object body=contact.getFixtureA().getBody().getUserData(); 
 		Object body1=contact.getFixtureB().getBody().getUserData(); 
-		if(body1 != null && body==null)
+		if(body1 != null && body==null) //rain drop collides with a static object
 		{
 			if(body1 instanceof Raindrops.RainDrop)
 			{
@@ -46,7 +46,7 @@ public class MyContactListener implements ContactListener
 			}
 			
 		}
-		else if(body != null && body1==null)
+		else if(body != null && body1==null)//rain drop collides with a static obejct
 		{
 			if(body instanceof Raindrops.RainDrop)
 			{
@@ -57,23 +57,23 @@ public class MyContactListener implements ContactListener
 		}
 		else  
 		{
-			if(body1 instanceof Raindrops.RainDrop && body instanceof Raindrops.RainDrop)//rain colliding with rain
+			if(body1 instanceof Raindrops.RainDrop && body instanceof Raindrops.RainDrop)
 			{
-				return; 
+				return; //rain drop colliding with another dynamic rain drop
 			}
 			else if(body1 instanceof Raindrops.RainDrop && body instanceof Points || body1 instanceof Points && body instanceof Raindrops.RainDrop)
 			{
-				return; 
+				return; //rain drop colliding with a dynamic point object 
 			}
 			else if(body1 instanceof Raindrops.RainDrop && body instanceof Star || body1 instanceof Star && body instanceof Raindrops.RainDrop)
 			{
-				return; 
+				return; //rain drop colliding with a dynamic star object 
 			}
 			else if(body1 instanceof Raindrops.RainDrop && body instanceof Ability || body1 instanceof Ability && body instanceof Raindrops.RainDrop)
 			{
 				if(body1 instanceof Raindrops.RainDrop)
 				{
-					
+															//rain drop colliding with a dynamic ability object
 					RainDrop rain = (RainDrop)body1;
 					rain.startContact();
 				}
@@ -88,7 +88,7 @@ public class MyContactListener implements ContactListener
 			{
 				if(body1 instanceof Points)
 				{
-					
+														//Timmy colliding with a dynamic point object(ie., collected)
 					Points point = (Points)body1;
 					point.startContract();
 				}
@@ -102,7 +102,7 @@ public class MyContactListener implements ContactListener
 			{
 				if(body1 instanceof Star)
 				{
-					
+													//Timmy colliding with a dynamic star object(ie., collected)
 					Star up = (Star)body1;
 					up.startContract();
 				}
@@ -116,7 +116,7 @@ public class MyContactListener implements ContactListener
 			{
 				if(body1 instanceof Timmy)
 				{
-					
+													//Timmy colliding with a dynamic rain object(ie., hit)
 					Timmy up = (Timmy)body1;
 					up.startContract();
 					RainDrop rain = (RainDrop)body;

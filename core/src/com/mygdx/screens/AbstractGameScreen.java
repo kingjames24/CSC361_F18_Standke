@@ -5,7 +5,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.mygdx.game.Assets;
 
-
+/**
+ * abstract Class that implements LibGDX's screen interface which will 
+ * be used to switch between the screens in the game
+ * @author adam
+ *
+ */
 public abstract class AbstractGameScreen implements Screen 
 {
 	
