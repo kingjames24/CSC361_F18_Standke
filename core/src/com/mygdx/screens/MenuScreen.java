@@ -162,7 +162,7 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		  tbl.pad(10, 10, 0, 10);
 		  tbl.add(new Label("Player Login", skinLibgdx, "font", Color.GREEN)).colspan(2);
 		  tbl.row();
-		  login= new TextField("", skinLibgdx);
+		  login= new TextField("", skinLibgdx, "default");
 		  login.setProgrammaticChangeEvents(false);
 		  tbl.add(login);
 		  login.addListener(new InputListener() {
@@ -176,7 +176,14 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 						}
 						else
 						{
-							player[count++]=character; 
+							if(count>=player.length)
+							{
+								; 
+							}
+							else
+							{
+								player[count++]=character; 
+							}
 							
 						}
 						 
@@ -362,6 +369,7 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		 
 		 
 		 btnMenuOptions = new Button(skinRainMaker, "options");
+		 btnMenuOptions.scaleBy(.38f);
 		 layer.add(btnMenuOptions).align(Align.bottomRight).expand();
 		 btnMenuOptions.addListener(new ChangeListener() {
 
@@ -384,7 +392,8 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		 }); 
 		 
 		//Play Button
-		 //layer.right().bottom();
+		 
+		 layer.add().expand();
 		 layer.add().expand();
 		 btnMenuPlay = new Button(skinRainMaker, "play");
 		 layer.add(btnMenuPlay).align(Align.bottomLeft).expand();
