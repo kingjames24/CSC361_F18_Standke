@@ -35,8 +35,8 @@ public class DesktopLauncher {
 					settings.debug = drawDebugOutline;
 					TexturePacker.process(settings, "assets-raw/images", "../core/assets/images",
 							"rainmaker.atlas");
-					/*TexturePacker.process(settings,  "assets-raw/images-ui", "../core/assets/images-ui",
-							"canyonbunny-ui.atlas");*/
+					TexturePacker.process(settings,  "assets-raw/images-ui", "../core/assets/images-ui",
+							"rainmaker-ui.atlas");
 				}
 				
 				LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();

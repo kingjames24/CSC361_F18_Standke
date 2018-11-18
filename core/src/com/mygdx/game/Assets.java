@@ -8,11 +8,14 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.mygdx.util.Constants;
+
 
 
 
@@ -34,6 +37,7 @@ public class Assets implements Disposable, AssetErrorListener
 	//static object that holds the only instance of the class
 	public static final Assets instance = new Assets();
     private AssetManager assetManager;
+	
     
     /**
      * Private constructor since the Assets' class is modeled after
@@ -152,16 +156,18 @@ public class Assets implements Disposable, AssetErrorListener
     	public final AtlasRegion chopper;
     	public final AtlasRegion city;
     	public final AtlasRegion woman1;
+    	public final AtlasRegion bar; 
     	
     	public AssetLevelDecoration (TextureAtlas atlas)
     	{
-    		
+    		bar = atlas.findRegion("prog2"); 
     		chopper = atlas.findRegion("chopper");
     		city = atlas.findRegion("city_background");
     		woman1 = atlas.findRegion("woman_rain");
     	}
     }
     
+   
     
     
     /*
@@ -202,6 +208,8 @@ public class Assets implements Disposable, AssetErrorListener
 	    }
 	    
 	    // create game resource objects
+	    
+	    
 	    timmy = new AssetTimmy(atlas);
 	    plat = new AssetPlatform(atlas); 
 	    drop = new AssetRainDrop(atlas); 
@@ -237,6 +245,8 @@ public class Assets implements Disposable, AssetErrorListener
 		
 	}
 	
+	
+	
 	/**
 	 * Disposes the assets loaded in main memory
 	 */
@@ -244,6 +254,7 @@ public class Assets implements Disposable, AssetErrorListener
 	public void dispose() 
 	{
 		assetManager.dispose();
+		
 		
 	}
 

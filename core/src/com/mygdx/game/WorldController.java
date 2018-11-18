@@ -30,6 +30,7 @@ import com.mygdx.objects.Raindrops;
 import com.mygdx.objects.Raindrops.RainDrop;
 import com.mygdx.objects.Star;
 import com.mygdx.objects.Timmy;
+import com.mygdx.screens.MenuScreen;
 import com.mygdx.util.CameraHelper;
 import com.mygdx.util.Constants;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -44,21 +45,25 @@ import com.badlogic.gdx.utils.Disposable;
  */
 public class WorldController extends InputAdapter implements Disposable
 {
-	private Game game;
+	
+	
 	public CameraHelper cameraHelper;
     public static World b2world;
     public static int numFootContacts=0;
     public int jumpTimeout=0;
-    public int shootTimeout=15; 
+    public static int shootTimeout=15; 
     public boolean attached=false; 
     public RevoluteJoint joint;
     public RevoluteJoint joint2; 
     public Raindrops rain;
     public Ability ability; 
     public Level level;
-    public int score;
-	private int lives=3;
-	private int first; 
+    public static int score;
+	public static int lives=3;
+	public static int health; 
+	private int first;
+	private Game game;
+	public static boolean visible=false; 
      
     
     
@@ -70,7 +75,7 @@ public class WorldController extends InputAdapter implements Disposable
      */
 	public WorldController(Game game) 
 	{
-		this.game = game;
+		this.game=game; 
 		init();
 	}
 	/**
@@ -87,7 +92,6 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
-		if (b2world != null) b2world.dispose();
  	   	b2world = new World(new Vector2(0, -5f), true);
  	   	b2world.setContactListener(new MyContactListener());
 		initlevel(); 
@@ -122,15 +126,13 @@ public class WorldController extends InputAdapter implements Disposable
 		handleDebugInput(deltaTime);
 		
 		handleInputGame(deltaTime);
-		
 	
 		
-		
-		level.update(deltaTime);
+		//level.update(deltaTime);
 		b2world.step(deltaTime, 8, 3);
 		jumpTimeout--;
 		shootTimeout--; 
-		
+	
 		if(!b2world.isLocked()) 
 		{
 			int x= rain.raindropScheduledForRemoval.size;
@@ -144,6 +146,7 @@ public class WorldController extends InputAdapter implements Disposable
 					{
 						
 						drop.body.getWorld().destroyBody(drop.body);
+						drop.body=null; 
 						
 					}
 					rain.destroy(drop);
@@ -165,6 +168,7 @@ public class WorldController extends InputAdapter implements Disposable
 					{
 						updateScore(point); 
 						point.body.getWorld().destroyBody(point.body);
+						point.body=null; 
 						
 					}
 					
@@ -181,20 +185,25 @@ public class WorldController extends InputAdapter implements Disposable
 				if(Star.collected)
 				{
 					star.body.getWorld().destroyBody(star.body);
+					star.body=null; 
+					visible=true; 
 				}
 			}
 			Star.starScheduledforRemoval=null; 
 		}		
 		cameraHelper.update(deltaTime);
 		level.people.updateScrollPosition(cameraHelper.getPosition());
-		if (isGameOver() || didTimmyfall()|| isTimmyDead())
+		healthStatus(); 
+		if (isGameOver() || didTimmyfall()|| isTimmyDead())//portion of update that handles the state of game
 		{
 			
+			
 			lives--;
+			visible=false;
 			if (isGameOver())
 			{
-				lives=3; 
-				init();
+ 
+				return; 
 				
 			}
 			else
@@ -204,6 +213,8 @@ public class WorldController extends InputAdapter implements Disposable
 			}
 			
 		}
+		
+		
 	}
 	
 	/**
@@ -239,7 +250,7 @@ public class WorldController extends InputAdapter implements Disposable
 	       {
 	    	   if(numFootContacts<1)return;
 	    	   if(jumpTimeout>0)return; 
-	    	   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*3.5f), level.tim.body.getWorldCenter(), true);
+	    	   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*4f), level.tim.body.getWorldCenter(), true);
 	    	   jumpTimeout=60; 
 	       }
 	       if(Gdx.input.isButtonPressed(Input.Buttons.LEFT))
@@ -250,9 +261,15 @@ public class WorldController extends InputAdapter implements Disposable
 	    	  
 	    	   if(Star.collected)
 	    	   {
-	    		   if(shootTimeout>0)return;
+	    		   
+	    		   if(shootTimeout>0)
+	    		   {
+	    			  
+	    			   return;
+	    		   }
 	    		   if(first==0)
 	    		   {
+	    			    
 	    			   ability.createBody(level.tim.body.getPosition());
 	    			   Vector3 screen = new Vector3(x,y,0); 
 		    		   Vector3 world = WorldRenderer.camera.unproject(screen);
@@ -265,10 +282,12 @@ public class WorldController extends InputAdapter implements Disposable
 		    		   ability.body.setLinearVelocity(distance);
 		    		   ability.body.setGravityScale(0);
 		    		   ability.setFire(true); 
-		    		   shootTimeout=120; 
+		    		   shootTimeout=120;
+		    		   
 	    		   }
 	    		   else
 	    		   {
+	    			    
 	    			   Vector3 screen = new Vector3(x,y,0); 
 		    		   Vector3 world = WorldRenderer.camera.unproject(screen);
 		    		   Vector2 camera = new Vector2(world.x, world.y);
@@ -280,7 +299,8 @@ public class WorldController extends InputAdapter implements Disposable
 		    		   ability.body.setLinearVelocity(distance);
 		    		   ability.body.setGravityScale(0);
 		    		   ability.setFire(true); 
-		    		   shootTimeout=120; 
+		    		   shootTimeout=120;
+		    		    
 	    		   }
 	    		  
 	    	   
@@ -293,32 +313,24 @@ public class WorldController extends InputAdapter implements Disposable
 	/**
 	 * Method used currently for debugging purposes. When the enter
 	 * key is pressed the camera is allowed to follow any object it wants
-	 * in the game. Later when the menu screen is created this method will 
-	 * either restart the game or return to the menu screen  
+	 * in the game. Also by pressing escape or
+	 * the back key the game returns to the main menu   
 	 */
 	public boolean keyUp (int keycode) 
 	{
-      /*// Reset game world
-      if (keycode == Keys.R) 
-      {
-    	  	init();
-    	  	Gdx.app.debug(TAG, "Game world resetted");
-      }*/
-      // Toggle camera follow
+      //camera debug
       if (keycode == Keys.ENTER) 
       {
         cameraHelper.setTarget(cameraHelper.hasTarget()
         		? null: level.tim);
-        /*Gdx.app.debug(TAG, "Camera follow enabled: "
-        			+ cameraHelper.hasTarget());*/
+        
       }
-      
-      //Back to menu
-      /*else if(keycode == Keys.ESCAPE || keycode == Keys.BACK)
+      //Back to main menu
+      else if(keycode == Keys.ESCAPE || keycode == Keys.BACK)
       {
     	  backToMenu();
       }
-      */
+      
       return false;
 	}
 	
@@ -485,6 +497,14 @@ public class WorldController extends InputAdapter implements Disposable
 		
 	}
 	/**
+	 * Method that get's the main player's health during the game
+	 */
+	public void healthStatus()
+	{
+		health=level.tim.getLife(); 
+	}
+	
+	/**
 	 * Method that updates the player's score as it collects points in the game
 	 * @param point an object that represents things timmy can collect in the game
 	 */
@@ -508,7 +528,7 @@ public class WorldController extends InputAdapter implements Disposable
 	 * player exhausting the number of lives allowed
 	 * @return a boolean that represents whether Timmy has no more lives
 	 */
-	public boolean isGameOver ()
+	public static boolean isGameOver ()
 	{
 		   return lives < 0;
 	}
@@ -527,6 +547,17 @@ public class WorldController extends InputAdapter implements Disposable
 		 }
 		 return false; 
 	}
+	
+	/**
+	 * Method that exits the game screen and returns back to the menu screen
+	 */
+	private void backToMenu () 
+	{
+	       // switch to menu screen
+	       game.setScreen(new MenuScreen(game));
+	}
+	
+	
 	
 		
 	

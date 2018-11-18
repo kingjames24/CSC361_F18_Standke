@@ -1,0 +1,16 @@
+{
+	com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle:
+	{
+		play: { down: playButton, up: playButton },
+		options: { down: optionButton, up: optionButton }
+		 
+
+	},
+	com.badlogic.gdx.scenes.scene2d.ui.Image:
+	{
+	    	background: { drawable: background },
+		Tim: { drawable: Tim },
+		raindrops: { drawable: raindrops }, 
+		Cloud: { drawable: Cloud }	
+	},
+}

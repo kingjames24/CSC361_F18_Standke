@@ -1,0 +1,48 @@
+
+rainmaker-ui.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Cloud
+  rotate: false
+  xy: 604, 561
+  size: 305, 115
+  orig: 305, 115
+  offset: 0, 0
+  index: -1
+Tim
+  rotate: false
+  xy: 2, 2
+  size: 137, 156
+  orig: 137, 156
+  offset: 0, 0
+  index: -1
+background
+  rotate: false
+  xy: 2, 295
+  size: 600, 381
+  orig: 600, 381
+  offset: 0, 0
+  index: -1
+optionButton
+  rotate: false
+  xy: 461, 178
+  size: 115, 115
+  orig: 115, 115
+  offset: 0, 0
+  index: -1
+playButton
+  rotate: false
+  xy: 604, 445
+  size: 115, 114
+  orig: 115, 114
+  offset: 0, 0
+  index: -1
+raindrops
+  rotate: false
+  xy: 2, 160
+  size: 457, 133
+  orig: 457, 133
+  offset: 0, 0
+  index: -1

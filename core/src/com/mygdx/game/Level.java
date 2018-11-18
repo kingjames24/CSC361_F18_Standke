@@ -144,7 +144,7 @@ public class Level
 					if (lastPixel != currentPixel) 
 					{
 						obj = new Platform();
-						float heightIncreaseFactor = 0.25f;
+						float heightIncreaseFactor = 0.50f;
 						offsetHeight = -2.5f;
 						obj.position.set(pixelX, baseHeight * obj.dimension.y
 								* heightIncreaseFactor + offsetHeight);
@@ -216,11 +216,11 @@ public class Level
 	 * @param a float that represents the time-span between the
 	 * previously rendered frame and currently rendered frame
 	 */
-	public void update(float deltatime)
+	/*public void update(float deltatime)
 	{
 		for (Platform plat : platforms)
 			plat.update(deltatime);
-	}
+	}*/
 	
 	/**
 	 * Method that draws the level in the order specified; namely,
@@ -230,8 +230,7 @@ public class Level
 	 */
 	public void render (SpriteBatch batch)
 	{
-		// Draw City background
-		background.render(batch);
+		
 		
 		// Draw Platform
 		for (Platform plat : platforms)
