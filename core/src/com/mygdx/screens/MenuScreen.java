@@ -48,7 +48,14 @@ import com.mygdx.util.Constants;
 import com.mygdx.util.GamePreferences;
 
 
-
+/**
+ * Class that sets up the main menu screen in which the player
+ * chooses various options for the game and also logs in a name 
+ * to be used in playing the game
+ * 
+ * @author Adam Standke
+ *
+ */
 public class MenuScreen  extends AbstractGameScreen implements DestructionListener
 {
 	
@@ -78,12 +85,22 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 	private TextButton btnWinOptCancel;
 	private int count; 
 
+	/**
+     * Constructor that is passed in the Game Class 
+     * which implements the application interface allowing
+     * different screens to be loaded in 
+     * @param game an object from the Game Class
+     */
 	public MenuScreen(Game game) 
 	{
 		super(game);
 		
 	}
-	
+	  /*
+	  * A private method that loads in the specific
+	  * settings for a game such as sound, volume, 
+	  * music, name of the player
+	  */
 	 private void loadSettings() 
 	 {
 		 player= new char[20];
@@ -96,7 +113,11 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 	     sldMusic.setValue(prefs.volMusic);
 	     login.setText(prefs.login);
 	 }
-	 
+	 /**
+	  * Private method that saves the 
+	  * game preferences that the user decided 
+	  * for the game
+	  */
 	 private void saveSettings() 
 	 {
 		 String login = new String(player);
@@ -111,12 +132,25 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 	     prefs.save();
 	 }
 	 
+	 /**
+	 * Private method is called when the save
+	 * button of the option window is called. 
+	 * Then two helper methods are called to save
+	 * the game settings and not display the window
+	 * options any more. Also saves the audio settings
+	 */
 	 private void onSaveClicked() 
 	 {
 	     saveSettings();
 	     onCancelClicked();
-	}
-	 
+	 }
+	 /**
+	  * Private method that is called when the 
+	  * the cancel and/or save button is pressed by 
+	  * the user. It will then hide the window option 
+	  * pane and will then display the main two menu-buttons;
+	  * namely, play and menu-options
+	  */
 	  private void onCancelClicked() 
 	  {
 		     btnMenuPlay.setVisible(true);
@@ -128,7 +162,13 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		    
 	  
 	  
-	  
+	  /**
+	   * Method that builds the audio portion of
+	   * option window's UI that houses the game's audio 
+	   * settings. A new table object is which a labels, 
+	   * checkboxes and movable sliders are contained within  
+	   * @return a Table object that contains various widgets
+	   */
 	  private Table buildOptWinAudioSettings () 
 	  {
 		     Table tbl = new Table();
@@ -154,15 +194,20 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		     tbl.add(sldMusic);
 		     tbl.row();
 		     return tbl;
-	}
+	  }
 	 
+	  /**
+	   * Method that builds the login portion of
+	   * option window's UI that houses the player's name 
+	   * @return a Table object that contains various widgets
+	   */
 	  private Table buildOptWinLoginSettings ()
 	  {
 		  Table tbl = new Table(); 
 		  tbl.pad(10, 10, 0, 10);
 		  tbl.add(new Label("Player Login", skinLibgdx, "font", Color.GREEN)).colspan(2);
 		  tbl.row();
-		  login= new TextField("", skinLibgdx);
+		  login= new TextField("", skinLibgdx, "default");
 		  login.setProgrammaticChangeEvents(false);
 		  tbl.add(login);
 		  login.addListener(new InputListener() {
@@ -170,13 +215,20 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 					public boolean keyTyped(InputEvent event, char character)
 					{
 						
-						if(event.getCharacter()=='\b')
+						if(event.getCharacter()=='\b')//backspace character is not added to the login array
 						{
 							; 
 						}
 						else
 						{
-							player[count++]=character; 
+							if(count>=player.length)//an array out of bounds exception
+							{
+								; 
+							}
+							else
+							{
+								player[count++]=character; 
+							}
 							
 						}
 						 
@@ -189,7 +241,16 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		  
 	  }
 	  
-	  
+	  /**
+	  Method that builds the button portion of
+	  the option window's UI that will contain two buttons-
+	  a save and cancel button. A new table layout widget
+	  is created in which labels and a textbutton 
+	  widget are contained within. Allowing the user to select
+	  to save the new game settings or cancel opening up the 
+	  option's window in the first place.  
+	  @return a Table object that contains various widgets 
+	  */
 	  private Table buildOptWinButtons () 
 	  {
 		     Table tbl = new Table();
@@ -230,7 +291,11 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		     return tbl; 
 	  }
 	  
-	  
+	  /**
+	  * private method that builds the pop-out option window
+	  * and layers one table on top of each other from top to bottom
+	  * @return a Table object that is a layout widget
+	  */
 	  private Table buildOptionsWindowLayer () 
 	  {
 			 winOptions = new Window("Options", skinLibgdx);
@@ -251,7 +316,13 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		     return winOptions;
 		 }
 	 
-
+	/**
+	* Method that is called after the method Show(). It makes two 
+	* calls to openGL's interface to clear the given screen 
+	* and then the stage calls each of the actors in the scene to take some 
+	* action and calls the draw method to render the UI on the 
+	* user's display
+	*/
 	@Override
 	public void render(float deltaTime) 
 	{
@@ -261,15 +332,24 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		stage.act(deltaTime);
 	    stage.draw();
 	}
-
+	
+	/**
+	* Method that is called to resize the main menu 
+	* through getting the stage's viewport which handles the stage's 
+	* camera  
+	*/
 	@Override
 	public void resize(int width, int height) 
 	{
-		 stage.getViewport().setScreenSize(width, height); 
-		
-		
+		 stage.getViewport().setScreenSize(width, height); 	
 	}
 
+	/**
+	* Method that is routinely called by the Game class in which 
+	* the game's main menu is displayed. A new Stage is created and 
+	* is set to handle user input while shown to the user. Then the
+	* main menu is created through the helper method of rebuildStage(). 
+	*/
 	@Override
 	public void show() 
 	{
@@ -279,7 +359,18 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		Gdx.input.setInputProcessor(stage);
 		rebuildStage(); 
 	}
+	
 
+	/**
+	* Key method that builds the 2d scene graph in which the stage widget 
+	* is the root of the graph and uses a stack and table layout
+	* widget to add various actors to the overall stage.In which the UI is 
+	* ready to be rendered. First two new skin textures are created one for the 
+	* the main menu UI and another for the window option UI. Then each layer of 
+	* the UI is constructed through helper methods and a table is sent back. After
+	* clearing the stage's previous root child and new stack widgetgroup is created 
+	* to overlay/position each of the previous tables on top of each other 
+	*/
 	private void rebuildStage() 
 	{
 		
@@ -324,6 +415,11 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 
 	
 
+	/**
+	* Private method that builds the 
+	* rain drop images for the main menu's UI
+	* @return a Table object that is a layout widget
+	*/
 	private Table buildRainLayer() 
 	{
 		Table layer = new Table();
@@ -338,6 +434,11 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		return layer;
 	}
 
+	/**
+	* Private method that builds the cloud
+	* images for the main menu's UI
+	* @return a Table object that is a layout widget
+	*/
 	private Table buildCloudsLayer() 
 	{
 		Table layer = new Table(); 
@@ -354,14 +455,18 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 	}
 
 	
-
+	/**
+	* Private method that builds the two interactive buttons
+	* for main menu's UI that are seen in the bottom portion
+	* of the screen 
+	* @return a Table object that is a layout widget
+	*/
 	private Table buildControlsLayer() 
 	{
 		 Table layer = new Table();
-		 
-		 
-		 
+	
 		 btnMenuOptions = new Button(skinRainMaker, "options");
+		 btnMenuOptions.scaleBy(.38f);
 		 layer.add(btnMenuOptions).align(Align.bottomRight).expand();
 		 btnMenuOptions.addListener(new ChangeListener() {
 
@@ -384,7 +489,8 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		 }); 
 		 
 		//Play Button
-		 //layer.right().bottom();
+		 
+		 layer.add().expand();
 		 layer.add().expand();
 		 btnMenuPlay = new Button(skinRainMaker, "play");
 		 layer.add(btnMenuPlay).align(Align.bottomLeft).expand();
@@ -410,6 +516,11 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		return layer;
 	}
 
+	/**
+	* Private method that builds the main character's image
+	* ie., Timmy, for the main menu's UI
+	* @return a Table object that is a layout widget
+	*/
 	private Table buildTimmyLayer() 
 	{
 		Table layer = new Table();
@@ -421,6 +532,11 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		
 	}
 
+	/**
+	* Private method that builds the background image for the
+	* main menu's UI
+	* @return a Table object that is a layout widget
+	*/
 	private Table buildBackgroundLayer() 
 	{
 		Table layer= new Table(); 
@@ -432,6 +548,11 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		return layer; 
 	}
 
+	/**
+	* Method that is routinely called by the Game class in which the 
+	* game's main menu is hidden and the memory deallocated for items 
+	* such as the skins and widgets held in memory  
+	*/
 	@Override
 	public void hide() 
 	{
@@ -442,10 +563,10 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		
 	}
 
+	/**
+	* non-implemented method inherited from AbstractScreen
+	*/
 	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void pause() {}
 
 }

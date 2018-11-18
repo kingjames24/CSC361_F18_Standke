@@ -7,6 +7,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.MathUtils;
 
+/**
+ * Stores all the values for the settings like music, and
+ * sound, volume etc...
+ * 
+ * @author adam
+ *
+ */
 public class GamePreferences 
 {
 	 public static final GamePreferences instance = new GamePreferences();
@@ -17,14 +24,20 @@ public class GamePreferences
      public float volSound;
      public float volMusic;
      
+     // Singleton: prevent instantiation from other classes
      private GamePreferences () 
      {
          prefs = Gdx.app.getPreferences(Constants.PREFERENCES);
          
      }
-     
+     /**
+ 	 * Method that loads in default values if none are 
+ 	 * chosen by the player. Sound values are also clamped
+ 	 * making sure the value is between 0-1.
+ 	 */
      public void load () 
      { 
+    	//random string generator to be used if player did not enter a name
     	byte[] array = new byte[7];
     	new Random().nextBytes(array);
     	String generatedString = new String(array, Charset.forName("UTF-8"));
@@ -40,6 +53,10 @@ public class GamePreferences
  			0.0f, 1.0f);
     	 
      }
+     /**
+ 	 * Method takes the default values set above and saves them
+ 	 * into LibGDX's preferences file.
+ 	 */
      public void save () 
      { 
     	prefs.putBoolean("sound", sound);
