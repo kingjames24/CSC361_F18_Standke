@@ -58,7 +58,9 @@ public class WorldRenderer implements Disposable
 	private ExtendViewport backViewport;
 	private Stage backStage;
 	private OrthographicCamera camera2;
-	private Table powerup2; 
+	private Table powerup2;
+	private FitViewport viewport2;
+	private Stage stage2; 
 	
 	/**
 	 * Constructor that takes in an object of the WorldController class and also 
@@ -90,12 +92,13 @@ public class WorldRenderer implements Disposable
 		camera = new OrthographicCamera(Constants.VIEWPORT_WIDTH,Constants.VIEWPORT_HEIGHT);
 		camera.position.set(0, 0, 0);
 		camera.update();
-		//secondary camera that only focuses on the background image
-		camera2 = new OrthographicCamera(Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT);
-		camera2.setToOrtho(false,Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT );
+		//secondary  stage  that only focuses on the background image with its own seperate camera
+		viewport2 = new FitViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT, new OrthographicCamera()); 
+		stage2 = new Stage(viewport2, batch);
+
 		//Scene 2d ui used to create HUD display in game; the stage also has its own orthographic camera too
 		viewport = new FitViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT, new OrthographicCamera()); 
-		stage = new Stage(viewport, batch);
+		stage = new Stage(viewport, batch); 
 		stack = new Stack();
 		leftCorner = new Table(); 
 		//builds skin for HUD
@@ -111,7 +114,7 @@ public class WorldRenderer implements Disposable
 		leftCorner.setFillParent(true);
 		stage.addActor(leftCorner);
 		
-		//b2debugRenderer = new Box2DDebugRenderer();
+		b2debugRenderer = new Box2DDebugRenderer();
 	}
 	
 
@@ -261,9 +264,12 @@ public class WorldRenderer implements Disposable
 	{
 		
 		//drawing of background image
-		batch.setProjectionMatrix(camera2.combined);
+		OrthographicCamera camera2 = (OrthographicCamera) stage.getCamera(); 
+		camera2.zoom=1f; 
+		camera2.update();
+		batch.setProjectionMatrix(stage2.getCamera().combined);
 		batch.begin();
-		batch.draw(Assets.instance.leveldecoration.city,0, 0, Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT ); 
+		batch.draw(Assets.instance.leveldecoration.city, 0, 0, 300f, 0, Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT, 1.5f, 1, 0 );
 		batch.end();
 		
 		worldController.cameraHelper.applyTo(camera);
@@ -307,7 +313,12 @@ public class WorldRenderer implements Disposable
 	{
 		camera.viewportWidth = (Constants.VIEWPORT_HEIGHT / height) * width;
 		camera.update();
-		//resolve resize issue for camera 2
+		
+		stage2.getCamera().viewportWidth=width;
+		stage2.getCamera().viewportWidth=height;
+		stage2.getCamera().update(); 
+		stage2.getViewport().setScreenSize(width, height);
+		
 		stage.getViewport().setScreenSize(width, height);
 		
 	}

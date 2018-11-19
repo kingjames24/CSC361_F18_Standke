@@ -4,6 +4,9 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+
+import java.util.Iterator;
+
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -130,6 +133,7 @@ public class WorldController extends InputAdapter implements Disposable
 		
 		//level.update(deltaTime);
 		b2world.step(deltaTime, 8, 3);
+		
 		jumpTimeout--;
 		shootTimeout--; 
 	
@@ -146,7 +150,7 @@ public class WorldController extends InputAdapter implements Disposable
 					{
 						
 						drop.body.getWorld().destroyBody(drop.body);
-						drop.body=null; 
+						
 						
 					}
 					rain.destroy(drop);
@@ -168,7 +172,7 @@ public class WorldController extends InputAdapter implements Disposable
 					{
 						updateScore(point); 
 						point.body.getWorld().destroyBody(point.body);
-						point.body=null; 
+						 
 						
 					}
 					
@@ -185,7 +189,6 @@ public class WorldController extends InputAdapter implements Disposable
 				if(Star.collected)
 				{
 					star.body.getWorld().destroyBody(star.body);
-					star.body=null; 
 					visible=true; 
 				}
 			}
@@ -233,27 +236,37 @@ public class WorldController extends InputAdapter implements Disposable
 	       float sprMoveSpeed = 1;
 	       if (Gdx.input.isKeyPressed(Keys.A)) 
 	       {
-	    	   if(numFootContacts<1)return;
-	    	   level.people.timmyLeft(false);
-	    	   level.tim.left=true; 
-	    	   level.tim.body.applyLinearImpulse(new Vector2(-sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
+	    	   
+	    	   if(canWalkNow())
+	    	   {
+	    		   level.people.timmyLeft(false);
+		    	   level.tim.left=true; 
+		    	   level.tim.body.applyLinearImpulse(new Vector2(-sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
+	    	   }
+	    	   
 	       } 
 	       else if (Gdx.input.isKeyPressed(Keys.D)) 
 	       {
-	    	   if(numFootContacts<1)return;
-	    	   level.people.timmyLeft(true);
-	    	   level.tim.left=false;
-	    	   level.tim.body.applyLinearImpulse(new Vector2(sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
-	       }
+	    	  
+	    	   if(canWalkNow())
+	    	   {
+	    		   level.people.timmyLeft(true);
+		    	   level.tim.left=false;
+		    	   level.tim.body.applyLinearImpulse(new Vector2(sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
+	    	   }
+	       }   
 	       // Tim Jump
-	       if ( Gdx.input.isKeyPressed(Keys.W))
+	       else if ( Gdx.input.isKeyPressed(Keys.W))
 	       {
-	    	   if(numFootContacts<1)return;
-	    	   if(jumpTimeout>0)return; 
-	    	   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*4f), level.tim.body.getWorldCenter(), true);
-	    	   jumpTimeout=60; 
+	    	   
+	    	   if(canJumpNow())
+	    	   {
+	    		   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*4f), level.tim.body.getWorldCenter(), true);
+		    	   jumpTimeout=15;  
+	    	   }
+	    	   
 	       }
-	       if(Gdx.input.isButtonPressed(Input.Buttons.LEFT))
+	       if (Gdx.input.isButtonPressed(Input.Buttons.LEFT))
 	       {
 	    	   int x = Gdx.input.getX(); 
 	    	   int y = Gdx.input.getY();
@@ -309,6 +322,38 @@ public class WorldController extends InputAdapter implements Disposable
 	       }
 	     }
 	 }
+	
+	private boolean canJumpNow() 
+	{
+		if(jumpTimeout>0)return false; 
+		Iterator<String> it = MyContactListener.fixturesUnderFoot.iterator();
+		while(it.hasNext())
+		{
+			String fix = it.next(); 
+			String userDataTag =fix;  
+			if (userDataTag=="2")
+			{
+				return true; 
+			}
+		}
+		return false;
+	}
+	
+	private boolean canWalkNow()
+	{
+		Iterator<String> it = MyContactListener.fixturesUnderFoot.iterator();
+		while(it.hasNext())
+		{
+			String fix = it.next(); 
+			String userDataTag =fix;  
+			if (userDataTag=="2")
+			{
+				return true; 
+			}
+		}
+		return false;
+	}
+	
 	
 	/**
 	 * Method used currently for debugging purposes. When the enter
@@ -439,10 +484,10 @@ public class WorldController extends InputAdapter implements Disposable
 	       fixtureDef.friction = 0.1f;//low friction so the main character slides on the platform
 	       body.createFixture(fixtureDef);
 	       //Timmy's foot-sensor to disallow him from jumping while in the air
-	       polygonShape.setAsBox(0.3f, 0.3f, new Vector2(0.5f,-0.1f), 0);//fixture sits right below main characters hit box 
+	       polygonShape.setAsBox(0.4f, 0.1f, new Vector2(0.5f,.1f), 0);//fixture sits right below main characters hit box 
 	       fixtureDef.isSensor=true; 
-	       body.createFixture(fixtureDef);
-	       //footSensor.setUserData(3);
+	       Fixture footSensorFixture = body.createFixture(fixtureDef);
+	       footSensorFixture.setUserData((Object)"3");
 	       polygonShape.dispose();
 	       //Timmy's fire-launcher that allows him to fire an object when the star is collected 
 	       BodyDef circle = new BodyDef(); 
@@ -490,7 +535,8 @@ public class WorldController extends InputAdapter implements Disposable
  	   		   polygonShape.setAsBox(plat.bounds.width/ 2.0f, plat.bounds.height/ 2.0f, origin, 0);
  	   		   FixtureDef fixtureDef = new FixtureDef();
  	   		   fixtureDef.shape = polygonShape;
- 	   		   body.createFixture(fixtureDef);
+ 	   		   Fixture senor = body.createFixture(fixtureDef);
+ 	   		   senor.setUserData((Object)("2"));
  	   		   polygonShape.dispose();
  	   		        
  	   }

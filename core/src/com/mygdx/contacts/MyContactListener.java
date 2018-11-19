@@ -4,11 +4,12 @@ import com.mygdx.game.WorldController;
 import com.mygdx.objects.*;
 import com.mygdx.objects.Raindrops.RainDrop;
 
-
+import java.util.ArrayList;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
 
@@ -21,7 +22,8 @@ import com.badlogic.gdx.utils.Array;
  */
 public class MyContactListener implements ContactListener
 {
-	 
+	
+ public static ArrayList<String> fixturesUnderFoot= new ArrayList<String>(); 
 	/**
 	 * Method that is called when a collision has just started between
 	 * bodies in the game. The method receives the beginning contact points
@@ -35,7 +37,10 @@ public class MyContactListener implements ContactListener
 	public void beginContact(Contact contact) 
 	{
 		Object body=contact.getFixtureA().getBody().getUserData(); 
-		Object body1=contact.getFixtureB().getBody().getUserData(); 
+		Object body1=contact.getFixtureB().getBody().getUserData();
+		
+		Object fixtureUserData1 = contact.getFixtureA().getUserData();
+		Object FixtureUserData2 = contact.getFixtureB().getUserData(); 
 		if(body1 != null && body==null) //rain drop collides with a static object
 		{
 			if(body1 instanceof Raindrops.RainDrop)
@@ -59,15 +64,15 @@ public class MyContactListener implements ContactListener
 		{
 			if(body1 instanceof Raindrops.RainDrop && body instanceof Raindrops.RainDrop)
 			{
-				return; //rain drop colliding with another dynamic rain drop
+				; //rain drop colliding with another dynamic rain drop
 			}
 			else if(body1 instanceof Raindrops.RainDrop && body instanceof Points || body1 instanceof Points && body instanceof Raindrops.RainDrop)
 			{
-				return; //rain drop colliding with a dynamic point object 
+				; //rain drop colliding with a dynamic point object 
 			}
 			else if(body1 instanceof Raindrops.RainDrop && body instanceof Star || body1 instanceof Star && body instanceof Raindrops.RainDrop)
 			{
-				return; //rain drop colliding with a dynamic star object 
+				; //rain drop colliding with a dynamic star object 
 			}
 			else if(body1 instanceof Raindrops.RainDrop && body instanceof Ability || body1 instanceof Ability && body instanceof Raindrops.RainDrop)
 			{
@@ -135,15 +140,18 @@ public class MyContactListener implements ContactListener
 			}
 			
 		}
+		if(fixtureUserData1!=null && FixtureUserData2!=null)
+		{
+			if(fixtureUserData1.equals("3"))
+			{
+				fixturesUnderFoot.add((String)FixtureUserData2); 
+			}
+			if (FixtureUserData2.equals("3"))
+			{
+				fixturesUnderFoot.add((String)fixtureUserData1);
+			}
+		}
 		
-		if(body!=null && body instanceof Timmy)
-		{
-			WorldController.numFootContacts++; 
-		}
-		if (body1!=null && body1 instanceof Timmy)
-		{
-			WorldController.numFootContacts++; 
-		}
 		
 	}
 
@@ -156,16 +164,24 @@ public class MyContactListener implements ContactListener
 	@Override
 	public void endContact(Contact contact) 
 	{
-		Object body=contact.getFixtureA().getBody().getUserData(); 
-		Object body1=contact.getFixtureB().getBody().getUserData(); 
-		if(body!=null && body instanceof Timmy)
+		
+		
+		Object fixtureUserData1 = contact.getFixtureA().getUserData();
+		Object FixtureUserData2 = contact.getFixtureB().getUserData(); 
+		
+		
+		if(fixtureUserData1!=null && FixtureUserData2!=null)
 		{
-			WorldController.numFootContacts--; 
+			if(fixtureUserData1.equals("3"))
+			{
+				fixturesUnderFoot.remove((String)FixtureUserData2); 
+			}
+			if (FixtureUserData2.equals("3"))
+			{
+				fixturesUnderFoot.remove((String)fixtureUserData1);
+			}
 		}
-		if (body1!=null && body1 instanceof Timmy)
-		{
-			WorldController.numFootContacts--; 
-		}
+		
 		
 	}
 		
