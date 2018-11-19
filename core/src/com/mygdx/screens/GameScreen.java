@@ -61,6 +61,8 @@ public class GameScreen extends AbstractGameScreen
 		
 		Gdx.gl.glClearColor(0, 0, 0, 0xff / 255.0f);
 		
+		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
 		// Clears the screen
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		

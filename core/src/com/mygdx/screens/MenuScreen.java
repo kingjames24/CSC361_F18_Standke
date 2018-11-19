@@ -328,7 +328,7 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 	{
 		Gdx.gl.glClearColor(1f, 1f, 1f, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
+		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		stage.act(deltaTime);
 	    stage.draw();
 	}
