@@ -131,7 +131,7 @@ public class WorldController extends InputAdapter implements Disposable
 		handleInputGame(deltaTime);
 	
 		
-		//level.update(deltaTime);
+		level.update(deltaTime);
 		b2world.step(deltaTime, 8, 3);
 		
 		jumpTimeout--;
@@ -240,7 +240,11 @@ public class WorldController extends InputAdapter implements Disposable
 	    	   if(canWalkNow())
 	    	   {
 	    		   level.people.timmyLeft(false);
-		    	   level.tim.left=true; 
+		    	   level.tim.left=true;
+		    	   
+		    	   level.tim.runningLeft=true; 
+		    	   level.tim.runningRight=false;
+		    	   
 		    	   level.tim.body.applyLinearImpulse(new Vector2(-sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
 	    	   }
 	    	   
@@ -252,6 +256,10 @@ public class WorldController extends InputAdapter implements Disposable
 	    	   {
 	    		   level.people.timmyLeft(true);
 		    	   level.tim.left=false;
+		    	   
+		    	   level.tim.runningLeft=false; 
+		    	   level.tim.runningRight=true; 
+		    	   
 		    	   level.tim.body.applyLinearImpulse(new Vector2(sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
 	    	   }
 	       }   
@@ -264,6 +272,12 @@ public class WorldController extends InputAdapter implements Disposable
 	    		   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*4f), level.tim.body.getWorldCenter(), true);
 		    	   jumpTimeout=15;  
 	    	   }
+	    	   
+	       }
+	       else
+	       {
+	    	   level.tim.runningLeft=false; 
+	    	   level.tim.runningRight=false; 
 	    	   
 	       }
 	       if (Gdx.input.isButtonPressed(Input.Buttons.LEFT))
