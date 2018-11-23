@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -326,9 +327,9 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 	@Override
 	public void render(float deltaTime) 
 	{
-		Gdx.gl.glClearColor(1f, 1f, 1f, 1.0f);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClearColor(30, 144, 255, 1f);
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act(deltaTime);
 	    stage.draw();
 	}
@@ -390,7 +391,7 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 	    Table layerOptionsWindow = buildOptionsWindowLayer();
 	    
 	    Label title = new Label("RainMaker", skinLibgdx, "title", Color.SKY);
-	    title.setFontScale(3.5f);
+	    title.setFontScale(3.5f);//figure out to make font less pixilly when increasing size
 	    Label name = new Label("By Adam Standke", skinLibgdx, "title", Color.SKY);
 	    name.setFontScale(1f);
 	    Table credit = new Table();
@@ -463,11 +464,9 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 	*/
 	private Table buildControlsLayer() 
 	{
-		 Table layer = new Table();
-	
-		 btnMenuOptions = new Button(skinRainMaker, "options");
-		 btnMenuOptions.scaleBy(.38f);
-		 layer.add(btnMenuOptions).align(Align.bottomRight).expand();
+		 Table layer = new Table(); 
+		 btnMenuOptions = new Button(skinRainMaker, "options"); 
+		 layer.add(btnMenuOptions).align(Align.bottomRight).expand().width(60).height(60);
 		 btnMenuOptions.addListener(new ChangeListener() {
 
 			@Override
@@ -490,10 +489,10 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		 
 		//Play Button
 		 
-		 layer.add().expand();
-		 layer.add().expand();
+		 
+		 layer.row();
 		 btnMenuPlay = new Button(skinRainMaker, "play");
-		 layer.add(btnMenuPlay).align(Align.bottomLeft).expand();
+		 layer.add(btnMenuPlay).align(Align.bottomRight).width(60).height(60);
 		 btnMenuPlay.addListener(new ChangeListener() {
 
 			@Override
@@ -524,10 +523,8 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 	private Table buildTimmyLayer() 
 	{
 		Table layer = new Table();
-		
 		imgTim = new Image (skinRainMaker, "Tim");
-		imgTim.scaleBy(.01f, .01f);
-		layer.add(imgTim).align(Align.bottom).expand();
+		layer.add(imgTim).align(Align.bottom).expand().width(150).height(150);
 		return layer; 
 		
 	}
@@ -541,10 +538,8 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 	{
 		Table layer= new Table(); 
 		imgBackground = new Image(skinRainMaker, "background");
-		imgBackground.scaleBy(1f, 1f);
-		layer.add(imgBackground);
-		layer.align(Align.bottomLeft);
-		
+		imgBackground.scaleBy(.1f);
+		layer.add(imgBackground).width(Constants.VIEWPORT_GUI_WIDTH).height(Constants.VIEWPORT_GUI_HEIGHT);
 		return layer; 
 	}
 
