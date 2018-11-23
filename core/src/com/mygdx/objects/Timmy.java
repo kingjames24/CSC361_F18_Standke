@@ -1,5 +1,6 @@
 package com.mygdx.objects;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -14,9 +15,13 @@ import com.mygdx.game.Assets;
  */
 public class Timmy extends AbstractGameObject 
 {
+	private Animation animRunning;
+	private Animation animNormal;
 	public float rotation; 
 	public TextureRegion regTim;
-	public boolean left; 
+	public boolean left;
+	public boolean runningLeft; 
+	public boolean runningRight; 
 	public boolean hit;
 	public int life=100; 
 	
@@ -35,7 +40,10 @@ public class Timmy extends AbstractGameObject
 	public void init()
 	{
 		origin.set(dimension.x/2, dimension.y/2);
-		regTim = Assets.instance.timmy.frame1; 
+		regTim = Assets.instance.timmy.frame1;
+		animRunning=Assets.instance.timmy.animRunning;
+		animNormal=Assets.instance.timmy.animNormal;
+		setAnimation(animNormal); 
 		
 	}
 	/**
@@ -48,8 +56,16 @@ public class Timmy extends AbstractGameObject
 		
 		position= body.getPosition();
 		rotation= (float) Math.toDegrees(body.getAngle());
+		if(animation.getKeyFrame(stateTime)==null)
+		{
+			reg=regTim; 
+		}
+		else
+		{
+			reg = (TextureRegion) animation.getKeyFrame(stateTime, true); 
+		}
 		
-		reg = regTim;
+		
 		batch.draw(reg.getTexture(), position.x, 
 				position.y, origin.x, origin.y, dimension.x,
 				dimension.y, scale.x, scale.y, rotation, reg.getRegionX(),
@@ -61,8 +77,23 @@ public class Timmy extends AbstractGameObject
 	 *   
 	 */
 	@Override
-	public void createBody(Vector2 position) {
-		// TODO Auto-generated method stub
+	public void createBody(Vector2 position) {}
+	
+	public void update(float deltaTime)
+	{
+		super.update(deltaTime);
+		if(runningLeft||runningRight)
+		{
+			setAnimation(animRunning);
+		}
+		else
+		{
+			setAnimation(animNormal); 	
+		}
+		 	
+			
+		
+		 
 		
 	}
 	/**
@@ -82,6 +113,8 @@ public class Timmy extends AbstractGameObject
 	{
 		return life; 
 	}
+	
+	
 	
 	
 	

@@ -8,6 +8,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -56,11 +57,22 @@ public class Assets implements Disposable, AssetErrorListener
 	 */
     public class AssetTimmy
     {	
-    	public final AtlasRegion frame1; 
+    	public final AtlasRegion frame1;
+    	public final Animation animNormal; 
+    	public final Animation animRunning; 
     	
     	public AssetTimmy (TextureAtlas atlas)
     	{
-    		frame1= atlas.findRegion("Tim"); 
+    		frame1= atlas.findRegion("Tim");
+    		animNormal= new Animation(1.0f/10.0f, frame1); 
+    		
+    		
+    		Array<AtlasRegion> regions = null;
+    		AtlasRegion region = null; 
+    		
+    		//Animation: Timmy moving
+    		regions = atlas.findRegions("Tim_running"); 
+    		animRunning= new Animation(1.0f/10.0f, regions, Animation.PlayMode.LOOP_PINGPONG); 
     	}	
     }
     
