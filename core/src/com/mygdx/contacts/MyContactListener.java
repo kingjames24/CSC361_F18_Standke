@@ -144,11 +144,15 @@ public class MyContactListener implements ContactListener
 		{
 			if(fixtureUserData1.equals("3"))
 			{
-				fixturesUnderFoot.add((String)FixtureUserData2); 
+				fixturesUnderFoot.add((String)FixtureUserData2);
+				Timmy up = (Timmy)body;
+				up.notJumping();
 			}
 			if (FixtureUserData2.equals("3"))
 			{
 				fixturesUnderFoot.add((String)fixtureUserData1);
+				Timmy up = (Timmy)body1;
+				up.notJumping();
 			}
 		}
 		
@@ -164,7 +168,8 @@ public class MyContactListener implements ContactListener
 	@Override
 	public void endContact(Contact contact) 
 	{
-		
+		Object body=contact.getFixtureA().getBody().getUserData(); 
+		Object body1=contact.getFixtureB().getBody().getUserData();
 		
 		Object fixtureUserData1 = contact.getFixtureA().getUserData();
 		Object FixtureUserData2 = contact.getFixtureB().getUserData(); 
@@ -174,11 +179,15 @@ public class MyContactListener implements ContactListener
 		{
 			if(fixtureUserData1.equals("3"))
 			{
-				fixturesUnderFoot.remove((String)FixtureUserData2); 
+				fixturesUnderFoot.remove((String)FixtureUserData2);
+				Timmy up = (Timmy)body;
+				up.jumping();
 			}
 			if (FixtureUserData2.equals("3"))
 			{
 				fixturesUnderFoot.remove((String)fixtureUserData1);
+				Timmy up = (Timmy)body1;
+				up.jumping();
 			}
 		}
 		
