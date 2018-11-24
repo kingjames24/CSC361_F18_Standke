@@ -269,13 +269,15 @@ public class WorldController extends InputAdapter implements Disposable
 	    	   
 	    	   if(canJumpNow())
 	    	   {
+	 
 	    		   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*4f), level.tim.body.getWorldCenter(), true);
 		    	   jumpTimeout=15;  
 	    	   }
-	    	   
+	    	  
 	       }
 	       else
 	       {
+	    	   
 	    	   level.tim.runningLeft=false; 
 	    	   level.tim.runningRight=false; 
 	    	   

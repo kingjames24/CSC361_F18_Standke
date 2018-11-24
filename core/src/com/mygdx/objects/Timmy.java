@@ -17,11 +17,13 @@ public class Timmy extends AbstractGameObject
 {
 	private Animation animRunning;
 	private Animation animNormal;
+	private Animation animJumping; 
 	public float rotation; 
 	public TextureRegion regTim;
 	public boolean left;
 	public boolean runningLeft; 
-	public boolean runningRight; 
+	public boolean runningRight;
+	public boolean jumping; 
 	public boolean hit;
 	public int life=100; 
 	
@@ -43,6 +45,8 @@ public class Timmy extends AbstractGameObject
 		regTim = Assets.instance.timmy.frame1;
 		animRunning=Assets.instance.timmy.animRunning;
 		animNormal=Assets.instance.timmy.animNormal;
+		animJumping=Assets.instance.timmy.animJumping; 
+		
 		setAnimation(animNormal); 
 		
 	}
@@ -82,18 +86,20 @@ public class Timmy extends AbstractGameObject
 	public void update(float deltaTime)
 	{
 		super.update(deltaTime);
+		
 		if(runningLeft||runningRight)
 		{
 			setAnimation(animRunning);
 		}
+		else if(jumping)
+		{
+			setAnimation(animJumping); 	
+		}
 		else
 		{
-			setAnimation(animNormal); 	
+			setAnimation(animNormal); 
 		}
-		 	
-			
-		
-		 
+		 		 
 		
 	}
 	/**
@@ -114,7 +120,15 @@ public class Timmy extends AbstractGameObject
 		return life; 
 	}
 	
+	public void jumping()
+	{
+		jumping=true; 
+	}
 	
+	public void notJumping()
+	{
+		jumping=false; 
+	}
 	
 	
 	
