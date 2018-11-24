@@ -20,6 +20,7 @@ import com.mygdx.util.Constants;
 
 
 
+
 /*
 * By Adam Standke
 * Class that contains the asset manager that loads 
@@ -38,6 +39,7 @@ public class Assets implements Disposable, AssetErrorListener
 	//static object that holds the only instance of the class
 	public static final Assets instance = new Assets();
     private AssetManager assetManager;
+	public AssetFonts fonts;
 	
     
     /**
@@ -231,7 +233,7 @@ public class Assets implements Disposable, AssetErrorListener
 	    
 	    // create game resource objects
 	    
-	    
+	    fonts = new AssetFonts();
 	    timmy = new AssetTimmy(atlas);
 	    plat = new AssetPlatform(atlas); 
 	    drop = new AssetRainDrop(atlas); 
@@ -279,5 +281,30 @@ public class Assets implements Disposable, AssetErrorListener
 		
 		
 	}
+	
+	public class AssetFonts
+    {
+    	public final BitmapFont defaultSmall;
+    	public final BitmapFont defaultNormal;
+    	public final BitmapFont defaultBig;
+    	
+    	public AssetFonts()
+    	{
+    		//create three fonts using Libgdx's 15px bitmap font
+    		defaultSmall = new BitmapFont(Gdx.files.internal("images/font-title-export.fnt"), false);
+    		defaultNormal = new BitmapFont(Gdx.files.internal("images/font-title-export.fnt"), false);
+    		defaultBig = new BitmapFont(Gdx.files.internal("images/font-title-export.fnt"), false);
+    		
+    		//set font sizes
+    		defaultSmall.getData().setScale(0.75f);
+    		defaultNormal.getData().setScale(1.0f);
+    		defaultBig.getData().setScale(3.0f);
+    		
+    		//enable linear textrue filtering for smooth fonts
+    		defaultSmall.getRegion().getTexture().setFilter(TextureFilter.Linear,  TextureFilter.Linear);
+    		defaultNormal.getRegion().getTexture().setFilter(TextureFilter.Linear,  TextureFilter.Linear);
+    		defaultBig.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+    	}
+    }
 
 }
