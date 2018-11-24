@@ -44,6 +44,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.Assets;
 import com.mygdx.game.WorldController;
 import com.mygdx.util.Constants;
 import com.mygdx.util.GamePreferences;
@@ -390,8 +391,8 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 	    Table layerControls = buildControlsLayer();
 	    Table layerOptionsWindow = buildOptionsWindowLayer();
 	    
-	    Label title = new Label("RainMaker", skinLibgdx, "title", Color.SKY);
-	    title.setFontScale(3.5f);//figure out to make font less pixilly when increasing size
+	    BitmapFont titleFont = Assets.instance.fonts.defaultBig; 
+	    Label title = new Label("RainMaker", new Label.LabelStyle(titleFont, Color.SKY));
 	    Label name = new Label("By Adam Standke", skinLibgdx, "title", Color.SKY);
 	    name.setFontScale(1f);
 	    Table credit = new Table();

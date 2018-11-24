@@ -60,14 +60,9 @@ public class Timmy extends AbstractGameObject
 		
 		position= body.getPosition();
 		rotation= (float) Math.toDegrees(body.getAngle());
-		if(animation.getKeyFrame(stateTime)==null)
-		{
-			reg=regTim; 
-		}
-		else
-		{
-			reg = (TextureRegion) animation.getKeyFrame(stateTime, true); 
-		}
+		
+	    reg = (TextureRegion) animation.getKeyFrame(stateTime, true); 
+		
 		
 		
 		batch.draw(reg.getTexture(), position.x, 

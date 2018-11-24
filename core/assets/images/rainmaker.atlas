@@ -6,7 +6,7 @@ filter: Nearest,Nearest
 repeat: none
 5points
   rotate: false
-  xy: 937, 629
+  xy: 938, 629
   size: 26, 14
   orig: 26, 14
   offset: 0, 0
@@ -55,28 +55,28 @@ Tim_dying
   index: 1
 Tim_dying
   rotate: false
-  xy: 455, 374
+  xy: 723, 512
   size: 103, 131
   orig: 103, 131
   offset: 0, 0
   index: 2
 Tim_dying
   rotate: false
-  xy: 560, 384
+  xy: 758, 387
   size: 107, 123
   orig: 107, 123
   offset: 0, 0
   index: 3
 Tim_dying
   rotate: false
-  xy: 669, 385
+  xy: 828, 521
   size: 108, 122
   orig: 108, 122
   offset: 0, 0
   index: 5
 Tim_dying
   rotate: false
-  xy: 779, 385
+  xy: 867, 398
   size: 104, 121
   orig: 104, 121
   offset: 0, 0
@@ -104,18 +104,25 @@ Tim_jumping
   index: 3
 Tim_jumping
   rotate: false
-  xy: 723, 509
-  size: 105, 134
-  orig: 105, 134
-  offset: 0, 0
-  index: 1
-Tim_jumping
-  rotate: false
-  xy: 141, 345
+  xy: 230, 351
   size: 101, 142
   orig: 101, 142
   offset: 0, 0
   index: 5
+Tim_jumping
+  rotate: false
+  xy: 544, 373
+  size: 105, 134
+  orig: 105, 134
+  offset: 0, 0
+  index: 1
+Tim_normal
+  rotate: false
+  xy: 141, 340
+  size: 87, 147
+  orig: 87, 147
+  offset: 0, 0
+  index: 1
 Tim_running
   rotate: false
   xy: 401, 650
@@ -153,21 +160,21 @@ Tim_running
   index: 6
 Tim_running
   rotate: false
-  xy: 830, 508
+  xy: 333, 369
   size: 105, 135
   orig: 105, 135
   offset: 0, 0
   index: 5
 Tim_running
   rotate: false
-  xy: 244, 358
+  xy: 440, 370
   size: 102, 135
   orig: 102, 135
   offset: 0, 0
   index: 8
 Tim_running
   rotate: false
-  xy: 348, 370
+  xy: 651, 374
   size: 105, 134
   orig: 105, 134
   offset: 0, 0
@@ -188,14 +195,14 @@ city_background
   index: -1
 man_rain01
   rotate: false
-  xy: 669, 285
+  xy: 333, 269
   size: 121, 98
   orig: 121, 98
   offset: 0, 0
   index: -1
 man_rain02
   rotate: false
-  xy: 792, 286
+  xy: 557, 274
   size: 111, 97
   orig: 111, 97
   offset: 0, 0
@@ -237,7 +244,7 @@ special_power
   index: -1
 woman_rain
   rotate: false
-  xy: 885, 406
+  xy: 456, 268
   size: 99, 100
   orig: 99, 100
   offset: 0, 0
