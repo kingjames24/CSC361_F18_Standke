@@ -62,14 +62,13 @@ public class Assets implements Disposable, AssetErrorListener
     	public final AtlasRegion frame1;
     	public final Animation animNormal; 
     	public final Animation animRunning;
-    	public final Animation animJumping; 
+    	public final Animation animJumping;
+    	public final Animation animDead;
+    	
     	
     	public AssetTimmy (TextureAtlas atlas)
     	{
     		frame1= atlas.findRegion("Tim");
-    		
-    		
-    		
     		
     		Array<AtlasRegion> regions = null;
     		AtlasRegion region = null; 
@@ -82,7 +81,12 @@ public class Assets implements Disposable, AssetErrorListener
     		animJumping= new Animation(1.0f/4.0f, regions, Animation.PlayMode.NORMAL);
     		
     		region= atlas.findRegion("Tim_normal", 1); 
-    		animNormal= new Animation(1.0f/10.0f, region); 
+    		animNormal= new Animation(1.0f/10.0f, region);
+    		
+    		regions =atlas.findRegions("Tim_dying"); 
+    		animDead = new Animation(1.0f/4.0f, regions, Animation.PlayMode.NORMAL);
+    		
+    		
     		
     		
     	}	

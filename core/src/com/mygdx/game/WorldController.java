@@ -91,7 +91,7 @@ public class WorldController extends InputAdapter implements Disposable
 	 * it instantiates two objects; namely an object from the Raindrop class and an object
 	 * from the Ability class.     
 	 */
-	private void init() 
+	public void init() 
 	{
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
@@ -200,19 +200,22 @@ public class WorldController extends InputAdapter implements Disposable
 		if (isGameOver() || didTimmyfall()|| isTimmyDead())//portion of update that handles the state of game
 		{
 			
-			
+			 
 			lives--;
 			visible=false;
 			if (isGameOver())
 			{
- 
+				level.tim.dead=true;
 				return; 
 				
 			}
 			else
 			{
-
+				
+				
 				init();
+			
+				
 			}
 			
 		}
@@ -592,6 +595,7 @@ public class WorldController extends InputAdapter implements Disposable
 	 */
 	public static boolean isGameOver ()
 	{
+			
 		   return lives < 0;
 	}
 	
@@ -604,11 +608,14 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		 if(level.tim.life<=0)
 		 {
+			  
 			 lives--; 
 			 return true; 
 		 }
 		 return false; 
 	}
+	
+	
 	
 	/**
 	 * Method that exits the game screen and returns back to the menu screen

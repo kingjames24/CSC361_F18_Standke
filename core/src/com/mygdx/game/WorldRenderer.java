@@ -181,7 +181,8 @@ public class WorldRenderer implements Disposable
 	public void render () 
 	{ 
 		renderWorld(batch);
-		renderHud(batch); 
+		renderHud(batch);
+		
 		
 	}
 	
