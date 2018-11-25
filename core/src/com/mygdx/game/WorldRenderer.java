@@ -306,6 +306,7 @@ public class WorldRenderer implements Disposable
 	{
 		batch.dispose();
 		stage.dispose();
+		stage2.dispose();
 		
 	}
 	
