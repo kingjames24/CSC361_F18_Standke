@@ -17,15 +17,19 @@ public class Timmy extends AbstractGameObject
 {
 	private Animation animRunning;
 	private Animation animNormal;
-	private Animation animJumping; 
+	private Animation animJumping;
+	private Animation animDead; 
 	public float rotation; 
 	public TextureRegion regTim;
 	public boolean left;
 	public boolean runningLeft; 
 	public boolean runningRight;
-	public boolean jumping; 
+	public boolean jumping;
+	public boolean dead; 
 	public boolean hit;
-	public int life=100; 
+	public int life=100;
+	public float i=0f; 
+	
 	
 	/**
 	 * Constructor that calls a helper method to set up a Timmy object
@@ -45,8 +49,9 @@ public class Timmy extends AbstractGameObject
 		regTim = Assets.instance.timmy.frame1;
 		animRunning=Assets.instance.timmy.animRunning;
 		animNormal=Assets.instance.timmy.animNormal;
-		animJumping=Assets.instance.timmy.animJumping; 
-		
+		animJumping=Assets.instance.timmy.animJumping;
+		animDead=Assets.instance.timmy.animDead; 
+		dead=false; 
 		setAnimation(animNormal); 
 		
 	}
@@ -66,9 +71,28 @@ public class Timmy extends AbstractGameObject
 		if(animation == animNormal)
 		{
 			correctX=  0.0f; 
-			correctY= -0.1f; 
+			correctY= -0.12f; 
 		}
-	    reg = (TextureRegion) animation.getKeyFrame(stateTime, true); 
+		
+		if(animation==animDead)
+		{
+			if(animDead.isAnimationFinished(stateTime))
+			{
+				reg = (TextureRegion) animation.getKeyFrame(stateTime, false); 
+			} 
+			else
+			{
+				reg = (TextureRegion) animation.getKeyFrame(stateTime, true);
+			}
+		}
+		else
+		{
+			reg = (TextureRegion) animation.getKeyFrame(stateTime, true);
+		}
+		
+		
+		
+		
 		
 		
 		
@@ -88,6 +112,10 @@ public class Timmy extends AbstractGameObject
 	public void update(float deltaTime)
 	{
 		super.update(deltaTime);
+		if(animation==animDead)
+		{
+			return; 
+		}
 		
 		if(runningLeft||runningRight)
 		{
@@ -96,6 +124,11 @@ public class Timmy extends AbstractGameObject
 		else if(jumping)
 		{
 			setAnimation(animJumping); 	
+		}
+		else if(dead)
+		{
+			stateTime=0; 
+			setAnimation(animDead); 
 		}
 		else
 		{
