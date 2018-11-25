@@ -556,6 +556,7 @@ public class MenuScreen  extends AbstractGameScreen implements DestructionListen
 		stage.dispose();
 		skinRainMaker.dispose();
 		skinLibgdx.dispose();
+		Assets.instance.fonts.defaultBig.dispose();
 		
 	}
 

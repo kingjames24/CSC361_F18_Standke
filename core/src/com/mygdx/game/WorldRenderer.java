@@ -202,7 +202,7 @@ public class WorldRenderer implements Disposable
 		healthBar.setValue(WorldController.health);
 		score.setText("Score:"+ WorldController.score);
 		batch.begin();
-		if (WorldController.visible)
+		if (WorldController.visible)//fix issue with objects in render 
 		{
 			TextureRegionDrawable drawable = new TextureRegionDrawable(Assets.instance.up.power);
 			powerUp.setDrawable(drawable);
