@@ -100,6 +100,7 @@ public class Ability extends AbstractGameObject
 		
 		if(body== null) return; 
 		position = body.getPosition(); 
+		fireBlast.setPosition(position.x, position.y);
 		
 		batch.draw(reg.getTexture(), position.x, position.y,
 				origin.x, origin.y, dimension.x, dimension.y,
