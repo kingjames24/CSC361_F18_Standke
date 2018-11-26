@@ -473,16 +473,57 @@ public class WorldController extends InputAdapter implements Disposable
     {
     	   //edgeShapped boundary
     	   Vector2 origin = new Vector2();
+    	   
     	   BodyDef bodyDef2 = new BodyDef();
 		   bodyDef2.type = BodyType.StaticBody;//static body type for boundary
 		   bodyDef2.position.set(new Vector2(0f, -10f));//set 10 meters below scene
 		   Body body1 = b2world.createBody(bodyDef2); 
 		   EdgeShape boundary = new EdgeShape();//use an edge as shape
-		   boundary.set(new Vector2(0f, 0f), new Vector2(128f, 0));//extends 128 meters in lenght
 		   FixtureDef fixtureDef2 = new FixtureDef();
 		   fixtureDef2.shape=boundary;
-		   body1.createFixture(fixtureDef2); 
+		   boundary.set(new Vector2(0f, 0f), new Vector2(128f, 0));//extends 128 meters in length
+		   body1.createFixture(fixtureDef2);
 		   boundary.dispose();
+		   
+		  
+    	   BodyDef bodyDef3 = new BodyDef();
+		   bodyDef3.type = BodyType.StaticBody;//static body type for boundary
+		   bodyDef3.position.set(new Vector2(0f, 10f));//set 10 meters above scene
+		   Body body2 = b2world.createBody(bodyDef3); 
+		   EdgeShape boundary1 = new EdgeShape();//use an edge as shape
+		   FixtureDef fixtureDef3 = new FixtureDef();
+		   fixtureDef3.shape=boundary1;
+		   boundary1.set(new Vector2(0f, 0f), new Vector2(128f, 0));//extends 128 meters in length
+		   body2.createFixture(fixtureDef3);
+		   boundary1.dispose();
+		   
+		   
+		  
+    	   BodyDef bodyDef4 = new BodyDef();
+		   bodyDef4.type = BodyType.StaticBody;//static body type for boundary
+		   bodyDef4.position.set(new Vector2(0f, 0f));//set 10 meters to the left scene
+		   Body body4 = b2world.createBody(bodyDef4); 
+		   EdgeShape boundary2 = new EdgeShape();//use an edge as shape
+		   FixtureDef fixtureDef4 = new FixtureDef();
+		   fixtureDef4.shape=boundary2;
+		   boundary2.set(new Vector2(0f, -10f), new Vector2(0, 10f));//extends 128 meters in length
+		   body4.createFixture(fixtureDef4);
+		   boundary2.dispose();
+		   
+		   BodyDef bodyDef5 = new BodyDef();
+		   bodyDef5.type = BodyType.StaticBody;//static body type for boundary
+		   bodyDef5.position.set(new Vector2(128f, 0f));//set 10 meters to the left scene
+		   Body body5 = b2world.createBody(bodyDef5); 
+		   EdgeShape boundary3 = new EdgeShape();//use an edge as shape
+		   FixtureDef fixtureDef5 = new FixtureDef();
+		   fixtureDef5.shape=boundary3;
+		   boundary3.set(new Vector2(0f, -10f), new Vector2(0, 10f));//extends 128 meters in length
+		   body5.createFixture(fixtureDef5);
+		   boundary3.dispose();
+		   
+		   
+		   
+		   
     	   // Timmy's main body 
     	   BodyDef bodyDef = new BodyDef();
 		   bodyDef.type = BodyType.DynamicBody;//dynamic body type for main character 

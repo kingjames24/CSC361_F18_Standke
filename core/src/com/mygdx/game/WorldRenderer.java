@@ -41,7 +41,7 @@ public class WorldRenderer implements Disposable
 	public static OrthographicCamera camera;
 	private SpriteBatch batch;
 	private WorldController worldController; 
-	private static final boolean DEBUG_DRAW_BOX2D_WORLD = false;
+	private static final boolean DEBUG_DRAW_BOX2D_WORLD = true;
 	private Box2DDebugRenderer b2debugRenderer;
 	public Stage stage; 
 	public Stack stack; 
@@ -288,10 +288,7 @@ public class WorldRenderer implements Disposable
 		
 		if (DEBUG_DRAW_BOX2D_WORLD)
 		{
-			b2debugRenderer.setDrawAABBs(false);
-			b2debugRenderer.setDrawVelocities(false);
-			b2debugRenderer.AABB_COLOR.set(Color.BLACK); 
-			b2debugRenderer.VELOCITY_COLOR.set(Color.BLACK); 
+			 
 			b2debugRenderer.render(worldController.b2world, camera.combined);
 		}
 			
