@@ -28,7 +28,9 @@ public class Timmy extends AbstractGameObject
 	public boolean dead; 
 	public boolean hit;
 	public int life=100;
-	public float i=0f; 
+	public float i=0f;
+	private Animation animShooting;
+	public boolean shooting; 
 	
 	
 	/**
@@ -50,7 +52,8 @@ public class Timmy extends AbstractGameObject
 		animRunning=Assets.instance.timmy.animRunning;
 		animNormal=Assets.instance.timmy.animNormal;
 		animJumping=Assets.instance.timmy.animJumping;
-		animDead=Assets.instance.timmy.animDead; 
+		animDead=Assets.instance.timmy.animDead;
+		animShooting = Assets.instance.timmy.animShooting; 
 		dead=false; 
 		setAnimation(animNormal); 
 		
@@ -70,8 +73,13 @@ public class Timmy extends AbstractGameObject
 		float correctY=0; 
 		if(animation == animNormal)
 		{
-			correctX=  0.0f; 
+			correctX= -0.02f; 
 			correctY= -0.12f; 
+		}
+		if (animation==animShooting)
+		{
+			correctX=.2f; 
+			correctY=.3f; 
 		}
 		
 		if(animation==animDead)
@@ -89,6 +97,7 @@ public class Timmy extends AbstractGameObject
 		{
 			reg = (TextureRegion) animation.getKeyFrame(stateTime, true);
 		}
+		
 		
 		
 		
@@ -119,11 +128,47 @@ public class Timmy extends AbstractGameObject
 		
 		if(runningLeft||runningRight)
 		{
-			setAnimation(animRunning);
+			if(shooting)
+			{
+				stateTime=0; 
+				setAnimation(animShooting);
+				shooting=false; 
+			}
+			else if(animation==animShooting) 
+			{
+				if(animShooting.isAnimationFinished(stateTime))
+				{
+					setAnimation(animRunning);
+				}
+				 
+			}
+			else
+			{
+				setAnimation(animRunning);
+			}
+			
 		}
 		else if(jumping)
 		{
-			setAnimation(animJumping); 	
+			if (shooting)
+			{
+				stateTime=0; 
+				setAnimation(animShooting);
+				shooting=false; 
+			}
+			else if (animation==animShooting)
+			{
+				if(animShooting.isAnimationFinished(stateTime))
+				{
+					setAnimation(animJumping);
+				}
+				
+			}
+			else
+			{
+				setAnimation(animJumping);
+			}
+			 	
 		}
 		else if(dead)
 		{
@@ -132,7 +177,23 @@ public class Timmy extends AbstractGameObject
 		}
 		else
 		{
-			setAnimation(animNormal); 
+			if (shooting)
+			{
+				stateTime=0; 
+				setAnimation(animShooting);
+				shooting=false; 
+			}
+			else if(animation==animShooting)
+			{	
+				if(animShooting.isAnimationFinished(stateTime))
+				{
+					setAnimation(animNormal);
+				}	
+			}
+			else
+			{
+				setAnimation(animNormal);
+			}
 		}
 		 		 
 		

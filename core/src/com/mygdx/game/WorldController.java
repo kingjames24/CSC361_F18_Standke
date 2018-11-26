@@ -296,12 +296,12 @@ public class WorldController extends InputAdapter implements Disposable
 	    		   
 	    		   if(shootTimeout>0)
 	    		   {
-	    			  
+	    			  level.tim.shooting=false; 
 	    			   return;
 	    		   }
 	    		   if(first==0)
 	    		   {
-	    			    
+	    			   level.tim.shooting=true; 
 	    			   ability.createBody(level.tim.body.getPosition());
 	    			   Vector3 screen = new Vector3(x,y,0); 
 		    		   Vector3 world = WorldRenderer.camera.unproject(screen);
@@ -319,7 +319,7 @@ public class WorldController extends InputAdapter implements Disposable
 	    		   }
 	    		   else
 	    		   {
-	    			    
+	    			   level.tim.shooting=true;  
 	    			   Vector3 screen = new Vector3(x,y,0); 
 		    		   Vector3 world = WorldRenderer.camera.unproject(screen);
 		    		   Vector2 camera = new Vector2(world.x, world.y);
