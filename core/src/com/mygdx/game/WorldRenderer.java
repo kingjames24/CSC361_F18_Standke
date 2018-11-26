@@ -48,7 +48,7 @@ public class WorldRenderer implements Disposable
 	public Table leftCorner; 
 	private Viewport viewport;
 	private Skin hudSkin; 
-	
+	public TextureRegionDrawable drawable; 
 	private ProgressBar healthBar;
 	private Label score;
 	public Image powerUp;
@@ -103,6 +103,9 @@ public class WorldRenderer implements Disposable
 		leftCorner = new Table(); 
 		//builds skin for HUD
 		buildHudSkin();
+		
+		gameOver = new Label("GAME-OVER", hudSkin, "title", Color.RED); 
+		drawable = new TextureRegionDrawable(Assets.instance.up.power);
 		
 		Table progressBar = buildPrograssBar();
 		Table score1 = buildScoreBox();
@@ -202,9 +205,9 @@ public class WorldRenderer implements Disposable
 		healthBar.setValue(WorldController.health);
 		score.setText("Score:"+ WorldController.score);
 		batch.begin();
-		if (WorldController.visible)
+		if (WorldController.visible)//fix issue with objects in render 
 		{
-			TextureRegionDrawable drawable = new TextureRegionDrawable(Assets.instance.up.power);
+			
 			powerUp.setDrawable(drawable);
 			powerUp.setSize(24,24); 
 			if (WorldController.shootTimeout<2)
@@ -235,7 +238,6 @@ public class WorldRenderer implements Disposable
 				
 		}
 		batch.end();
-		gameOver = new Label("GAME-OVER", hudSkin, "title", Color.RED); 
 		if(WorldController.isGameOver())
 		{
 			
@@ -304,6 +306,7 @@ public class WorldRenderer implements Disposable
 	{
 		batch.dispose();
 		stage.dispose();
+		stage2.dispose();
 		
 	}
 	
