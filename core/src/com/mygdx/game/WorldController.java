@@ -159,6 +159,30 @@ public class WorldController extends InputAdapter implements Disposable
 			}
 			rain.raindropScheduledForRemoval.clear();
 		}
+		
+		if(!b2world.isLocked()) 
+		{
+			int x= Ability.abilityScheduledForRemoval.size;
+			for(int j=0; j<x; j++)
+			{
+			
+				Ability point= Ability.abilityScheduledForRemoval.pop(); 
+				if(point!=null)
+				{
+					if(point.hit)
+					{ 
+						point.body.getWorld().destroyBody(point.body);
+						 
+						
+					}
+					
+				}
+				
+			}
+			Ability.abilityScheduledForRemoval.clear();
+		}
+		
+		
 		if(!b2world.isLocked()) 
 		{
 			int x= Points.pointScheduledForRemoval.size;
@@ -319,7 +343,8 @@ public class WorldController extends InputAdapter implements Disposable
 	    		   }
 	    		   else
 	    		   {
-	    			   level.tim.shooting=true;  
+	    			   level.tim.shooting=true;
+	    			   ability.createBody(level.tim.body.getPosition());
 	    			   Vector3 screen = new Vector3(x,y,0); 
 		    		   Vector3 world = WorldRenderer.camera.unproject(screen);
 		    		   Vector2 camera = new Vector2(world.x, world.y);
@@ -482,7 +507,8 @@ public class WorldController extends InputAdapter implements Disposable
 		   FixtureDef fixtureDef2 = new FixtureDef();
 		   fixtureDef2.shape=boundary;
 		   boundary.set(new Vector2(0f, 0f), new Vector2(128f, 0));//extends 128 meters in length
-		   body1.createFixture(fixtureDef2);
+		   Fixture data1= body1.createFixture(fixtureDef2);
+		   data1.setUserData((Object)("10"));
 		   boundary.dispose();
 		   
 		  
@@ -494,7 +520,8 @@ public class WorldController extends InputAdapter implements Disposable
 		   FixtureDef fixtureDef3 = new FixtureDef();
 		   fixtureDef3.shape=boundary1;
 		   boundary1.set(new Vector2(0f, 0f), new Vector2(128f, 0));//extends 128 meters in length
-		   body2.createFixture(fixtureDef3);
+		   Fixture data2 =body2.createFixture(fixtureDef3);
+		   data2.setUserData((Object)"10");
 		   boundary1.dispose();
 		   
 		   
@@ -507,7 +534,8 @@ public class WorldController extends InputAdapter implements Disposable
 		   FixtureDef fixtureDef4 = new FixtureDef();
 		   fixtureDef4.shape=boundary2;
 		   boundary2.set(new Vector2(0f, -10f), new Vector2(0, 10f));//extends 128 meters in length
-		   body4.createFixture(fixtureDef4);
+		   Fixture data3 =body4.createFixture(fixtureDef4);
+		   data3.setUserData((Object)"10");
 		   boundary2.dispose();
 		   
 		   BodyDef bodyDef5 = new BodyDef();
@@ -518,7 +546,8 @@ public class WorldController extends InputAdapter implements Disposable
 		   FixtureDef fixtureDef5 = new FixtureDef();
 		   fixtureDef5.shape=boundary3;
 		   boundary3.set(new Vector2(0f, -10f), new Vector2(0, 10f));//extends 128 meters in length
-		   body5.createFixture(fixtureDef5);
+		   Fixture data4 = body5.createFixture(fixtureDef5);
+		   data4.setUserData((Object)("10"));
 		   boundary3.dispose();
 		   
 		   

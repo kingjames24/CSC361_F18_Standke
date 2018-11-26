@@ -9,8 +9,10 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Assets;
 import com.mygdx.game.WorldController;
+import com.mygdx.objects.Raindrops.RainDrop;
 
 /**
  * Class that represents the star object that 
@@ -22,6 +24,8 @@ public class Ability extends AbstractGameObject
 {
 
 	private TextureRegion star;
+	public boolean hit;
+	public static Array<Ability> abilityScheduledForRemoval;
 	public static boolean fire=false;
 	
 	 
@@ -41,6 +45,7 @@ public class Ability extends AbstractGameObject
 	{
 		dimension.set(.5f, .5f); 
 		star=Assets.instance.up.power;
+		abilityScheduledForRemoval= new Array<Ability>(); 
 		 
 	}
 	
@@ -99,6 +104,12 @@ public class Ability extends AbstractGameObject
 	{
 		Ability.fire=b; 
 		
+	}
+	
+	public void startContact() 
+	{
+		hit=true;
+		abilityScheduledForRemoval.add(this);	  	
 	}
 	
 	
