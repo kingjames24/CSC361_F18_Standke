@@ -21,7 +21,8 @@ public class Star extends AbstractGameObject{
 
 	private TextureRegion star; 
 	public static boolean collected;
-	public static Star starScheduledforRemoval; 
+	public static Star starScheduledforRemoval;
+	
 	
 	 
 	/**

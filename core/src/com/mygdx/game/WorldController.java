@@ -58,8 +58,7 @@ public class WorldController extends InputAdapter implements Disposable
     public boolean attached=false; 
     public RevoluteJoint joint;
     public RevoluteJoint joint2; 
-    public Raindrops rain;
-    public Ability ability; 
+    public Raindrops rain; 
     public Level level;
     public static int score;
 	public static int lives=3;
@@ -99,7 +98,7 @@ public class WorldController extends InputAdapter implements Disposable
  	   	b2world.setContactListener(new MyContactListener());
 		initlevel(); 
 		rain= new Raindrops(100);
-		ability = new Ability(); 
+		
 		
 		 
 		
@@ -326,7 +325,7 @@ public class WorldController extends InputAdapter implements Disposable
 	    		   if(first==0)
 	    		   {
 	    			   level.tim.shooting=true; 
-	    			   ability.createBody(level.tim.body.getPosition());
+	    			   level.ability.createBody(level.tim.body.getPosition());
 	    			   Vector3 screen = new Vector3(x,y,0); 
 		    		   Vector3 world = WorldRenderer.camera.unproject(screen);
 		    		   Vector2 camera = new Vector2(world.x, world.y);
@@ -334,17 +333,17 @@ public class WorldController extends InputAdapter implements Disposable
 		    		   Vector2 distance = new Vector2(); 
 		    		   distance.x= camera.x-launcher.x; 
 		    		   distance.y= camera.y-launcher.y; 
-		    		   ability.body.setTransform(joint.getBodyB().getPosition(), 0);
-		    		   ability.body.setLinearVelocity(distance);
-		    		   ability.body.setGravityScale(0);
-		    		   ability.setFire(true); 
+		    		   level.ability.body.setTransform(joint.getBodyB().getPosition(), 0);
+		    		   level.ability.body.setLinearVelocity(distance);
+		    		   level.ability.body.setGravityScale(0);
+		    		   level.ability.setFire(true); 
 		    		   shootTimeout=120;
 		    		   
 	    		   }
 	    		   else
 	    		   {
 	    			   level.tim.shooting=true;
-	    			   ability.createBody(level.tim.body.getPosition());
+	    			   level.ability.createBody(level.tim.body.getPosition());
 	    			   Vector3 screen = new Vector3(x,y,0); 
 		    		   Vector3 world = WorldRenderer.camera.unproject(screen);
 		    		   Vector2 camera = new Vector2(world.x, world.y);
@@ -352,10 +351,10 @@ public class WorldController extends InputAdapter implements Disposable
 		    		   Vector2 distance = new Vector2(); 
 		    		   distance.x= camera.x-launcher.x; 
 		    		   distance.y= camera.y-launcher.y; 
-		    		   ability.body.setTransform(joint.getBodyB().getPosition(), 0);
-		    		   ability.body.setLinearVelocity(distance);
-		    		   ability.body.setGravityScale(0);
-		    		   ability.setFire(true); 
+		    		   level.ability.body.setTransform(joint.getBodyB().getPosition(), 0);
+		    		   level.ability.body.setLinearVelocity(distance);
+		    		   level.ability.body.setGravityScale(0);
+		    		   level.ability.setFire(true); 
 		    		   shootTimeout=120;
 		    		    
 	    		   }

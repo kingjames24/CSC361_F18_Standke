@@ -1,6 +1,7 @@
 package com.mygdx.objects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -27,6 +28,7 @@ public class Ability extends AbstractGameObject
 	public boolean hit;
 	public static Array<Ability> abilityScheduledForRemoval;
 	public static boolean fire=false;
+	public ParticleEffect fireBlast = new ParticleEffect(); 
 	
 	 
 	/**
@@ -45,8 +47,8 @@ public class Ability extends AbstractGameObject
 	{
 		dimension.set(.5f, .5f); 
 		star=Assets.instance.up.power;
-		abilityScheduledForRemoval= new Array<Ability>(); 
-		 
+		abilityScheduledForRemoval= new Array<Ability>();
+		fireBlast.load(Gdx.files.internal("../core/assets/particles/particle3.p"), Gdx.files.internal("../core/assets/particles/"));	 
 	}
 	
 	/**
@@ -74,6 +76,13 @@ public class Ability extends AbstractGameObject
 	    polygonShape.dispose();
 		
 	}
+	
+	public void update(float deltaTime)
+	{
+		
+		fireBlast.start();
+		fireBlast.update(deltaTime);
+	}
 
 	/**
 	 * Method that renders the star image. Together, the texture's position and other 
@@ -85,6 +94,10 @@ public class Ability extends AbstractGameObject
 		if(!fire) return; 
 		TextureRegion reg = null;
 		reg = star;
+		
+		fireBlast.draw(batch);
+		
+		
 		if(body== null) return; 
 		position = body.getPosition(); 
 		
