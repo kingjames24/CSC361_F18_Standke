@@ -10,6 +10,7 @@ import com.mygdx.objects.Platform;
 import com.mygdx.objects.Points;
 import com.mygdx.objects.Star;
 import com.mygdx.objects.Timmy;
+import com.mygdx.objects.Ability;
 import com.mygdx.objects.AbstractGameObject;
 
 /**
@@ -80,6 +81,8 @@ public class Level
 	public Array<Star> enhancement;
 	public People people;
 	public City background;
+	public Ability ability; 
+	 
 	
 
 	/**
@@ -203,6 +206,7 @@ public class Level
 		people.position.set(0, -5);
 		background = new City(pixmap.getWidth());
 		background.position.set(0, -5);
+		ability = new Ability(); 
 		
 				
 		// free memory
@@ -219,6 +223,13 @@ public class Level
 	public void update(float deltatime)
 	{
 		//for (Platform plat : platforms) plat.update(deltatime);
+		if(Star.collected)
+		{
+			ability.update(deltatime);
+		}
+		
+		
+		
 		tim.update(deltatime);
 	}
 	

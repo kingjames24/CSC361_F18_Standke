@@ -110,10 +110,11 @@ public class WorldRenderer implements Disposable
 		Table progressBar = buildPrograssBar();
 		Table score1 = buildScoreBox();
 	    powerup2 = buildPowerBox();
-		leftCorner.add(progressBar).top().left();
-		leftCorner.add(score1).top().right(); 
-		leftCorner.row(); 
-		leftCorner.add(powerup2).align(Align.topLeft).expand();
+		leftCorner.add(progressBar).align(Align.topLeft).expand();
+		leftCorner.add(score1).align(Align.topRight); 
+		leftCorner.row();
+		leftCorner.add(); 
+		leftCorner.add(powerup2).align(Align.topLeft).width(24).height(24);
 		leftCorner.setFillParent(true);
 		stage.addActor(leftCorner);
 		
@@ -131,7 +132,8 @@ public class WorldRenderer implements Disposable
 	private Table buildPowerBox() 
 	{
 		Table powerUpDisplay = new Table();
-	    powerUp= new Image(); 
+	    powerUp= new Image();
+	    powerUp.setDrawable(drawable);
 	    powerUpDisplay.add(powerUp);
 		return powerUpDisplay;
 	}
@@ -183,8 +185,8 @@ public class WorldRenderer implements Disposable
 	 */
 	public void render () 
 	{ 
-		renderWorld(batch);
-		renderHud(batch);
+		renderWorld(batch, stage2);
+		renderHud(batch, stage);
 		
 		
 	}
@@ -198,7 +200,7 @@ public class WorldRenderer implements Disposable
 	 * Then all of the in game elements, such as the player's health and score are gathered. 
 	 * After which batch's begin and end method are called to draw most of the HuD.    
 	 */
-	private void renderHud(SpriteBatch batch2)
+	private void renderHud(SpriteBatch batch, Stage stage)
 	{ 
 		
 		batch.setProjectionMatrix(stage.getCamera().combined);
@@ -208,26 +210,16 @@ public class WorldRenderer implements Disposable
 		if (WorldController.visible)//fix issue with objects in render 
 		{
 			
-			powerUp.setDrawable(drawable);
-			powerUp.setSize(24,24); 
+
 			if (WorldController.shootTimeout<2)
 			{
 					 
-					batch.draw(Assets.instance.up.power, powerUp.getImageX(), powerUp.getImageY()+450, powerup2.getOriginX(), powerup2.getOriginY(), powerup2.getWidth(), powerup2.getHeight(), powerup2.getScaleX(), powerup2.getScaleY(), powerup2.getRotation());
+					float y=viewport.getWorldHeight()-55; 
+					batch.draw(Assets.instance.up.power, powerUp.getImageX(), y, powerup2.getOriginX(), powerup2.getOriginY(), powerup2.getWidth(), powerup2.getHeight(), powerup2.getScaleX(), powerup2.getScaleY(), powerup2.getRotation());
 					
 			}
-			else
-			{
-					
-					powerUp.setDrawable(null);
-			}
-			
+	
 		}
-		else
-		{
-			powerUp.setDrawable(null);
-		}
-		
 		float x = viewport.getWorldWidth()-50-(2.3f*50); 
 		float y = viewport.getWorldHeight()-100; 
 		for (int i = 0; i < 3; i++) 
@@ -242,13 +234,13 @@ public class WorldRenderer implements Disposable
 		{
 			
 			leftCorner.clear();
-			leftCorner.add(gameOver).align(Align.center);
-			 
+			leftCorner.add(gameOver).align(Align.center);	 
 			 
 		}
 		stage.draw();
 		
 	}
+	
 	
 		
 		
@@ -263,18 +255,15 @@ public class WorldRenderer implements Disposable
 	 * object class to handle its rendering through SpriteBatch's draw method.     
 	 * @param batch
 	 */
-	public void renderWorld (SpriteBatch batch)
+	public void renderWorld (SpriteBatch batch, Stage stage2)
 	{
 		
 		//drawing of background image
-		OrthographicCamera camera2 = (OrthographicCamera) stage.getCamera(); 
-		camera2.zoom=1f; 
-		camera2.update();
+		
 		batch.setProjectionMatrix(stage2.getCamera().combined);
 		batch.begin();
 		batch.draw(Assets.instance.leveldecoration.city, 0, 0, 300f, 0, Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT, 1.5f, 1, 0 );
 		batch.end();
-		
 		worldController.cameraHelper.applyTo(camera);
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
@@ -282,16 +271,13 @@ public class WorldRenderer implements Disposable
 		worldController.rain.render(batch);
 		if(Ability.fire)
 		{
-			worldController.ability.render(batch);
+			worldController.level.ability.render(batch);
 		}
 		batch.end();
 		
 		if (DEBUG_DRAW_BOX2D_WORLD)
 		{
-			b2debugRenderer.setDrawAABBs(false);
-			b2debugRenderer.setDrawVelocities(false);
-			b2debugRenderer.AABB_COLOR.set(Color.BLACK); 
-			b2debugRenderer.VELOCITY_COLOR.set(Color.BLACK); 
+			 
 			b2debugRenderer.render(worldController.b2world, camera.combined);
 		}
 			
@@ -307,7 +293,8 @@ public class WorldRenderer implements Disposable
 		batch.dispose();
 		stage.dispose();
 		stage2.dispose();
-		
+		hudSkin.dispose();
+			
 	}
 	
 	/**

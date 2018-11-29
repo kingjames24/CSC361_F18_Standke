@@ -153,7 +153,7 @@ public class Raindrops extends AbstractGameObject
      RainDrop drop = new RainDrop();
      drop.setRegion(rainDrops.random());
      drop.dimension.set(dimension);
-     
+     float rainScale= 0.5f; 
      float x = MathUtils.random(0, 118);
      float y = MathUtils.random(0,1);
      float rotation = MathUtils.random(0.0f, 5.0f)* MathUtils.degreesToRadians; 
@@ -181,7 +181,7 @@ public class Raindrops extends AbstractGameObject
      PolygonShape polygonShape = new PolygonShape();
 	 drop.origin.x =drop.dimension.x/2f;
      drop.origin.y =drop.dimension.x/2f;
-     polygonShape.setAsBox(drop.dimension.x/2f, drop.dimension.y/2f, drop.origin, 0);
+     polygonShape.setAsBox(drop.dimension.x/2f*rainScale, drop.dimension.y/2f*rainScale, drop.origin, 0);
      
      
      FixtureDef fixtureDef = new FixtureDef();

@@ -58,7 +58,7 @@ import com.mygdx.util.GamePreferences;
  * @author Adam Standke
  *
  */
-public class MenuScreen  extends AbstractGameScreen implements DestructionListener
+public class MenuScreen extends AbstractGameScreen implements DestructionListener
 {
 	
 	private Stage stage;

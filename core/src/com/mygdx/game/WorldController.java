@@ -58,8 +58,7 @@ public class WorldController extends InputAdapter implements Disposable
     public boolean attached=false; 
     public RevoluteJoint joint;
     public RevoluteJoint joint2; 
-    public Raindrops rain;
-    public Ability ability; 
+    public Raindrops rain; 
     public Level level;
     public static int score;
 	public static int lives=3;
@@ -95,11 +94,9 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
- 	   	b2world = new World(new Vector2(0, -5f), true);
- 	   	b2world.setContactListener(new MyContactListener());
 		initlevel(); 
-		rain= new Raindrops(100);
-		ability = new Ability(); 
+		
+		
 		
 		 
 		
@@ -111,10 +108,17 @@ public class WorldController extends InputAdapter implements Disposable
 	 */
 	private void initlevel()
 	{
+		if (b2world != null) 
+		{
+			b2world.dispose();
+		}
+		b2world = new World(new Vector2(0, -5f), true);
+ 	   	b2world.setContactListener(new MyContactListener());
 		score=0; 
 		level = new Level(Constants.LEVEL_01);
 		cameraHelper.setTarget(level.tim);
 		initPhysics();
+		rain= new Raindrops(50);
 		
 	}
 	
@@ -159,6 +163,30 @@ public class WorldController extends InputAdapter implements Disposable
 			}
 			rain.raindropScheduledForRemoval.clear();
 		}
+		
+		if(!b2world.isLocked()) 
+		{
+			int x= Ability.abilityScheduledForRemoval.size;
+			for(int j=0; j<x; j++)
+			{
+			
+				Ability point= Ability.abilityScheduledForRemoval.pop(); 
+				if(point!=null)
+				{
+					if(point.hit)
+					{ 
+						point.body.getWorld().destroyBody(point.body);
+						 
+						
+					}
+					
+				}
+				
+			}
+			Ability.abilityScheduledForRemoval.clear();
+		}
+		
+		
 		if(!b2world.isLocked()) 
 		{
 			int x= Points.pointScheduledForRemoval.size;
@@ -213,7 +241,7 @@ public class WorldController extends InputAdapter implements Disposable
 			{
 				
 				
-				init();
+				initlevel();
 			
 				
 			}
@@ -301,8 +329,9 @@ public class WorldController extends InputAdapter implements Disposable
 	    		   }
 	    		   if(first==0)
 	    		   {
+	    			   level.ability.particle=false; 
 	    			   level.tim.shooting=true; 
-	    			   ability.createBody(level.tim.body.getPosition());
+	    			   level.ability.createBody(level.tim.body.getPosition());
 	    			   Vector3 screen = new Vector3(x,y,0); 
 		    		   Vector3 world = WorldRenderer.camera.unproject(screen);
 		    		   Vector2 camera = new Vector2(world.x, world.y);
@@ -310,16 +339,18 @@ public class WorldController extends InputAdapter implements Disposable
 		    		   Vector2 distance = new Vector2(); 
 		    		   distance.x= camera.x-launcher.x; 
 		    		   distance.y= camera.y-launcher.y; 
-		    		   ability.body.setTransform(joint.getBodyB().getPosition(), 0);
-		    		   ability.body.setLinearVelocity(distance);
-		    		   ability.body.setGravityScale(0);
-		    		   ability.setFire(true); 
+		    		   level.ability.body.setTransform(joint.getBodyB().getPosition(), 0);
+		    		   level.ability.body.setLinearVelocity(distance);
+		    		   level.ability.body.setGravityScale(0);
+		    		   level.ability.setFire(true); 
 		    		   shootTimeout=120;
 		    		   
 	    		   }
 	    		   else
 	    		   {
-	    			   level.tim.shooting=true;  
+	    			   level.ability.particle=false; 
+	    			   level.tim.shooting=true;
+	    			   level.ability.createBody(level.tim.body.getPosition());
 	    			   Vector3 screen = new Vector3(x,y,0); 
 		    		   Vector3 world = WorldRenderer.camera.unproject(screen);
 		    		   Vector2 camera = new Vector2(world.x, world.y);
@@ -327,10 +358,10 @@ public class WorldController extends InputAdapter implements Disposable
 		    		   Vector2 distance = new Vector2(); 
 		    		   distance.x= camera.x-launcher.x; 
 		    		   distance.y= camera.y-launcher.y; 
-		    		   ability.body.setTransform(joint.getBodyB().getPosition(), 0);
-		    		   ability.body.setLinearVelocity(distance);
-		    		   ability.body.setGravityScale(0);
-		    		   ability.setFire(true); 
+		    		   level.ability.body.setTransform(joint.getBodyB().getPosition(), 0);
+		    		   level.ability.body.setLinearVelocity(distance);
+		    		   level.ability.body.setGravityScale(0);
+		    		   level.ability.setFire(true); 
 		    		   shootTimeout=120;
 		    		    
 	    		   }
@@ -473,16 +504,61 @@ public class WorldController extends InputAdapter implements Disposable
     {
     	   //edgeShapped boundary
     	   Vector2 origin = new Vector2();
+    	   
     	   BodyDef bodyDef2 = new BodyDef();
 		   bodyDef2.type = BodyType.StaticBody;//static body type for boundary
 		   bodyDef2.position.set(new Vector2(0f, -10f));//set 10 meters below scene
 		   Body body1 = b2world.createBody(bodyDef2); 
 		   EdgeShape boundary = new EdgeShape();//use an edge as shape
-		   boundary.set(new Vector2(0f, 0f), new Vector2(128f, 0));//extends 128 meters in lenght
 		   FixtureDef fixtureDef2 = new FixtureDef();
 		   fixtureDef2.shape=boundary;
-		   body1.createFixture(fixtureDef2); 
+		   boundary.set(new Vector2(0f, 0f), new Vector2(128f, 0));//extends 128 meters in length
+		   Fixture data1= body1.createFixture(fixtureDef2);
+		   data1.setUserData((Object)("10"));
 		   boundary.dispose();
+		   
+		  
+    	   BodyDef bodyDef3 = new BodyDef();
+		   bodyDef3.type = BodyType.StaticBody;//static body type for boundary
+		   bodyDef3.position.set(new Vector2(0f, 10f));//set 10 meters above scene
+		   Body body2 = b2world.createBody(bodyDef3); 
+		   EdgeShape boundary1 = new EdgeShape();//use an edge as shape
+		   FixtureDef fixtureDef3 = new FixtureDef();
+		   fixtureDef3.shape=boundary1;
+		   boundary1.set(new Vector2(0f, 0f), new Vector2(128f, 0));//extends 128 meters in length
+		   Fixture data2 =body2.createFixture(fixtureDef3);
+		   data2.setUserData((Object)"10");
+		   boundary1.dispose();
+		   
+		   
+		  
+    	   BodyDef bodyDef4 = new BodyDef();
+		   bodyDef4.type = BodyType.StaticBody;//static body type for boundary
+		   bodyDef4.position.set(new Vector2(0f, 0f));//set 10 meters to the left scene
+		   Body body4 = b2world.createBody(bodyDef4); 
+		   EdgeShape boundary2 = new EdgeShape();//use an edge as shape
+		   FixtureDef fixtureDef4 = new FixtureDef();
+		   fixtureDef4.shape=boundary2;
+		   boundary2.set(new Vector2(0f, -10f), new Vector2(0, 10f));//extends 128 meters in length
+		   Fixture data3 =body4.createFixture(fixtureDef4);
+		   data3.setUserData((Object)"10");
+		   boundary2.dispose();
+		   
+		   BodyDef bodyDef5 = new BodyDef();
+		   bodyDef5.type = BodyType.StaticBody;//static body type for boundary
+		   bodyDef5.position.set(new Vector2(128f, 0f));//set 10 meters to the left scene
+		   Body body5 = b2world.createBody(bodyDef5); 
+		   EdgeShape boundary3 = new EdgeShape();//use an edge as shape
+		   FixtureDef fixtureDef5 = new FixtureDef();
+		   fixtureDef5.shape=boundary3;
+		   boundary3.set(new Vector2(0f, -10f), new Vector2(0, 10f));//extends 128 meters in length
+		   Fixture data4 = body5.createFixture(fixtureDef5);
+		   data4.setUserData((Object)("10"));
+		   boundary3.dispose();
+		   
+		   
+		   
+		   
     	   // Timmy's main body 
     	   BodyDef bodyDef = new BodyDef();
 		   bodyDef.type = BodyType.DynamicBody;//dynamic body type for main character 

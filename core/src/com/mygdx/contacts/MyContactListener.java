@@ -41,7 +41,7 @@ public class MyContactListener implements ContactListener
 		
 		Object fixtureUserData1 = contact.getFixtureA().getUserData();
 		Object FixtureUserData2 = contact.getFixtureB().getUserData(); 
-		if(body1 != null && body==null) //rain drop collides with a static object
+		if(body1 != null && body==null) //rain drop collides with a static object or star collides with static object
 		{
 			if(body1 instanceof Raindrops.RainDrop)
 			{
@@ -50,21 +50,35 @@ public class MyContactListener implements ContactListener
 				
 			}
 			
+			
 		}
 		else if(body != null && body1==null)//rain drop collides with a static obejct
 		{
 			if(body instanceof Raindrops.RainDrop)
 			{
 				RainDrop rain = (RainDrop)body;
-				rain.startContact();
-				
+				rain.startContact();	
 			}
+			
 		}
 		else  
 		{
 			if(body1 instanceof Raindrops.RainDrop && body instanceof Raindrops.RainDrop)
 			{
-				; //rain drop colliding with another dynamic rain drop
+				if(body1 instanceof Raindrops.RainDrop) //rain drop collides with another raindrop
+				{
+					RainDrop rain = (RainDrop)body1;
+					rain.startContact();
+					
+					
+				}
+				if(body instanceof Raindrops.RainDrop)
+				{
+					RainDrop rain = (RainDrop)body;
+					rain.startContact();	
+				}
+				
+				
 			}
 			else if(body1 instanceof Raindrops.RainDrop && body instanceof Points || body1 instanceof Points && body instanceof Raindrops.RainDrop)
 			{
@@ -137,6 +151,47 @@ public class MyContactListener implements ContactListener
 					rain.startContact();
 					
 				} 
+			}
+			
+		}
+		if(body1 instanceof Ability && fixtureUserData1!=null || body1 instanceof Ability && FixtureUserData2!=null)
+		{
+			if(fixtureUserData1!=null)
+			{
+				if(fixtureUserData1.equals("10"))
+				{
+					Ability ab = (Ability)body1; 
+					ab.startContact();
+				}
+			}
+			else
+			{
+				if(FixtureUserData2.equals("10"))
+				{
+					Ability ab = (Ability)body1; 
+					ab.startContact();
+				}
+				
+			}
+		}
+		if(body instanceof Ability && fixtureUserData1!=null || body instanceof Ability && FixtureUserData2!=null)
+		{
+			if(fixtureUserData1!=null)
+			{
+				if(fixtureUserData1.equals("10"))
+				{
+					Ability ab = (Ability)body; 
+					ab.startContact();
+				}
+			}
+			else
+			{
+				if(FixtureUserData2.equals("10"))
+				{
+					Ability ab = (Ability)body; 
+					ab.startContact();
+				}
+				
 			}
 			
 		}
