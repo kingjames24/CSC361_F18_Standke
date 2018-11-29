@@ -28,7 +28,8 @@ public class Ability extends AbstractGameObject
 	public boolean hit;
 	public static Array<Ability> abilityScheduledForRemoval;
 	public static boolean fire=false;
-	public ParticleEffect fireBlast = new ParticleEffect(); 
+	public ParticleEffect fireBlast = new ParticleEffect();
+	public boolean particle; 
 	
 	 
 	/**
@@ -48,7 +49,8 @@ public class Ability extends AbstractGameObject
 		dimension.set(.5f, .5f); 
 		star=Assets.instance.up.power;
 		abilityScheduledForRemoval= new Array<Ability>();
-		fireBlast.load(Gdx.files.internal("../core/assets/particles/particle3.p"), Gdx.files.internal("../core/assets/particles/"));	 
+		fireBlast.load(Gdx.files.internal("../core/assets/particles/particle3.p"), Gdx.files.internal("../core/assets/particles/"));
+		particle=true; 
 	}
 	
 	/**
@@ -82,6 +84,7 @@ public class Ability extends AbstractGameObject
 		
 		fireBlast.start();
 		fireBlast.update(deltaTime);
+		
 	}
 
 	/**
@@ -95,6 +98,7 @@ public class Ability extends AbstractGameObject
 		TextureRegion reg = null;
 		reg = star;
 		
+		if(particle) return; 
 		fireBlast.draw(batch);
 		
 		
@@ -122,6 +126,7 @@ public class Ability extends AbstractGameObject
 	
 	public void startContact() 
 	{
+		particle=true; 
 		hit=true;
 		abilityScheduledForRemoval.add(this);	  	
 	}

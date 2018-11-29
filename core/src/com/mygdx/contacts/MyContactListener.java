@@ -65,7 +65,20 @@ public class MyContactListener implements ContactListener
 		{
 			if(body1 instanceof Raindrops.RainDrop && body instanceof Raindrops.RainDrop)
 			{
-				; //rain drop colliding with another dynamic rain drop
+				if(body1 instanceof Raindrops.RainDrop) //rain drop collides with another raindrop
+				{
+					RainDrop rain = (RainDrop)body1;
+					rain.startContact();
+					
+					
+				}
+				if(body instanceof Raindrops.RainDrop)
+				{
+					RainDrop rain = (RainDrop)body;
+					rain.startContact();	
+				}
+				
+				
 			}
 			else if(body1 instanceof Raindrops.RainDrop && body instanceof Points || body1 instanceof Points && body instanceof Raindrops.RainDrop)
 			{

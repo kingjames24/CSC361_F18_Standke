@@ -94,10 +94,8 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
- 	   	b2world = new World(new Vector2(0, -5f), true);
- 	   	b2world.setContactListener(new MyContactListener());
 		initlevel(); 
-		rain= new Raindrops(100);
+		
 		
 		
 		 
@@ -110,10 +108,17 @@ public class WorldController extends InputAdapter implements Disposable
 	 */
 	private void initlevel()
 	{
+		if (b2world != null) 
+		{
+			b2world.dispose();
+		}
+		b2world = new World(new Vector2(0, -5f), true);
+ 	   	b2world.setContactListener(new MyContactListener());
 		score=0; 
 		level = new Level(Constants.LEVEL_01);
 		cameraHelper.setTarget(level.tim);
 		initPhysics();
+		rain= new Raindrops(50);
 		
 	}
 	
@@ -236,7 +241,7 @@ public class WorldController extends InputAdapter implements Disposable
 			{
 				
 				
-				init();
+				initlevel();
 			
 				
 			}
@@ -324,6 +329,7 @@ public class WorldController extends InputAdapter implements Disposable
 	    		   }
 	    		   if(first==0)
 	    		   {
+	    			   level.ability.particle=false; 
 	    			   level.tim.shooting=true; 
 	    			   level.ability.createBody(level.tim.body.getPosition());
 	    			   Vector3 screen = new Vector3(x,y,0); 
@@ -342,6 +348,7 @@ public class WorldController extends InputAdapter implements Disposable
 	    		   }
 	    		   else
 	    		   {
+	    			   level.ability.particle=false; 
 	    			   level.tim.shooting=true;
 	    			   level.ability.createBody(level.tim.body.getPosition());
 	    			   Vector3 screen = new Vector3(x,y,0); 

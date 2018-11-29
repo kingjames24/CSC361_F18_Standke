@@ -223,7 +223,13 @@ public class Level
 	public void update(float deltatime)
 	{
 		//for (Platform plat : platforms) plat.update(deltatime);
-		ability.update(deltatime);
+		if(Star.collected)
+		{
+			ability.update(deltatime);
+		}
+		
+		
+		
 		tim.update(deltatime);
 	}
 	
