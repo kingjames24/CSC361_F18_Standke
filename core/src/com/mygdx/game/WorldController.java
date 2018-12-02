@@ -66,6 +66,7 @@ public class WorldController extends InputAdapter implements Disposable
 	public static int health; 
 	private int first;
 	private Game game;
+	private int soundTimeOut;
 	public static boolean visible=false; 
      
     
@@ -140,7 +141,8 @@ public class WorldController extends InputAdapter implements Disposable
 		b2world.step(deltaTime, 8, 3);
 		
 		jumpTimeout--;
-		shootTimeout--; 
+		shootTimeout--;
+		soundTimeOut--; 
 	
 		if(!b2world.isLocked()) 
 		{
@@ -268,9 +270,18 @@ public class WorldController extends InputAdapter implements Disposable
 	       float sprMoveSpeed = 1;
 	       if (Gdx.input.isKeyPressed(Keys.A)) 
 	       {
+	    	   /*if(soundTimeOut>0)
+	    	   {
+	    		   ; 
+	    	   }
+	    	   else
+	    	   {
+	    		   AudioManager.instance.play(Assets.instance.sounds.jump);
+	    	   }*/
 	    	   
 	    	   if(canWalkNow())
 	    	   {
+	    		   soundTimeOut=10;
 	    		   level.people.timmyLeft(false);
 		    	   level.tim.left=true;
 		    	   
@@ -284,8 +295,18 @@ public class WorldController extends InputAdapter implements Disposable
 	       else if (Gdx.input.isKeyPressed(Keys.D)) 
 	       {
 	    	  
+	    	  /* if(soundTimeOut>0)
+	    	   {
+	    		   ; 
+	    	   }
+	    	   else
+	    	   {
+	    		   AudioManager.instance.play(Assets.instance.sounds.jump);
+	    	   }*/
+	    	   
 	    	   if(canWalkNow())
 	    	   {
+	    		   soundTimeOut=10; 
 	    		   level.people.timmyLeft(true);
 		    	   level.tim.left=false;
 		    	   
@@ -301,9 +322,10 @@ public class WorldController extends InputAdapter implements Disposable
 	    	   
 	    	   if(canJumpNow())
 	    	   {
-	    		   AudioManager.instance.play(Assets.instance.sounds.jump);
+	    		   //AudioManager.instance.play(Assets.instance.sounds.jump);
 	    		   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*4f), level.tim.body.getWorldCenter(), true);
-		    	   jumpTimeout=15;  
+		    	   jumpTimeout=15;
+		    	   
 	    	   }
 	    	  
 	       }
@@ -401,6 +423,15 @@ public class WorldController extends InputAdapter implements Disposable
 			String userDataTag =fix;  
 			if (userDataTag=="2")
 			{
+				   if(soundTimeOut>0)
+		    	   {
+		    		   ; 
+		    	   }
+		    	   else
+		    	   {
+		    		   AudioManager.instance.play(Assets.instance.sounds.walk);
+		    	   }
+				 
 				return true; 
 			}
 		}

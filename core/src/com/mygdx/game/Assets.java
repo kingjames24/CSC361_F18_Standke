@@ -66,7 +66,7 @@ public class Assets implements Disposable, AssetErrorListener
 	public class AssetSounds
 	{
 		public final Sound explode;
-		//public final Sound walk;
+		public final Sound walk;
 		public final Sound death;
 		public final Sound jump;
 		public final Sound drip;
@@ -78,7 +78,7 @@ public class Assets implements Disposable, AssetErrorListener
 		public AssetSounds(AssetManager am)
 		{
 			explode = am.get("sounds/110391__soundscalpel-com__firework-explosion-fizz.wav", Sound.class);
-			//walk = am.get("sounds/jump_with_feather.wav", Sound.class);
+			walk = am.get("sounds/Trim.wav", Sound.class);
 			death = am.get("sounds/239579__ryanconway__evil-laugh-2.wav", Sound.class);
 			jump = am.get("sounds/96185__atlaslives__cup-on-table.wav", Sound.class);
 			drip = am.get("sounds/25879__acclivity__drip1.wav", Sound.class);
@@ -274,6 +274,7 @@ public class Assets implements Disposable, AssetErrorListener
         assetManager.load("music/rain-01.mp3", Music.class);
 		assetManager.load("music/Yung_Kartz_-_11_-_Lonely.mp3", Music.class); 
 		assetManager.load("sounds/110391__soundscalpel-com__firework-explosion-fizz.wav", Sound.class);
+		assetManager.load("sounds/Trim.wav", Sound.class);
 		assetManager.load("sounds/239579__ryanconway__evil-laugh-2.wav", Sound.class);
 		assetManager.load("sounds/96185__atlaslives__cup-on-table.wav", Sound.class);
 		assetManager.load("sounds/25879__acclivity__drip1.wav", Sound.class);
