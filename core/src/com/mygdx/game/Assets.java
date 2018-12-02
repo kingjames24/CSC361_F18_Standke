@@ -16,6 +16,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.mygdx.util.Constants;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 
 
 
@@ -40,7 +42,8 @@ public class Assets implements Disposable, AssetErrorListener
 	public static final Assets instance = new Assets();
     private AssetManager assetManager;
 	public AssetFonts fonts;
-	
+	public AssetSounds sounds;
+	public AssetMusic music;
     
     /**
      * Private constructor since the Assets' class is modeled after
@@ -50,6 +53,58 @@ public class Assets implements Disposable, AssetErrorListener
      * one single instance of this class will be created for all to use. 
      */
     private Assets () {}
+    
+    
+    
+		
+	
+	/**
+	 * class that will handle the loading of the sound files for each sound type
+	 * @author Adam
+	 *
+	 */
+	public class AssetSounds
+	{
+		public final Sound explode;
+		//public final Sound walk;
+		public final Sound death;
+		public final Sound jump;
+		public final Sound drip;
+		
+		/**
+		 * Constructor that will handle the loading/assigning of the sound files
+		 * @param am
+		 */
+		public AssetSounds(AssetManager am)
+		{
+			explode = am.get("sounds/110391__soundscalpel-com__firework-explosion-fizz.wav", Sound.class);
+			//walk = am.get("sounds/jump_with_feather.wav", Sound.class);
+			death = am.get("sounds/239579__ryanconway__evil-laugh-2.wav", Sound.class);
+			jump = am.get("sounds/96185__atlaslives__cup-on-table.wav", Sound.class);
+			drip = am.get("sounds/25879__acclivity__drip1.wav", Sound.class);
+		}
+	}
+	
+	/**
+	 * Class that will handle the loading of the music assets
+	 * @author Adam
+	 *
+	 */
+	public class AssetMusic
+	{
+		public final Music song02; 
+		public final Music song01;
+		
+		/**
+		 * Constructor will assign the music files for the given sound
+		 * @param am
+		 */
+		public AssetMusic(AssetManager am)
+		{
+			song01 = am.get("music/rain-01.mp3", Music.class);
+			song02 = am.get("music/Yung_Kartz_-_11_-_Lonely.mp3", Music.class); 
+		}
+	}
     
     /**
 	 * Inner class that holds a reference to the various Timmy image files 
@@ -216,10 +271,12 @@ public class Assets implements Disposable, AssetErrorListener
         // load texture atlas
         assetManager.load(Constants.TEXTURE_ATLAS_OBJECTS, TextureAtlas.class);
         
-        // load sounds
-       
-        
-        // load music
+        assetManager.load("music/rain-01.mp3", Music.class);
+		assetManager.load("music/Yung_Kartz_-_11_-_Lonely.mp3", Music.class); 
+		assetManager.load("sounds/110391__soundscalpel-com__firework-explosion-fizz.wav", Sound.class);
+		assetManager.load("sounds/239579__ryanconway__evil-laugh-2.wav", Sound.class);
+		assetManager.load("sounds/96185__atlaslives__cup-on-table.wav", Sound.class);
+		assetManager.load("sounds/25879__acclivity__drip1.wav", Sound.class);
         
          
         // start loading assets and wait until finished
@@ -247,6 +304,8 @@ public class Assets implements Disposable, AssetErrorListener
 	    up = new AssetPowerUp(atlas); 
 	    plus = new AssetPoints(atlas); 
 	    leveldecoration = new AssetLevelDecoration(atlas); 
+	    sounds = new AssetSounds(assetManager);
+	    music = new AssetMusic(assetManager);
     	 
    }
     
@@ -288,6 +347,7 @@ public class Assets implements Disposable, AssetErrorListener
 		fonts.defaultSmall.dispose();
 		fonts.defaultNormal.dispose();
 		fonts.defaultBig.dispose();
+		
 		
 	}
 	

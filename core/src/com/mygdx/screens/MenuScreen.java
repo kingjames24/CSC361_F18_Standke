@@ -46,6 +46,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Assets;
 import com.mygdx.game.WorldController;
+import com.mygdx.util.AudioManager;
 import com.mygdx.util.Constants;
 import com.mygdx.util.GamePreferences;
 
@@ -145,6 +146,7 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 	 {
 	     saveSettings();
 	     onCancelClicked();
+	     AudioManager.instance.onSettingsUpdated();
 	 }
 	 /**
 	  * Private method that is called when the 
@@ -158,6 +160,8 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 		     btnMenuPlay.setVisible(true);
 		     btnMenuOptions.setVisible(true);
 		     winOptions.setVisible(false);
+		     AudioManager.instance.onSettingsUpdated();
+		     
 	  }
 	  
 	  

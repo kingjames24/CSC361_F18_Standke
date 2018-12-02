@@ -34,6 +34,7 @@ import com.mygdx.objects.Raindrops.RainDrop;
 import com.mygdx.objects.Star;
 import com.mygdx.objects.Timmy;
 import com.mygdx.screens.MenuScreen;
+import com.mygdx.util.AudioManager;
 import com.mygdx.util.CameraHelper;
 import com.mygdx.util.Constants;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -228,7 +229,7 @@ public class WorldController extends InputAdapter implements Disposable
 		if (isGameOver() || didTimmyfall()|| isTimmyDead())//portion of update that handles the state of game
 		{
 			
-			 
+			AudioManager.instance.play(Assets.instance.sounds.death, 1);
 			lives--;
 			visible=false;
 			if (isGameOver())
@@ -300,7 +301,7 @@ public class WorldController extends InputAdapter implements Disposable
 	    	   
 	    	   if(canJumpNow())
 	    	   {
-	 
+	    		   AudioManager.instance.play(Assets.instance.sounds.jump);
 	    		   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*4f), level.tim.body.getWorldCenter(), true);
 		    	   jumpTimeout=15;  
 	    	   }
@@ -329,6 +330,7 @@ public class WorldController extends InputAdapter implements Disposable
 	    		   }
 	    		   if(first==0)
 	    		   {
+	    			   AudioManager.instance.play(Assets.instance.sounds.explode);
 	    			   level.ability.particle=false; 
 	    			   level.tim.shooting=true; 
 	    			   level.ability.createBody(level.tim.body.getPosition());
@@ -348,6 +350,7 @@ public class WorldController extends InputAdapter implements Disposable
 	    		   }
 	    		   else
 	    		   {
+	    			   AudioManager.instance.play(Assets.instance.sounds.explode);
 	    			   level.ability.particle=false; 
 	    			   level.tim.shooting=true;
 	    			   level.ability.createBody(level.tim.body.getPosition());

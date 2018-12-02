@@ -8,6 +8,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.mygdx.game.Assets;
 import com.mygdx.screens.GameScreen;
 import com.mygdx.screens.MenuScreen;
+import com.mygdx.util.AudioManager;
 import com.mygdx.util.GamePreferences;
 
 
@@ -32,7 +33,7 @@ public class RainMaker extends Game{
 		Assets.instance.init(new AssetManager());
 		GamePreferences.instance.load();
 		setScreen(new MenuScreen(this));
-		 
+		AudioManager.instance.play(Assets.instance.music.song01); 
 	}
 
 	

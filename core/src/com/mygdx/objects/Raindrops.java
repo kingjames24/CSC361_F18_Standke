@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Assets;
 import com.mygdx.game.WorldController;
 import com.mygdx.objects.Raindrops.RainDrop;
+import com.mygdx.util.AudioManager;
 
 /**
  * Class that represents all of the rain drops that fall from 
@@ -64,6 +65,7 @@ public class Raindrops extends AbstractGameObject
 	*/	
 	public void startContact() 
 	{
+		AudioManager.instance.play(Assets.instance.sounds.drip);
 		hit=true;
 		raindropScheduledForRemoval.add(this);	  	
 	}
