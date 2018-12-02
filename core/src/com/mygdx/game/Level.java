@@ -8,6 +8,7 @@ import com.mygdx.objects.City;
 import com.mygdx.objects.People;
 import com.mygdx.objects.Platform;
 import com.mygdx.objects.Points;
+import com.mygdx.objects.Princess;
 import com.mygdx.objects.Star;
 import com.mygdx.objects.Timmy;
 import com.mygdx.objects.Ability;
@@ -35,7 +36,8 @@ public class Level
 		PLATFORMS(0, 255, 0), // platforms are green
 		PLAYER_SPAWNPOINT(255, 255, 255), // player spawn point is white
 		POWERUP(255, 0, 255), // star location is purple
-		ITEMS(255, 255, 0); // collectible game points are yellow
+		ITEMS(255, 255, 0), // collectible game points are yellow
+		GOAL(255,0,0); 
 		 
 		//store decimal value of each game object's associated color  
 		private int color;
@@ -81,7 +83,8 @@ public class Level
 	public Array<Star> enhancement;
 	public People people;
 	public City background;
-	public Ability ability; 
+	public Ability ability;
+	public Princess goal; 
 	 
 	
 
@@ -166,7 +169,17 @@ public class Level
 					obj.position.set(pixelX, baseHeight * obj.dimension.y +
 							offsetHeight);
 					tim = (Timmy)obj;
-				}		
+				}
+				else if (BLOCK_TYPE.GOAL.sameColor(currentPixel))
+				{
+					obj = new Princess();
+					offsetHeight = -7.7f;
+					obj.position.set(pixelX, baseHeight * obj.dimension.y +
+							offsetHeight);
+					obj.createBody(obj.position);
+					goal = (Princess)obj; 
+					
+				}
 				// Adds feathers to the map
 				else if (BLOCK_TYPE.POWERUP.sameColor(currentPixel)) 
 				{
@@ -242,6 +255,7 @@ public class Level
 	public void render (SpriteBatch batch)
 	{
 		
+		goal.render(batch); 
 		
 		// Draw Platform
 		for (Platform plat : platforms)
