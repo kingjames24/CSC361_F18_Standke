@@ -70,6 +70,9 @@ public class Assets implements Disposable, AssetErrorListener
 		public final Sound death;
 		public final Sound jump;
 		public final Sound drip;
+		public final Sound points; 
+		public final Sound power; 
+		
 		
 		/**
 		 * Constructor that will handle the loading/assigning of the sound files
@@ -80,8 +83,11 @@ public class Assets implements Disposable, AssetErrorListener
 			explode = am.get("sounds/110391__soundscalpel-com__firework-explosion-fizz.wav", Sound.class);
 			walk = am.get("sounds/Trim.wav", Sound.class);
 			death = am.get("sounds/239579__ryanconway__evil-laugh-2.wav", Sound.class);
-			jump = am.get("sounds/96185__atlaslives__cup-on-table.wav", Sound.class);
-			drip = am.get("sounds/25879__acclivity__drip1.wav", Sound.class);
+			jump = am.get("sounds/344004__reitanna__heavy-grunt.wav", Sound.class);
+			//drip = am.get("sounds/25879__acclivity__drip1.wav", Sound.class);
+			drip = am.get("sounds/348022__mattix__water-drop-01.wav", Sound.class);
+			points = am.get("sounds/320655__rhodesmas__level-up-01.wav", Sound.class);
+			power =  am.get("sounds/220173__gameaudio__spacey-1up-power-up.wav", Sound.class);
 		}
 	}
 	
@@ -276,8 +282,13 @@ public class Assets implements Disposable, AssetErrorListener
 		assetManager.load("sounds/110391__soundscalpel-com__firework-explosion-fizz.wav", Sound.class);
 		assetManager.load("sounds/Trim.wav", Sound.class);
 		assetManager.load("sounds/239579__ryanconway__evil-laugh-2.wav", Sound.class);
-		assetManager.load("sounds/96185__atlaslives__cup-on-table.wav", Sound.class);
-		assetManager.load("sounds/25879__acclivity__drip1.wav", Sound.class);
+		
+		assetManager.load("sounds/348022__mattix__water-drop-01.wav", Sound.class);
+		assetManager.load("sounds/344004__reitanna__heavy-grunt.wav", Sound.class);
+
+		
+		assetManager.load("sounds/320655__rhodesmas__level-up-01.wav", Sound.class);
+		assetManager.load("sounds/220173__gameaudio__spacey-1up-power-up.wav", Sound.class);
         
          
         // start loading assets and wait until finished

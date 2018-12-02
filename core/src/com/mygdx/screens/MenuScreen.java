@@ -511,6 +511,7 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 			{
 				
 				game.setScreen(new GameScreen(game));
+				AudioManager.instance.play(Assets.instance.music.song01);
 
 			}
 			 

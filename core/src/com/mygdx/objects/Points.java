@@ -13,6 +13,7 @@ import com.mygdx.game.Assets;
 import com.mygdx.game.Level;
 import com.mygdx.game.WorldController;
 import com.mygdx.objects.Raindrops.RainDrop;
+import com.mygdx.util.AudioManager;
 /**
  * Class that represents Points objects that 
  * the player is allowed to collect
@@ -57,7 +58,7 @@ public class Points extends AbstractGameObject
 	{
 		collected=true; 
 		pointScheduledForRemoval.add(this);
-		
+		AudioManager.instance.play(Assets.instance.sounds.points); 
 		
 	}
 	/**

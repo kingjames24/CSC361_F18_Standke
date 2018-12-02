@@ -2,6 +2,7 @@ package com.mygdx.util;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.Game;
 /**
  * Class that manages audio sounds and music during the game
  * @author adam standke
@@ -12,11 +13,17 @@ public class AudioManager
 	//creates a new instance of AudioManger when class is loaded(ie Singleton pattern)
 	public static final AudioManager instance = new AudioManager();
 	
+	public Game game; 
     private Music playingMusic;
-    private Music playingMusic2; 
+    
     
     // singleton: prevent instantiation from other classes
     private AudioManager () { }
+    
+    public void init(Game game)
+    {
+    	this.game=game; 
+    }
     
     /**
      * Method that plays a sound effect with a default volume of one

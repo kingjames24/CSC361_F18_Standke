@@ -33,7 +33,8 @@ public class RainMaker extends Game{
 		Assets.instance.init(new AssetManager());
 		GamePreferences.instance.load();
 		setScreen(new MenuScreen(this));
-		AudioManager.instance.play(Assets.instance.music.song01); 
+		AudioManager.instance.init(this);
+		AudioManager.instance.play(Assets.instance.music.song02); 
 	}
 
 	

@@ -65,7 +65,7 @@ public class Raindrops extends AbstractGameObject
 	*/	
 	public void startContact() 
 	{
-		AudioManager.instance.play(Assets.instance.sounds.drip);
+		AudioManager.instance.play(Assets.instance.sounds.drip, 0.2f);
 		hit=true;
 		raindropScheduledForRemoval.add(this);	  	
 	}

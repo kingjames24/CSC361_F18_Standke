@@ -231,7 +231,7 @@ public class WorldController extends InputAdapter implements Disposable
 		if (isGameOver() || didTimmyfall()|| isTimmyDead())//portion of update that handles the state of game
 		{
 			
-			AudioManager.instance.play(Assets.instance.sounds.death, 1);
+			AudioManager.instance.play(Assets.instance.sounds.death, 1f);
 			lives--;
 			visible=false;
 			if (isGameOver())
@@ -270,14 +270,7 @@ public class WorldController extends InputAdapter implements Disposable
 	       float sprMoveSpeed = 1;
 	       if (Gdx.input.isKeyPressed(Keys.A)) 
 	       {
-	    	   /*if(soundTimeOut>0)
-	    	   {
-	    		   ; 
-	    	   }
-	    	   else
-	    	   {
-	    		   AudioManager.instance.play(Assets.instance.sounds.jump);
-	    	   }*/
+	    	   
 	    	   
 	    	   if(canWalkNow())
 	    	   {
@@ -295,14 +288,7 @@ public class WorldController extends InputAdapter implements Disposable
 	       else if (Gdx.input.isKeyPressed(Keys.D)) 
 	       {
 	    	  
-	    	  /* if(soundTimeOut>0)
-	    	   {
-	    		   ; 
-	    	   }
-	    	   else
-	    	   {
-	    		   AudioManager.instance.play(Assets.instance.sounds.jump);
-	    	   }*/
+	    	  
 	    	   
 	    	   if(canWalkNow())
 	    	   {
@@ -322,7 +308,7 @@ public class WorldController extends InputAdapter implements Disposable
 	    	   
 	    	   if(canJumpNow())
 	    	   {
-	    		   //AudioManager.instance.play(Assets.instance.sounds.jump);
+	    		   AudioManager.instance.play(Assets.instance.sounds.jump);
 	    		   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*4f), level.tim.body.getWorldCenter(), true);
 		    	   jumpTimeout=15;
 		    	   
@@ -352,7 +338,7 @@ public class WorldController extends InputAdapter implements Disposable
 	    		   }
 	    		   if(first==0)
 	    		   {
-	    			   AudioManager.instance.play(Assets.instance.sounds.explode);
+	    			   AudioManager.instance.play(Assets.instance.sounds.explode, 1f);
 	    			   level.ability.particle=false; 
 	    			   level.tim.shooting=true; 
 	    			   level.ability.createBody(level.tim.body.getPosition());
@@ -372,7 +358,7 @@ public class WorldController extends InputAdapter implements Disposable
 	    		   }
 	    		   else
 	    		   {
-	    			   AudioManager.instance.play(Assets.instance.sounds.explode);
+	    			   AudioManager.instance.play(Assets.instance.sounds.explode, 1f);
 	    			   level.ability.particle=false; 
 	    			   level.tim.shooting=true;
 	    			   level.ability.createBody(level.tim.body.getPosition());
@@ -429,7 +415,7 @@ public class WorldController extends InputAdapter implements Disposable
 		    	   }
 		    	   else
 		    	   {
-		    		   AudioManager.instance.play(Assets.instance.sounds.walk);
+		    		   AudioManager.instance.play(Assets.instance.sounds.walk, 1f);
 		    	   }
 				 
 				return true; 
@@ -733,7 +719,9 @@ public class WorldController extends InputAdapter implements Disposable
 	private void backToMenu () 
 	{
 	       // switch to menu screen
+		  
 	       game.setScreen(new MenuScreen(game));
+	       AudioManager.instance.play(Assets.instance.music.song02);
 	}
 	
 	
