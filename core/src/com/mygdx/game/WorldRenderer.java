@@ -114,7 +114,7 @@ public class WorldRenderer implements Disposable
 		leftCorner.add(score1).align(Align.topRight); 
 		leftCorner.row();
 		leftCorner.add(); 
-		leftCorner.add(powerup2).align(Align.topLeft).width(24).height(24);
+		leftCorner.add(powerup2).align(Align.left).width(18).height(18);
 		leftCorner.setFillParent(true);
 		stage.addActor(leftCorner);
 		
@@ -133,7 +133,6 @@ public class WorldRenderer implements Disposable
 	{
 		Table powerUpDisplay = new Table();
 	    powerUp= new Image();
-	    powerUp.setDrawable(drawable);
 	    powerUpDisplay.add(powerUp);
 		return powerUpDisplay;
 	}
