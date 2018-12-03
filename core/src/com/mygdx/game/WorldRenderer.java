@@ -41,7 +41,6 @@ public class WorldRenderer implements Disposable
 	public static OrthographicCamera camera;
 	private SpriteBatch batch;
 	private WorldController worldController; 
-	private static final boolean DEBUG_DRAW_BOX2D_WORLD = false;
 	private Box2DDebugRenderer b2debugRenderer;
 	public Stage stage; 
 	public Stack stack; 
@@ -114,7 +113,7 @@ public class WorldRenderer implements Disposable
 		leftCorner.add(score1).align(Align.topRight); 
 		leftCorner.row();
 		leftCorner.add(); 
-		leftCorner.add(powerup2).align(Align.topLeft).width(24).height(24);
+		leftCorner.add(powerup2).align(Align.left).width(18).height(18);
 		leftCorner.setFillParent(true);
 		stage.addActor(leftCorner);
 		
@@ -133,7 +132,6 @@ public class WorldRenderer implements Disposable
 	{
 		Table powerUpDisplay = new Table();
 	    powerUp= new Image();
-	    powerUp.setDrawable(drawable);
 	    powerUpDisplay.add(powerUp);
 		return powerUpDisplay;
 	}
@@ -275,11 +273,7 @@ public class WorldRenderer implements Disposable
 		}
 		batch.end();
 		
-		if (DEBUG_DRAW_BOX2D_WORLD)
-		{
-			 
-			b2debugRenderer.render(worldController.b2world, camera.combined);
-		}
+		
 			
 	}
 

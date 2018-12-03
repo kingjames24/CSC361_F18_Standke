@@ -34,6 +34,7 @@ import com.mygdx.objects.Raindrops.RainDrop;
 import com.mygdx.objects.Star;
 import com.mygdx.objects.Timmy;
 import com.mygdx.screens.MenuScreen;
+import com.mygdx.util.AudioManager;
 import com.mygdx.util.CameraHelper;
 import com.mygdx.util.Constants;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -52,20 +53,23 @@ public class WorldController extends InputAdapter implements Disposable
 	
 	public CameraHelper cameraHelper;
     public static World b2world;
-    public static int numFootContacts=0;
-    public int jumpTimeout=0;
-    public static int shootTimeout=15; 
-    public boolean attached=false; 
+    public static int numFootContacts;
+    public int jumpTimeout;
+    public static int shootTimeout;
+    public static boolean goalReached;
+    public boolean attached; 
     public RevoluteJoint joint;
     public RevoluteJoint joint2; 
     public Raindrops rain; 
     public Level level;
     public static int score;
-	public static int lives=3;
+	public static int lives;
 	public static int health; 
 	private int first;
 	private Game game;
-	public static boolean visible=false; 
+	private int soundTimeOut;
+	private float timeLeftGameOverDelay;
+	public static boolean visible; 
      
     
     
@@ -94,6 +98,13 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
+		goalReached=false;
+		lives=3; 
+		attached=false; 
+		visible=false;
+		numFootContacts=0;
+		shootTimeout=15;
+		jumpTimeout=0;
 		initlevel(); 
 		
 		
@@ -130,6 +141,17 @@ public class WorldController extends InputAdapter implements Disposable
 	 */
 	public void update(float deltaTime)
 	{
+		if (isGameOver() || goalReached)
+		{
+			Gdx.input.setInputProcessor(null);
+			timeLeftGameOverDelay -= deltaTime;
+			if (timeLeftGameOverDelay < 0)
+			{
+				backToMenu();
+				return; 
+			}
+			 
+		}
 		handleDebugInput(deltaTime);
 		
 		handleInputGame(deltaTime);
@@ -139,7 +161,8 @@ public class WorldController extends InputAdapter implements Disposable
 		b2world.step(deltaTime, 8, 3);
 		
 		jumpTimeout--;
-		shootTimeout--; 
+		shootTimeout--;
+		soundTimeOut--; 
 	
 		if(!b2world.isLocked()) 
 		{
@@ -225,28 +248,27 @@ public class WorldController extends InputAdapter implements Disposable
 		cameraHelper.update(deltaTime);
 		level.people.updateScrollPosition(cameraHelper.getPosition());
 		healthStatus(); 
-		if (isGameOver() || didTimmyfall()|| isTimmyDead())//portion of update that handles the state of game
+		if ((!isGameOver() && didTimmyfall())||(!isGameOver() && isTimmyDead()))//portion of update that handles the state of game
 		{
 			
-			 
+			AudioManager.instance.play(Assets.instance.sounds.death, 1f);
 			lives--;
 			visible=false;
 			if (isGameOver())
 			{
 				level.tim.dead=true;
-				return; 
+				timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER; 
 				
 			}
 			else
 			{
-				
-				
+					
 				initlevel();
 			
-				
 			}
 			
 		}
+		
 		
 		
 	}
@@ -268,8 +290,10 @@ public class WorldController extends InputAdapter implements Disposable
 	       if (Gdx.input.isKeyPressed(Keys.A)) 
 	       {
 	    	   
+	    	   
 	    	   if(canWalkNow())
 	    	   {
+	    		   soundTimeOut=10;
 	    		   level.people.timmyLeft(false);
 		    	   level.tim.left=true;
 		    	   
@@ -283,8 +307,11 @@ public class WorldController extends InputAdapter implements Disposable
 	       else if (Gdx.input.isKeyPressed(Keys.D)) 
 	       {
 	    	  
+	    	  
+	    	   
 	    	   if(canWalkNow())
 	    	   {
+	    		   soundTimeOut=10; 
 	    		   level.people.timmyLeft(true);
 		    	   level.tim.left=false;
 		    	   
@@ -300,9 +327,10 @@ public class WorldController extends InputAdapter implements Disposable
 	    	   
 	    	   if(canJumpNow())
 	    	   {
-	 
+	    		   AudioManager.instance.play(Assets.instance.sounds.jump);
 	    		   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*4f), level.tim.body.getWorldCenter(), true);
-		    	   jumpTimeout=15;  
+		    	   jumpTimeout=15;
+		    	   
 	    	   }
 	    	  
 	       }
@@ -329,6 +357,7 @@ public class WorldController extends InputAdapter implements Disposable
 	    		   }
 	    		   if(first==0)
 	    		   {
+	    			   AudioManager.instance.play(Assets.instance.sounds.explode, 1f);
 	    			   level.ability.particle=false; 
 	    			   level.tim.shooting=true; 
 	    			   level.ability.createBody(level.tim.body.getPosition());
@@ -348,6 +377,7 @@ public class WorldController extends InputAdapter implements Disposable
 	    		   }
 	    		   else
 	    		   {
+	    			   AudioManager.instance.play(Assets.instance.sounds.explode, 1f);
 	    			   level.ability.particle=false; 
 	    			   level.tim.shooting=true;
 	    			   level.ability.createBody(level.tim.body.getPosition());
@@ -398,6 +428,15 @@ public class WorldController extends InputAdapter implements Disposable
 			String userDataTag =fix;  
 			if (userDataTag=="2")
 			{
+				   if(soundTimeOut>0)
+		    	   {
+		    		   ; 
+		    	   }
+		    	   else
+		    	   {
+		    		   AudioManager.instance.play(Assets.instance.sounds.walk, 1f);
+		    	   }
+				 
 				return true; 
 			}
 		}
@@ -699,7 +738,9 @@ public class WorldController extends InputAdapter implements Disposable
 	private void backToMenu () 
 	{
 	       // switch to menu screen
+		  
 	       game.setScreen(new MenuScreen(game));
+	       AudioManager.instance.play(Assets.instance.music.song02);
 	}
 	
 	

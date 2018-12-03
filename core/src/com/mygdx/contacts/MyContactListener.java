@@ -63,6 +63,8 @@ public class MyContactListener implements ContactListener
 		}
 		else  
 		{
+			
+		
 			if(body1 instanceof Raindrops.RainDrop && body instanceof Raindrops.RainDrop)
 			{
 				if(body1 instanceof Raindrops.RainDrop) //rain drop collides with another raindrop
@@ -152,7 +154,30 @@ public class MyContactListener implements ContactListener
 					
 				} 
 			}
+			else if(body1 instanceof Princess && body instanceof Timmy || body1 instanceof Timmy && body instanceof Princess)
+			{
 			
+				if(body1 instanceof Princess)
+				{
+													//Timmy colliding with a dynamic rain object(ie., hit)
+					Princess up = (Princess)body1;
+					up.startContract();
+					
+					
+				}
+				else
+				{
+					Princess up = (Princess)body;
+					up.startContract();
+					
+
+					
+				} 
+			
+			
+			
+			}
+	
 		}
 		if(body1 instanceof Ability && fixtureUserData1!=null || body1 instanceof Ability && FixtureUserData2!=null)
 		{
