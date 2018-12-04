@@ -2,6 +2,8 @@ package com.mygdx.screens;
 
 import java.util.ArrayList;
 
+import java.util.ListIterator;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -14,18 +16,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.Assets;
-import com.mygdx.screens.HighScore.KeyPair;
 import com.mygdx.util.Constants;
 import com.mygdx.util.GamePreferences;
 import com.mygdx.util.HighScoreList;
@@ -38,10 +36,11 @@ public class HighScore extends AbstractGameScreen
 	private Skin skinLibgdx;
 	private Skin skinRainMaker;
 	private Image imgBackground;
-	private List<ArrayList<KeyPair>> list;
 	private Button btnMenuHighScore;
 	public ArrayList<KeyPair> pair;
-	private GamePreferences name; 
+	private GamePreferences name;
+	
+	
 
 	public HighScore(Game game) {
 		super(game);
@@ -136,31 +135,58 @@ public class HighScore extends AbstractGameScreen
 		HighScoreList pref = HighScoreList.instance;
 		pref.load();
 		
+		
 		for(int i=0; i<HighScoreList.topTenPlayers.size(); i++)
 		{
 			String s = HighScoreList.topTenPlayers.get(i);
 			String[] hash =  s.split(":");
 			String key = hash[0]; 
 			int value = Integer.parseInt(hash[1]);
-			pair.add(new KeyPair(key, value)); 
+			KeyPair p = new KeyPair(key,value); 
+			pair.add(p); 
 				
 		}
-		sort(HighScoreList.scoreGame);
-		
-		for(int i=0; i<10; i++)
+		for(int i=0; i<pair.size(); i++)
 		{
-			KeyPair k = pair.get(i); 
-			if(k.value==HighScoreList.scoreGame && k.key.equals(name.login))
+			for(int j=1; j<pair.size(); j++)
 			{
-				pref.save(name.login, HighScoreList.scoreGame);
+				KeyPair z = pair.get(i);
+				KeyPair s = pair.get(j);
+				if (z.key.equals(s.key)&& z.value==s.value)
+				{
+					pair.remove(j); 
+				}
+				
 			}
 		}
 		
-		for(int i=0; i<10; i++)
+		sort(HighScoreList.scoreGame);
+		
+		for(int i=0; i<pair.size(); i++)
+		{	
+			if(pair.get(i) != null)
+			{
+				KeyPair k = pair.get(i); 
+				if(k.value==HighScoreList.scoreGame && k.key.equals(name.login))
+				{
+					
+					pref.save(name.login, HighScoreList.scoreGame);
+				}
+			}
+		}
+		
+		ListIterator<KeyPair> it = pair.listIterator();  
+		while(it.hasNext())
 		{
-			KeyPair k = pair.get(i);
-			layer.add(new Label(k.toString(), skinLibgdx,"title", Color.SKY));
-			layer.row(); 
+			
+			 
+			
+				KeyPair p = it.next();
+				layer.add(new Label(p.toString(), skinLibgdx,"title", Color.SKY));
+				layer.row(); 
+				
+			
+			
 		} 
 		return layer; 
 	}
