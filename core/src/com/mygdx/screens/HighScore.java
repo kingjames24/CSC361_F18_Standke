@@ -113,7 +113,7 @@ public class HighScore extends AbstractGameScreen
 
 				private void onHighScoreClicked() 
 				{
-					HighScoreList.topTenPlayers.clear();
+					
 					game.setScreen(new MenuScreen(game));
 				}
 				 
@@ -164,17 +164,21 @@ public class HighScore extends AbstractGameScreen
 		
 		
 		
-		ListIterator<KeyPair> it = pair.listIterator();  
+		ListIterator<KeyPair> it = pair.listIterator();
 		while(it.hasNext())
 		{
 			
-			 
-			
 				KeyPair p = it.next();
-				layer.add(new Label(p.toString(), skinLibgdx,"title", Color.RED));
-				layer.row(); 
-				
-			
+				if(p.key==null || p.key.equals("") || p.key.isEmpty()|| p.key.equals("null")|| p.key.equals("  " ))
+				{
+					; 
+				}
+				else
+				{
+					layer.add(new Label(p.toString(), skinLibgdx,"title", Color.RED));
+					layer.row(); 
+				}
+	
 			
 		} 
 		return layer; 
@@ -253,6 +257,7 @@ public class HighScore extends AbstractGameScreen
 		stage.dispose();
 		skinRainMaker.dispose();
 		skinLibgdx.dispose();
+		HighScoreList.topTenPlayers.clear();
 		
 	}
 

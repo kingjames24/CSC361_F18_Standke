@@ -73,6 +73,7 @@ public class WorldController extends InputAdapter implements Disposable
 	private Game game;
 	private int soundTimeOut;
 	private float timeLeftGameOverDelay;
+	private HighScoreList high;
 	public static boolean visible; 
      
     
@@ -102,6 +103,8 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
+	    high = HighScoreList.instance;
+		high.load();
 		goalReached=false;
 		lives=3; 
 		attached=false; 
@@ -153,13 +156,9 @@ public class WorldController extends InputAdapter implements Disposable
 			{
 				if(goalReached)
 				{
-					HighScoreList high = HighScoreList.instance;
+				   
 					high.load();
-					high.getScore(score+300);
-					if(high.login==null)
-					{
-						high.login=getSaltString();
-					}	
+					high.getScore(score+300);	
 					high.save(high.login, score);
 				}
 				backToMenu();
@@ -271,13 +270,9 @@ public class WorldController extends InputAdapter implements Disposable
 			visible=false;
 			if (isGameOver())
 			{
-				HighScoreList high = HighScoreList.instance;
+				
 				high.load();
 				high.getScore(score);
-				if(high.login==null)
-				{
-					high.login=getSaltString();
-				}	
 				high.save(high.login, score);
 				level.tim.dead=true;
 				timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER; 
@@ -639,6 +634,7 @@ public class WorldController extends InputAdapter implements Disposable
 	       fixtureDef.density =20;//set the main character's weight to 20 kg/m^2
 	       fixtureDef.restitution = 0.1f;//low restitution to not make the main character bounce
 	       fixtureDef.friction = 0.1f;//low friction so the main character slides on the platform
+	       fixtureDef.filter.groupIndex=-1;
 	       body.createFixture(fixtureDef);
 	       //Timmy's foot-sensor to disallow him from jumping while in the air
 	       polygonShape.setAsBox(0.4f, 0.1f, new Vector2(0.5f,.1f), 0);//fixture sits right below main characters hit box 
@@ -771,7 +767,7 @@ public class WorldController extends InputAdapter implements Disposable
         String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder salt = new StringBuilder();
         Random rnd = new Random();
-        while (salt.length() < 18) { // length of the random string.
+        while (salt.length() < 6) { // length of the random string.
             int index = (int) (rnd.nextFloat() * SALTCHARS.length());
             salt.append(SALTCHARS.charAt(index));
         }

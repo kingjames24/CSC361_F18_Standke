@@ -73,7 +73,8 @@ public class Ability extends AbstractGameObject
 		origin.y = this.dimension.y/2; 
 		polygonShape.setAsBox(this.dimension.x/2,this.dimension.y/2, origin, 0);
 		FixtureDef fixtureDef = new FixtureDef();
-	    fixtureDef.shape = polygonShape; 
+	    fixtureDef.shape = polygonShape;
+	    fixtureDef.filter.groupIndex=-1; 
 	    body.createFixture(fixtureDef);
 	    polygonShape.dispose();
 		
