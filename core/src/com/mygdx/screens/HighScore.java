@@ -162,18 +162,7 @@ public class HighScore extends AbstractGameScreen
 		
 		sort(HighScoreList.scoreGame);
 		
-		for(int i=0; i<pair.size(); i++)
-		{	
-			if(pair.get(i) != null)
-			{
-				KeyPair k = pair.get(i); 
-				if(k.value==HighScoreList.scoreGame && k.key.equals(name.login))
-				{
-					
-					pref.save(name.login, HighScoreList.scoreGame);
-				}
-			}
-		}
+		
 		
 		ListIterator<KeyPair> it = pair.listIterator();  
 		while(it.hasNext())
@@ -193,18 +182,12 @@ public class HighScore extends AbstractGameScreen
 
 	private void sort(int score) 
 	{
-		for(int i=0; i<pair.size(); i++)
-		{
-			KeyPair t = pair.get(i);
-			if(score>t.value)
-			{
+		
 				
 				bubble(score); 
 				return; 
-			}
+			
 	
-		}
-		bubble(); 
 		
 		
 	}
@@ -233,29 +216,7 @@ public class HighScore extends AbstractGameScreen
 		 
 	}
 	
-	private void bubble()
-	{
-		int n = pair.size();  
-		for (int j=0; j<n-1; j++)
-		{
-			int min=j; 
-			for(int p=j+1; p<n; p++)
-			{
-				KeyPair z = pair.get(p);
-				KeyPair s = pair.get(min);
-				if(z.value>s.value)
-				{
-					min=p; 
-				}
-			}
-			
-			KeyPair temp = pair.get(min); 
-			pair.set(min, pair.get(j)); 
-			pair.set(j, temp); 
-		}
-		 
-	}
-		
+
 	
 
 	private Table buildBackgroundLayer() 

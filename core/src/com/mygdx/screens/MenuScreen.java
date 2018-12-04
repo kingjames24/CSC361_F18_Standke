@@ -363,7 +363,7 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 	{
 		
 		viewport = new FitViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT, new OrthographicCamera());
-		stage = new Stage(viewport);
+		stage = new Stage(viewport); 
 		Gdx.input.setInputProcessor(stage);
 		rebuildStage(); 
 	}

@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 
 import java.util.Iterator;
+import java.util.Random;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
@@ -34,9 +35,11 @@ import com.mygdx.objects.Raindrops.RainDrop;
 import com.mygdx.objects.Star;
 import com.mygdx.objects.Timmy;
 import com.mygdx.screens.MenuScreen;
+import com.mygdx.screens.HighScore.KeyPair;
 import com.mygdx.util.AudioManager;
 import com.mygdx.util.CameraHelper;
 import com.mygdx.util.Constants;
+import com.mygdx.util.GamePreferences;
 import com.mygdx.util.HighScoreList;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
@@ -148,6 +151,17 @@ public class WorldController extends InputAdapter implements Disposable
 			timeLeftGameOverDelay -= deltaTime;
 			if (timeLeftGameOverDelay < 0)
 			{
+				if(goalReached)
+				{
+					HighScoreList high = HighScoreList.instance;
+					high.load();
+					high.getScore(score+300);
+					if(high.login==null)
+					{
+						high.login=getSaltString();
+					}	
+					high.save(high.login, score);
+				}
 				backToMenu();
 				return; 
 			}
@@ -257,7 +271,14 @@ public class WorldController extends InputAdapter implements Disposable
 			visible=false;
 			if (isGameOver())
 			{
-				HighScoreList.instance.getScore(score); 
+				HighScoreList high = HighScoreList.instance;
+				high.load();
+				high.getScore(score);
+				if(high.login==null)
+				{
+					high.login=getSaltString();
+				}	
+				high.save(high.login, score);
 				level.tim.dead=true;
 				timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER; 
 				
@@ -746,7 +767,18 @@ public class WorldController extends InputAdapter implements Disposable
 	}
 	
 	
-	
+	protected String getSaltString() {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 18) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
+
+    }
 		
 	
 
