@@ -472,9 +472,9 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 	private Table buildControlsLayer() 
 	{
 		 Table layer = new Table(); 
-		 btnMenuHighScore = new Button(skinLibgdx, "default");
-		 btnMenuHighScore.setName("High Score List");
-		 btnMenuHighScore.setColor(Color.WHITE);
+		 btnMenuHighScore = new Button(skinRainMaker, "score");
+		// btnMenuHighScore.setName("High Score List");
+		 //btnMenuHighScore.setColor(Color.WHITE);
 		 layer.add(btnMenuHighScore).align(Align.bottomRight).expand().width(60).height(60);
 		 btnMenuHighScore.addListener(new ChangeListener() {
 
@@ -523,7 +523,7 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 		 
 		 layer.row();
 		 btnMenuPlay = new Button(skinRainMaker, "play");
-		 layer.add(btnMenuPlay).align(Align.bottomRight).width(60).height(60);
+		 layer.add(btnMenuPlay).align(Align.bottomRight).width(60).height(55);
 		 btnMenuPlay.addListener(new ChangeListener() {
 
 			@Override

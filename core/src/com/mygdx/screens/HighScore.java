@@ -98,9 +98,9 @@ public class HighScore extends AbstractGameScreen
 	private Table buildControlsLayer() 
 	{
 		Table layer = new Table(); 
-		btnMenuHighScore = new Button(skinLibgdx, "default");
-		btnMenuHighScore.setName("Go Back to Main Menu");
-		btnMenuHighScore.setColor(Color.WHITE);
+		btnMenuHighScore = new Button(skinRainMaker, "score");
+		//btnMenuHighScore.setName("Go Back to Main Menu");
+		//btnMenuHighScore.setColor(Color.WHITE);
 		layer.add(btnMenuHighScore).align(Align.bottomRight).expand().width(60).height(60);
 		btnMenuHighScore.addListener(new ChangeListener() {
 
@@ -182,7 +182,7 @@ public class HighScore extends AbstractGameScreen
 			 
 			
 				KeyPair p = it.next();
-				layer.add(new Label(p.toString(), skinLibgdx,"title", Color.SKY));
+				layer.add(new Label(p.toString(), skinLibgdx,"title", Color.RED));
 				layer.row(); 
 				
 			

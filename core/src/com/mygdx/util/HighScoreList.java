@@ -43,8 +43,7 @@ public class HighScoreList
 	{
 		
 		score.writeString(name+":"+sc+"\n", true);
-		/*OutputStream stream= score.write(true); 
-		stream.w*/
+		
 	}
 	
 	public int getScore(int score)

@@ -2,7 +2,8 @@
 	com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle:
 	{
 		play: { down: playButton, up: playButton },
-		options: { down: optionButton, up: optionButton }
+		options: { down: optionButton, up: optionButton },
+		score: {down: highScore, up: highScore}
 		 
 
 	},
