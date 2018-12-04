@@ -37,6 +37,7 @@ import com.mygdx.screens.MenuScreen;
 import com.mygdx.util.AudioManager;
 import com.mygdx.util.CameraHelper;
 import com.mygdx.util.Constants;
+import com.mygdx.util.HighScoreList;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -256,6 +257,7 @@ public class WorldController extends InputAdapter implements Disposable
 			visible=false;
 			if (isGameOver())
 			{
+				HighScoreList.instance.getScore(score); 
 				level.tim.dead=true;
 				timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER; 
 				

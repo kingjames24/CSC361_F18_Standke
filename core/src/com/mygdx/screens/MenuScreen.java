@@ -86,7 +86,9 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 	private Window winOptions;
 	private TextButton btnWinOptSave;
 	private TextButton btnWinOptCancel;
-	private int count; 
+	private int count;
+	private Button btnMenuHighScore;
+	 
 
 	/**
      * Constructor that is passed in the Game Class 
@@ -470,8 +472,32 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 	private Table buildControlsLayer() 
 	{
 		 Table layer = new Table(); 
+		 btnMenuHighScore = new Button(skinLibgdx, "default");
+		 btnMenuHighScore.setName("High Score List");
+		 btnMenuHighScore.setColor(Color.WHITE);
+		 layer.add(btnMenuHighScore).align(Align.bottomRight).expand().width(60).height(60);
+		 btnMenuHighScore.addListener(new ChangeListener() {
+
+			@Override
+			public void changed(ChangeEvent event, Actor actor) 
+			{
+				onHighScoreClicked(); 
+				
+			}
+
+			private void onHighScoreClicked() 
+			{
+				
+				game.setScreen(new HighScore(game));
+			}
+			 
+		 }); 
+		 
+		 
+		 
+		 layer.row(); 
 		 btnMenuOptions = new Button(skinRainMaker, "options"); 
-		 layer.add(btnMenuOptions).align(Align.bottomRight).expand().width(60).height(60);
+		 layer.add(btnMenuOptions).align(Align.bottomRight).width(60).height(60);
 		 btnMenuOptions.addListener(new ChangeListener() {
 
 			@Override
@@ -570,5 +596,7 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 	*/
 	@Override
 	public void pause() {}
+	
+	
 
 }
