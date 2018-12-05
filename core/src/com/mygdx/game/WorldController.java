@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 
 import java.util.Iterator;
+import java.util.Random;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
@@ -34,8 +35,12 @@ import com.mygdx.objects.Raindrops.RainDrop;
 import com.mygdx.objects.Star;
 import com.mygdx.objects.Timmy;
 import com.mygdx.screens.MenuScreen;
+import com.mygdx.screens.HighScore.KeyPair;
+import com.mygdx.util.AudioManager;
 import com.mygdx.util.CameraHelper;
 import com.mygdx.util.Constants;
+import com.mygdx.util.GamePreferences;
+import com.mygdx.util.HighScoreList;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -52,21 +57,24 @@ public class WorldController extends InputAdapter implements Disposable
 	
 	public CameraHelper cameraHelper;
     public static World b2world;
-    public static int numFootContacts=0;
-    public int jumpTimeout=0;
-    public static int shootTimeout=15; 
-    public boolean attached=false; 
+    public static int numFootContacts;
+    public int jumpTimeout;
+    public static int shootTimeout;
+    public static boolean goalReached;
+    public boolean attached; 
     public RevoluteJoint joint;
     public RevoluteJoint joint2; 
-    public Raindrops rain;
-    public Ability ability; 
+    public Raindrops rain; 
     public Level level;
     public static int score;
-	public static int lives=3;
+	public static int lives;
 	public static int health; 
 	private int first;
 	private Game game;
-	public static boolean visible=false; 
+	private int soundTimeOut;
+	private float timeLeftGameOverDelay;
+	private HighScoreList high;
+	public static boolean visible; 
      
     
     
@@ -91,15 +99,22 @@ public class WorldController extends InputAdapter implements Disposable
 	 * it instantiates two objects; namely an object from the Raindrop class and an object
 	 * from the Ability class.     
 	 */
-	private void init() 
+	public void init() 
 	{
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
- 	   	b2world = new World(new Vector2(0, -5f), true);
- 	   	b2world.setContactListener(new MyContactListener());
+	    high = HighScoreList.instance;
+		high.load();
+		goalReached=false;
+		lives=3; 
+		attached=false; 
+		visible=false;
+		numFootContacts=0;
+		shootTimeout=15;
+		jumpTimeout=0;
 		initlevel(); 
-		rain= new Raindrops(100);
-		ability = new Ability(); 
+		
+		
 		
 		 
 		
@@ -111,10 +126,17 @@ public class WorldController extends InputAdapter implements Disposable
 	 */
 	private void initlevel()
 	{
+		if (b2world != null) 
+		{
+			b2world.dispose();
+		}
+		b2world = new World(new Vector2(0, -5f), true);
+ 	   	b2world.setContactListener(new MyContactListener());
 		score=0; 
 		level = new Level(Constants.LEVEL_01);
 		cameraHelper.setTarget(level.tim);
 		initPhysics();
+		rain= new Raindrops(50);
 		
 	}
 	
@@ -126,16 +148,35 @@ public class WorldController extends InputAdapter implements Disposable
 	 */
 	public void update(float deltaTime)
 	{
+		if (isGameOver() || goalReached)
+		{
+			Gdx.input.setInputProcessor(null);
+			timeLeftGameOverDelay -= deltaTime;
+			if (timeLeftGameOverDelay < 0)
+			{
+				if(goalReached)
+				{
+				   
+					high.load();
+					high.getScore(score+300);	
+					high.save(high.login, score);
+				}
+				backToMenu();
+				return; 
+			}
+			 
+		}
 		handleDebugInput(deltaTime);
 		
 		handleInputGame(deltaTime);
 	
 		
-		//level.update(deltaTime);
+		level.update(deltaTime);
 		b2world.step(deltaTime, 8, 3);
 		
 		jumpTimeout--;
-		shootTimeout--; 
+		shootTimeout--;
+		soundTimeOut--; 
 	
 		if(!b2world.isLocked()) 
 		{
@@ -159,6 +200,30 @@ public class WorldController extends InputAdapter implements Disposable
 			}
 			rain.raindropScheduledForRemoval.clear();
 		}
+		
+		if(!b2world.isLocked()) 
+		{
+			int x= Ability.abilityScheduledForRemoval.size;
+			for(int j=0; j<x; j++)
+			{
+			
+				Ability point= Ability.abilityScheduledForRemoval.pop(); 
+				if(point!=null)
+				{
+					if(point.hit)
+					{ 
+						point.body.getWorld().destroyBody(point.body);
+						 
+						
+					}
+					
+				}
+				
+			}
+			Ability.abilityScheduledForRemoval.clear();
+		}
+		
+		
 		if(!b2world.isLocked()) 
 		{
 			int x= Points.pointScheduledForRemoval.size;
@@ -197,25 +262,31 @@ public class WorldController extends InputAdapter implements Disposable
 		cameraHelper.update(deltaTime);
 		level.people.updateScrollPosition(cameraHelper.getPosition());
 		healthStatus(); 
-		if (isGameOver() || didTimmyfall()|| isTimmyDead())//portion of update that handles the state of game
+		if ((!isGameOver() && didTimmyfall())||(!isGameOver() && isTimmyDead()))//portion of update that handles the state of game
 		{
 			
-			
+			AudioManager.instance.play(Assets.instance.sounds.death, 1f);
 			lives--;
 			visible=false;
 			if (isGameOver())
 			{
- 
-				return; 
+				
+				high.load();
+				high.getScore(score);
+				high.save(high.login, score);
+				level.tim.dead=true;
+				timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER; 
 				
 			}
 			else
 			{
-
-				init();
+					
+				initlevel();
+			
 			}
 			
 		}
+		
 		
 		
 	}
@@ -224,7 +295,7 @@ public class WorldController extends InputAdapter implements Disposable
 	 * Method that handles any player input from a peripheral device, such 
 	 * as a keyboard/mouse. Depending on what the user pressed, Timmy will take
 	 * a certain action in the game, such as moving left, right, jumping, and/or shooting
-	 * at an object 
+	 * at an object and a certain audio sound will be played 
 	 * @param deltaTime a float that represents the time span between
 	 * the previously rendered frame and the currently rendered frame
 	 */
@@ -237,10 +308,16 @@ public class WorldController extends InputAdapter implements Disposable
 	       if (Gdx.input.isKeyPressed(Keys.A)) 
 	       {
 	    	   
+	    	   
 	    	   if(canWalkNow())
 	    	   {
+	    		   soundTimeOut=10;
 	    		   level.people.timmyLeft(false);
-		    	   level.tim.left=true; 
+		    	   level.tim.left=true;
+		    	   
+		    	   level.tim.runningLeft=true; 
+		    	   level.tim.runningRight=false;
+		    	   
 		    	   level.tim.body.applyLinearImpulse(new Vector2(-sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
 	    	   }
 	    	   
@@ -248,10 +325,17 @@ public class WorldController extends InputAdapter implements Disposable
 	       else if (Gdx.input.isKeyPressed(Keys.D)) 
 	       {
 	    	  
+	    	  
+	    	   
 	    	   if(canWalkNow())
 	    	   {
+	    		   soundTimeOut=10; 
 	    		   level.people.timmyLeft(true);
 		    	   level.tim.left=false;
+		    	   
+		    	   level.tim.runningLeft=false; 
+		    	   level.tim.runningRight=true; 
+		    	   
 		    	   level.tim.body.applyLinearImpulse(new Vector2(sprMoveSpeed, 0), level.tim.body.getWorldCenter(), true);
 	    	   }
 	       }   
@@ -261,9 +345,18 @@ public class WorldController extends InputAdapter implements Disposable
 	    	   
 	    	   if(canJumpNow())
 	    	   {
+	    		   AudioManager.instance.play(Assets.instance.sounds.jump);
 	    		   level.tim.body.applyLinearImpulse(new Vector2(0,level.tim.body.getMass()*4f), level.tim.body.getWorldCenter(), true);
-		    	   jumpTimeout=15;  
+		    	   jumpTimeout=15;
+		    	   
 	    	   }
+	    	  
+	       }
+	       else
+	       {
+	    	   
+	    	   level.tim.runningLeft=false; 
+	    	   level.tim.runningRight=false; 
 	    	   
 	       }
 	       if (Gdx.input.isButtonPressed(Input.Buttons.LEFT))
@@ -277,13 +370,15 @@ public class WorldController extends InputAdapter implements Disposable
 	    		   
 	    		   if(shootTimeout>0)
 	    		   {
-	    			  
+	    			  level.tim.shooting=false; 
 	    			   return;
 	    		   }
 	    		   if(first==0)
 	    		   {
-	    			    
-	    			   ability.createBody(level.tim.body.getPosition());
+	    			   AudioManager.instance.play(Assets.instance.sounds.explode, 1f);
+	    			   level.ability.particle=false; 
+	    			   level.tim.shooting=true; 
+	    			   level.ability.createBody(level.tim.body.getPosition());
 	    			   Vector3 screen = new Vector3(x,y,0); 
 		    		   Vector3 world = WorldRenderer.camera.unproject(screen);
 		    		   Vector2 camera = new Vector2(world.x, world.y);
@@ -291,16 +386,19 @@ public class WorldController extends InputAdapter implements Disposable
 		    		   Vector2 distance = new Vector2(); 
 		    		   distance.x= camera.x-launcher.x; 
 		    		   distance.y= camera.y-launcher.y; 
-		    		   ability.body.setTransform(joint.getBodyB().getPosition(), 0);
-		    		   ability.body.setLinearVelocity(distance);
-		    		   ability.body.setGravityScale(0);
-		    		   ability.setFire(true); 
+		    		   level.ability.body.setTransform(joint.getBodyB().getPosition(), 0);
+		    		   level.ability.body.setLinearVelocity(distance);
+		    		   level.ability.body.setGravityScale(0);
+		    		   level.ability.setFire(true); 
 		    		   shootTimeout=120;
 		    		   
 	    		   }
 	    		   else
 	    		   {
-	    			    
+	    			   AudioManager.instance.play(Assets.instance.sounds.explode, 1f);
+	    			   level.ability.particle=false; 
+	    			   level.tim.shooting=true;
+	    			   level.ability.createBody(level.tim.body.getPosition());
 	    			   Vector3 screen = new Vector3(x,y,0); 
 		    		   Vector3 world = WorldRenderer.camera.unproject(screen);
 		    		   Vector2 camera = new Vector2(world.x, world.y);
@@ -308,10 +406,10 @@ public class WorldController extends InputAdapter implements Disposable
 		    		   Vector2 distance = new Vector2(); 
 		    		   distance.x= camera.x-launcher.x; 
 		    		   distance.y= camera.y-launcher.y; 
-		    		   ability.body.setTransform(joint.getBodyB().getPosition(), 0);
-		    		   ability.body.setLinearVelocity(distance);
-		    		   ability.body.setGravityScale(0);
-		    		   ability.setFire(true); 
+		    		   level.ability.body.setTransform(joint.getBodyB().getPosition(), 0);
+		    		   level.ability.body.setLinearVelocity(distance);
+		    		   level.ability.body.setGravityScale(0);
+		    		   level.ability.setFire(true); 
 		    		   shootTimeout=120;
 		    		    
 	    		   }
@@ -323,6 +421,16 @@ public class WorldController extends InputAdapter implements Disposable
 	     }
 	 }
 	
+	/**
+	 * Method that determines whether Timmy can jump using Box2d's user data system and is used to tell
+	 * if Timmy is actually  on a platform and not in the air. During platform creation a user Data tag is attached 
+	 * to its fixture, namely the String 2. Underneath Timmy's foot is a tiny sensor that has a data tag 
+	 * attached to it of String 3. This method is initially called when user input is put in(ie., jump pressed). 
+	 * So long as Timmy's sensor and the user data of the platform match that means Timmy is on the ground 
+	 * and can jump. Prevents air jumping. Also used to add a timeout to jumping, so that physcis engine can take 
+	 * a break.  
+	 * @return a boolean that means that tim can either jump or not
+	 */
 	private boolean canJumpNow() 
 	{
 		if(jumpTimeout>0)return false; 
@@ -339,6 +447,15 @@ public class WorldController extends InputAdapter implements Disposable
 		return false;
 	}
 	
+	/**
+	 * Method that determines whether Timmy can run using Box2d's user data system and is used to tell
+	 * if Timmy is actually walking on a platform. During platform creation a user Data tag is attached 
+	 * to its fixture, namely the String 2. Underneath Timmy's foot is a tiny sensor that has a data tag 
+	 * attached to it of String 3. This method is initially called when user input is put in(ie., walking) 
+	 * and if is also used to do a sound time out so, Tim's walking speed it not too fast.Method also prevents
+	 * air walking.      
+	 * @return a boolean that means that tim can either walk or not
+	 */
 	private boolean canWalkNow()
 	{
 		Iterator<String> it = MyContactListener.fixturesUnderFoot.iterator();
@@ -348,6 +465,15 @@ public class WorldController extends InputAdapter implements Disposable
 			String userDataTag =fix;  
 			if (userDataTag=="2")
 			{
+				   if(soundTimeOut>0)
+		    	   {
+		    		   ; 
+		    	   }
+		    	   else
+		    	   {
+		    		   AudioManager.instance.play(Assets.instance.sounds.walk, 1f);
+		    	   }
+				 
 				return true; 
 			}
 		}
@@ -454,16 +580,61 @@ public class WorldController extends InputAdapter implements Disposable
     {
     	   //edgeShapped boundary
     	   Vector2 origin = new Vector2();
+    	   
     	   BodyDef bodyDef2 = new BodyDef();
 		   bodyDef2.type = BodyType.StaticBody;//static body type for boundary
 		   bodyDef2.position.set(new Vector2(0f, -10f));//set 10 meters below scene
 		   Body body1 = b2world.createBody(bodyDef2); 
 		   EdgeShape boundary = new EdgeShape();//use an edge as shape
-		   boundary.set(new Vector2(0f, 0f), new Vector2(128f, 0));//extends 128 meters in lenght
 		   FixtureDef fixtureDef2 = new FixtureDef();
 		   fixtureDef2.shape=boundary;
-		   body1.createFixture(fixtureDef2); 
+		   boundary.set(new Vector2(0f, 0f), new Vector2(128f, 0));//extends 128 meters in length
+		   Fixture data1= body1.createFixture(fixtureDef2);
+		   data1.setUserData((Object)("10"));
 		   boundary.dispose();
+		   
+		  
+    	   BodyDef bodyDef3 = new BodyDef();
+		   bodyDef3.type = BodyType.StaticBody;//static body type for boundary
+		   bodyDef3.position.set(new Vector2(0f, 10f));//set 10 meters above scene
+		   Body body2 = b2world.createBody(bodyDef3); 
+		   EdgeShape boundary1 = new EdgeShape();//use an edge as shape
+		   FixtureDef fixtureDef3 = new FixtureDef();
+		   fixtureDef3.shape=boundary1;
+		   boundary1.set(new Vector2(0f, 0f), new Vector2(128f, 0));//extends 128 meters in length
+		   Fixture data2 =body2.createFixture(fixtureDef3);
+		   data2.setUserData((Object)"10");
+		   boundary1.dispose();
+		   
+		   
+		  
+    	   BodyDef bodyDef4 = new BodyDef();
+		   bodyDef4.type = BodyType.StaticBody;//static body type for boundary
+		   bodyDef4.position.set(new Vector2(0f, 0f));//set 10 meters to the left scene
+		   Body body4 = b2world.createBody(bodyDef4); 
+		   EdgeShape boundary2 = new EdgeShape();//use an edge as shape
+		   FixtureDef fixtureDef4 = new FixtureDef();
+		   fixtureDef4.shape=boundary2;
+		   boundary2.set(new Vector2(0f, -10f), new Vector2(0, 10f));//extends 128 meters in length
+		   Fixture data3 =body4.createFixture(fixtureDef4);
+		   data3.setUserData((Object)"10");
+		   boundary2.dispose();
+		   
+		   BodyDef bodyDef5 = new BodyDef();
+		   bodyDef5.type = BodyType.StaticBody;//static body type for boundary
+		   bodyDef5.position.set(new Vector2(128f, 0f));//set 10 meters to the left scene
+		   Body body5 = b2world.createBody(bodyDef5); 
+		   EdgeShape boundary3 = new EdgeShape();//use an edge as shape
+		   FixtureDef fixtureDef5 = new FixtureDef();
+		   fixtureDef5.shape=boundary3;
+		   boundary3.set(new Vector2(0f, -10f), new Vector2(0, 10f));//extends 128 meters in length
+		   Fixture data4 = body5.createFixture(fixtureDef5);
+		   data4.setUserData((Object)("10"));
+		   boundary3.dispose();
+		   
+		   
+		   
+		   
     	   // Timmy's main body 
     	   BodyDef bodyDef = new BodyDef();
 		   bodyDef.type = BodyType.DynamicBody;//dynamic body type for main character 
@@ -482,6 +653,7 @@ public class WorldController extends InputAdapter implements Disposable
 	       fixtureDef.density =20;//set the main character's weight to 20 kg/m^2
 	       fixtureDef.restitution = 0.1f;//low restitution to not make the main character bounce
 	       fixtureDef.friction = 0.1f;//low friction so the main character slides on the platform
+	       fixtureDef.filter.groupIndex=-1;
 	       body.createFixture(fixtureDef);
 	       //Timmy's foot-sensor to disallow him from jumping while in the air
 	       polygonShape.setAsBox(0.4f, 0.1f, new Vector2(0.5f,.1f), 0);//fixture sits right below main characters hit box 
@@ -576,6 +748,7 @@ public class WorldController extends InputAdapter implements Disposable
 	 */
 	public static boolean isGameOver ()
 	{
+			
 		   return lives < 0;
 	}
 	
@@ -588,11 +761,14 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		 if(level.tim.life<=0)
 		 {
+			  
 			 lives--; 
 			 return true; 
 		 }
 		 return false; 
 	}
+	
+	
 	
 	/**
 	 * Method that exits the game screen and returns back to the menu screen
@@ -600,7 +776,9 @@ public class WorldController extends InputAdapter implements Disposable
 	private void backToMenu () 
 	{
 	       // switch to menu screen
+		  
 	       game.setScreen(new MenuScreen(game));
+	       AudioManager.instance.play(Assets.instance.music.song02);
 	}
 	
 	

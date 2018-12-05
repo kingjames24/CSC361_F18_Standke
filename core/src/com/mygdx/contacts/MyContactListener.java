@@ -41,7 +41,7 @@ public class MyContactListener implements ContactListener
 		
 		Object fixtureUserData1 = contact.getFixtureA().getUserData();
 		Object FixtureUserData2 = contact.getFixtureB().getUserData(); 
-		if(body1 != null && body==null) //rain drop collides with a static object
+		if(body1 != null && body==null) //rain drop collides with a static object or star collides with static object
 		{
 			if(body1 instanceof Raindrops.RainDrop)
 			{
@@ -50,21 +50,37 @@ public class MyContactListener implements ContactListener
 				
 			}
 			
+			
 		}
 		else if(body != null && body1==null)//rain drop collides with a static obejct
 		{
 			if(body instanceof Raindrops.RainDrop)
 			{
 				RainDrop rain = (RainDrop)body;
-				rain.startContact();
-				
+				rain.startContact();	
 			}
+			
 		}
 		else  
 		{
+			
+		
 			if(body1 instanceof Raindrops.RainDrop && body instanceof Raindrops.RainDrop)
 			{
-				; //rain drop colliding with another dynamic rain drop
+				if(body1 instanceof Raindrops.RainDrop) //rain drop collides with another raindrop
+				{
+					RainDrop rain = (RainDrop)body1;
+					rain.startContact();
+					
+					
+				}
+				if(body instanceof Raindrops.RainDrop)
+				{
+					RainDrop rain = (RainDrop)body;
+					rain.startContact();	
+				}
+				
+				
 			}
 			else if(body1 instanceof Raindrops.RainDrop && body instanceof Points || body1 instanceof Points && body instanceof Raindrops.RainDrop)
 			{
@@ -138,17 +154,86 @@ public class MyContactListener implements ContactListener
 					
 				} 
 			}
+			else if(body1 instanceof Princess && body instanceof Timmy || body1 instanceof Timmy && body instanceof Princess)
+			{
+			
+				if(body1 instanceof Princess)
+				{
+													//Timmy colliding with a dynamic rain object(ie., hit)
+					Princess up = (Princess)body1;
+					up.startContract();
+					
+					
+				}
+				else
+				{
+					Princess up = (Princess)body;
+					up.startContract();
+					
+
+					
+				} 
+			
+			
+			
+			}
+
+	
+		}
+		if(body1 instanceof Ability && fixtureUserData1!=null || body1 instanceof Ability && FixtureUserData2!=null)
+		{
+			if(fixtureUserData1!=null)
+			{
+				if(fixtureUserData1.equals("10"))
+				{
+					Ability ab = (Ability)body1; 
+					ab.startContact();
+				}
+			}
+			else
+			{
+				if(FixtureUserData2.equals("10"))
+				{
+					Ability ab = (Ability)body1; 
+					ab.startContact();
+				}
+				
+			}
+		}
+		if(body instanceof Ability && fixtureUserData1!=null || body instanceof Ability && FixtureUserData2!=null)
+		{
+			if(fixtureUserData1!=null)
+			{
+				if(fixtureUserData1.equals("10"))
+				{
+					Ability ab = (Ability)body; 
+					ab.startContact();
+				}
+			}
+			else
+			{
+				if(FixtureUserData2.equals("10"))
+				{
+					Ability ab = (Ability)body; 
+					ab.startContact();
+				}
+				
+			}
 			
 		}
 		if(fixtureUserData1!=null && FixtureUserData2!=null)
 		{
 			if(fixtureUserData1.equals("3"))
 			{
-				fixturesUnderFoot.add((String)FixtureUserData2); 
+				fixturesUnderFoot.add((String)FixtureUserData2);
+				Timmy up = (Timmy)body;
+				up.notJumping();
 			}
 			if (FixtureUserData2.equals("3"))
 			{
 				fixturesUnderFoot.add((String)fixtureUserData1);
+				Timmy up = (Timmy)body1;
+				up.notJumping();
 			}
 		}
 		
@@ -164,7 +249,8 @@ public class MyContactListener implements ContactListener
 	@Override
 	public void endContact(Contact contact) 
 	{
-		
+		Object body=contact.getFixtureA().getBody().getUserData(); 
+		Object body1=contact.getFixtureB().getBody().getUserData();
 		
 		Object fixtureUserData1 = contact.getFixtureA().getUserData();
 		Object FixtureUserData2 = contact.getFixtureB().getUserData(); 
@@ -174,11 +260,15 @@ public class MyContactListener implements ContactListener
 		{
 			if(fixtureUserData1.equals("3"))
 			{
-				fixturesUnderFoot.remove((String)FixtureUserData2); 
+				fixturesUnderFoot.remove((String)FixtureUserData2);
+				Timmy up = (Timmy)body;
+				up.jumping();
 			}
 			if (FixtureUserData2.equals("3"))
 			{
 				fixturesUnderFoot.remove((String)fixtureUserData1);
+				Timmy up = (Timmy)body1;
+				up.jumping();
 			}
 		}
 		
@@ -200,6 +290,8 @@ public class MyContactListener implements ContactListener
 		
 		
 	}
+	
+	
 	
 	
 	

@@ -1,6 +1,7 @@
 package com.mygdx.objects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -9,8 +10,10 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Assets;
 import com.mygdx.game.WorldController;
+import com.mygdx.objects.Raindrops.RainDrop;
 
 /**
  * Class that represents the star object that 
@@ -22,7 +25,11 @@ public class Ability extends AbstractGameObject
 {
 
 	private TextureRegion star;
+	public boolean hit;
+	public static Array<Ability> abilityScheduledForRemoval;
 	public static boolean fire=false;
+	public ParticleEffect fireBlast = new ParticleEffect();
+	public boolean particle; 
 	
 	 
 	/**
@@ -41,7 +48,9 @@ public class Ability extends AbstractGameObject
 	{
 		dimension.set(.5f, .5f); 
 		star=Assets.instance.up.power;
-		 
+		abilityScheduledForRemoval= new Array<Ability>();
+		fireBlast.load(Gdx.files.internal("../core/assets/particles/particle3.p"), Gdx.files.internal("../core/assets/particles/"));
+		particle=true; 
 	}
 	
 	/**
@@ -64,9 +73,22 @@ public class Ability extends AbstractGameObject
 		origin.y = this.dimension.y/2; 
 		polygonShape.setAsBox(this.dimension.x/2,this.dimension.y/2, origin, 0);
 		FixtureDef fixtureDef = new FixtureDef();
-	    fixtureDef.shape = polygonShape; 
+	    fixtureDef.shape = polygonShape;
+	    fixtureDef.filter.groupIndex=-1; 
 	    body.createFixture(fixtureDef);
 	    polygonShape.dispose();
+		
+	}
+	/**
+	 * Update method used for the particle effect, used for real-time 
+	 * rendering purposes since the variable time step tells it how to render
+	 * the effect given the current time step  
+	 */
+	public void update(float deltaTime)
+	{
+		
+		fireBlast.start();
+		fireBlast.update(deltaTime);
 		
 	}
 
@@ -80,8 +102,14 @@ public class Ability extends AbstractGameObject
 		if(!fire) return; 
 		TextureRegion reg = null;
 		reg = star;
+		
+		if(particle) return; 
+		fireBlast.draw(batch);
+		
+		
 		if(body== null) return; 
 		position = body.getPosition(); 
+		fireBlast.setPosition(position.x, position.y);
 		
 		batch.draw(reg.getTexture(), position.x, position.y,
 				origin.x, origin.y, dimension.x, dimension.y,
@@ -99,6 +127,19 @@ public class Ability extends AbstractGameObject
 	{
 		Ability.fire=b; 
 		
+	}
+	
+	/**
+	 * Method called inside the mycontactlistener class
+	 * when a star object has collied either with a dynamic object
+	 * such as a raindrop or the boundary of the game(helps in clean up
+	 * of memory)
+	 */
+	public void startContact() 
+	{
+		particle=true; 
+		hit=true;
+		abilityScheduledForRemoval.add(this);	  	
 	}
 	
 	

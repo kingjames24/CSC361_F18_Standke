@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.mygdx.game.Assets;
 import com.mygdx.game.WorldController;
+import com.mygdx.util.AudioManager;
 /**
  * Class that represents the star object that 
  * the player is allowed collect to unlock a special
@@ -21,7 +22,8 @@ public class Star extends AbstractGameObject{
 
 	private TextureRegion star; 
 	public static boolean collected;
-	public static Star starScheduledforRemoval; 
+	public static Star starScheduledforRemoval;
+	
 	
 	 
 	/**
@@ -95,7 +97,7 @@ public class Star extends AbstractGameObject{
 	{
 		collected=true;
 		starScheduledforRemoval=this; 
-		
+		AudioManager.instance.play(Assets.instance.sounds.power);
 	}
 
 }

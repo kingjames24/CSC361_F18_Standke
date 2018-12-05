@@ -20,7 +20,7 @@ public abstract class AbstractGameObject
 		public Vector2 origin;
 		public Vector2 scale;
 		
-		public float stateTime;
+		public float stateTime=0;
 		public Animation animation;
 		public float rotation;
 		public Body body;
@@ -33,13 +33,18 @@ public abstract class AbstractGameObject
 		 */
 		public abstract void createBody(Vector2 position); 
 		
+		public void update(float deltaTime)
+		{
+			stateTime+=deltaTime; 
+		}
 		/*
 		 * Starts the animation time
 		 */
 		public void setAnimation (Animation animation)
 		{
 			this.animation = animation;
-			stateTime = 0;
+			 
+			
 		}
 		/**
 		 * All game objects should have instantiated 
@@ -53,6 +58,9 @@ public abstract class AbstractGameObject
 			scale = new Vector2(1, 1);
 			rotation = 0;	
 		}
-		
+		/**
+		 * Abstract method implemented by each sub-class 
+		 * @param batch represents a set of vertex points/positions to render the current frame(sent to GPU)
+		 */
 		public abstract void render(SpriteBatch batch);
 }

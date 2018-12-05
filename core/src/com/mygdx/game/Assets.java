@@ -8,6 +8,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -15,6 +16,9 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.mygdx.util.Constants;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+
 
 
 
@@ -37,7 +41,9 @@ public class Assets implements Disposable, AssetErrorListener
 	//static object that holds the only instance of the class
 	public static final Assets instance = new Assets();
     private AssetManager assetManager;
-	
+	public AssetFonts fonts;
+	public AssetSounds sounds;
+	public AssetMusic music;
     
     /**
      * Private constructor since the Assets' class is modeled after
@@ -48,6 +54,64 @@ public class Assets implements Disposable, AssetErrorListener
      */
     private Assets () {}
     
+    
+    
+		
+	
+	/**
+	 * class that will handle the loading of the sound files for each sound type
+	 * @author Adam
+	 *
+	 */
+	public class AssetSounds
+	{
+		public final Sound explode;
+		public final Sound walk;
+		public final Sound death;
+		public final Sound jump;
+		public final Sound drip;
+		public final Sound points; 
+		public final Sound power; 
+		
+		
+		/**
+		 * Constructor that will handle the loading/assigning of the sound files
+		 * @param am
+		 */
+		public AssetSounds(AssetManager am)
+		{
+			explode = am.get("sounds/110391__soundscalpel-com__firework-explosion-fizz.wav", Sound.class);
+			walk = am.get("sounds/Trim.wav", Sound.class);
+			death = am.get("sounds/239579__ryanconway__evil-laugh-2.wav", Sound.class);
+			jump = am.get("sounds/344004__reitanna__heavy-grunt.wav", Sound.class);
+			//drip = am.get("sounds/25879__acclivity__drip1.wav", Sound.class);
+			drip = am.get("sounds/348022__mattix__water-drop-01.wav", Sound.class);
+			points = am.get("sounds/320655__rhodesmas__level-up-01.wav", Sound.class);
+			power =  am.get("sounds/220173__gameaudio__spacey-1up-power-up.wav", Sound.class);
+		}
+	}
+	
+	/**
+	 * Class that will handle the loading of the music assets
+	 * @author Adam
+	 *
+	 */
+	public class AssetMusic
+	{
+		public final Music song02; 
+		public final Music song01;
+		
+		/**
+		 * Constructor will assign the music files for the given sound
+		 * @param am
+		 */
+		public AssetMusic(AssetManager am)
+		{
+			song01 = am.get("music/rain-01.mp3", Music.class);
+			song02 = am.get("music/Yung_Kartz_-_11_-_Lonely.mp3", Music.class); 
+		}
+	}
+    
     /**
 	 * Inner class that holds a reference to the various Timmy image files 
 	 * used in the game to animate Timmy. Each image is loaded from the 
@@ -56,11 +120,44 @@ public class Assets implements Disposable, AssetErrorListener
 	 */
     public class AssetTimmy
     {	
-    	public final AtlasRegion frame1; 
+    	public final AtlasRegion frame1;
+    	public final Animation animNormal; 
+    	public final Animation animRunning;
+    	public final Animation animJumping;
+    	public final Animation animDead;
+    	public final Animation animShooting; 
     	
+    	/**
+    	 * Consturctor that takes in a texture atlas in which many animations are stored for 
+    	 * Timmy the main character. Animations such as him running, jumping, being normal, and 
+    	 * also shooting his star power. 
+    	 * @param atlas
+    	 */
     	public AssetTimmy (TextureAtlas atlas)
     	{
-    		frame1= atlas.findRegion("Tim"); 
+    		frame1= atlas.findRegion("Tim");
+    		
+    		Array<AtlasRegion> regions = null;
+    		AtlasRegion region = null; 
+    		
+    		//Animation: Timmy moving
+    		regions = atlas.findRegions("Tim_running"); 
+    		animRunning= new Animation(1.0f/10.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
+    		
+    		regions = atlas.findRegions("Tim_jumping"); 
+    		animJumping= new Animation(1.0f/4.0f, regions, Animation.PlayMode.NORMAL);
+    		
+    		region= atlas.findRegion("Tim_normal", 1); 
+    		animNormal= new Animation(1.0f/10.0f, region);
+    		
+    		regions =atlas.findRegions("Tim_dying"); 
+    		animDead = new Animation(1.0f/4.0f, regions, Animation.PlayMode.NORMAL);
+    		
+    		regions = atlas.findRegions("Tim"); 
+    		animShooting = new Animation(1.0f/9.0f, regions, Animation.PlayMode.NORMAL); 
+    		
+    		
+    		
     	}	
     }
     
@@ -156,7 +253,8 @@ public class Assets implements Disposable, AssetErrorListener
     	public final AtlasRegion chopper;
     	public final AtlasRegion city;
     	public final AtlasRegion woman1;
-    	public final AtlasRegion bar; 
+    	public final AtlasRegion bar;
+    	public final AtlasRegion prince; 
     	
     	public AssetLevelDecoration (TextureAtlas atlas)
     	{
@@ -164,6 +262,7 @@ public class Assets implements Disposable, AssetErrorListener
     		chopper = atlas.findRegion("chopper");
     		city = atlas.findRegion("city_background");
     		woman1 = atlas.findRegion("woman_rain");
+    		prince = atlas.findRegion("Princess"); 
     	}
     }
     
@@ -185,10 +284,17 @@ public class Assets implements Disposable, AssetErrorListener
         // load texture atlas
         assetManager.load(Constants.TEXTURE_ATLAS_OBJECTS, TextureAtlas.class);
         
-        // load sounds
-       
-        
-        // load music
+        //loads the two music mp3 files
+        assetManager.load("music/rain-01.mp3", Music.class);
+		assetManager.load("music/Yung_Kartz_-_11_-_Lonely.mp3", Music.class); 
+		//loads in multiple game sounds 
+		assetManager.load("sounds/110391__soundscalpel-com__firework-explosion-fizz.wav", Sound.class);
+		assetManager.load("sounds/Trim.wav", Sound.class);
+		assetManager.load("sounds/239579__ryanconway__evil-laugh-2.wav", Sound.class);
+		assetManager.load("sounds/348022__mattix__water-drop-01.wav", Sound.class);
+		assetManager.load("sounds/344004__reitanna__heavy-grunt.wav", Sound.class);
+		assetManager.load("sounds/320655__rhodesmas__level-up-01.wav", Sound.class);
+		assetManager.load("sounds/220173__gameaudio__spacey-1up-power-up.wav", Sound.class);
         
          
         // start loading assets and wait until finished
@@ -209,13 +315,15 @@ public class Assets implements Disposable, AssetErrorListener
 	    
 	    // create game resource objects
 	    
-	    
+	    fonts = new AssetFonts();
 	    timmy = new AssetTimmy(atlas);
 	    plat = new AssetPlatform(atlas); 
 	    drop = new AssetRainDrop(atlas); 
 	    up = new AssetPowerUp(atlas); 
 	    plus = new AssetPoints(atlas); 
 	    leveldecoration = new AssetLevelDecoration(atlas); 
+	    sounds = new AssetSounds(assetManager);
+	    music = new AssetMusic(assetManager);
     	 
    }
     
@@ -254,8 +362,45 @@ public class Assets implements Disposable, AssetErrorListener
 	public void dispose() 
 	{
 		assetManager.dispose();
+		fonts.defaultSmall.dispose();
+		fonts.defaultNormal.dispose();
+		fonts.defaultBig.dispose();
 		
 		
 	}
+	/**
+	 * Class that uses LibGdx's BitMap Font generator to read in a font file, and convert it
+	 * into a raw map of bits of which a scaling algorithm is used to make the original font larger
+	 * then the new font size has a filter applied to it
+	 * @author adam
+	 *
+	 */
+	public class AssetFonts
+    {
+    	public final BitmapFont defaultSmall;
+    	public final BitmapFont defaultNormal;
+    	public final BitmapFont defaultBig;
+    	/**
+    	 * Constructor that constructs three font sizes based 
+    	 * on the scaling factor 
+    	 */
+    	public AssetFonts()
+    	{
+    		//create three fonts using Libgdx's 15px bitmap font
+    		defaultSmall = new BitmapFont(Gdx.files.internal("images/font-title-export.fnt"), false);
+    		defaultNormal = new BitmapFont(Gdx.files.internal("images/font-title-export.fnt"), false);
+    		defaultBig = new BitmapFont(Gdx.files.internal("images/font-title-export.fnt"), false);
+    		
+    		//set font sizes
+    		defaultSmall.getData().setScale(0.75f);
+    		defaultNormal.getData().setScale(1.0f);
+    		defaultBig.getData().setScale(3.0f);
+    		
+    		//enable linear textrue filtering for smooth fonts
+    		defaultSmall.getRegion().getTexture().setFilter(TextureFilter.Linear,  TextureFilter.Linear);
+    		defaultNormal.getRegion().getTexture().setFilter(TextureFilter.Linear,  TextureFilter.Linear);
+    		defaultBig.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+    	}
+    }
 
 }
