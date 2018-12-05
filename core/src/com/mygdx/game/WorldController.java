@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 
 import java.util.Iterator;
+import java.util.Random;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
@@ -34,9 +35,12 @@ import com.mygdx.objects.Raindrops.RainDrop;
 import com.mygdx.objects.Star;
 import com.mygdx.objects.Timmy;
 import com.mygdx.screens.MenuScreen;
+import com.mygdx.screens.HighScore.KeyPair;
 import com.mygdx.util.AudioManager;
 import com.mygdx.util.CameraHelper;
 import com.mygdx.util.Constants;
+import com.mygdx.util.GamePreferences;
+import com.mygdx.util.HighScoreList;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -69,6 +73,7 @@ public class WorldController extends InputAdapter implements Disposable
 	private Game game;
 	private int soundTimeOut;
 	private float timeLeftGameOverDelay;
+	private HighScoreList high;
 	public static boolean visible; 
      
     
@@ -98,6 +103,8 @@ public class WorldController extends InputAdapter implements Disposable
 	{
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
+	    high = HighScoreList.instance;
+		high.load();
 		goalReached=false;
 		lives=3; 
 		attached=false; 
@@ -147,6 +154,13 @@ public class WorldController extends InputAdapter implements Disposable
 			timeLeftGameOverDelay -= deltaTime;
 			if (timeLeftGameOverDelay < 0)
 			{
+				if(goalReached)
+				{
+				   
+					high.load();
+					high.getScore(score+300);	
+					high.save(high.login, score);
+				}
 				backToMenu();
 				return; 
 			}
@@ -256,6 +270,10 @@ public class WorldController extends InputAdapter implements Disposable
 			visible=false;
 			if (isGameOver())
 			{
+				
+				high.load();
+				high.getScore(score);
+				high.save(high.login, score);
 				level.tim.dead=true;
 				timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER; 
 				
@@ -277,7 +295,7 @@ public class WorldController extends InputAdapter implements Disposable
 	 * Method that handles any player input from a peripheral device, such 
 	 * as a keyboard/mouse. Depending on what the user pressed, Timmy will take
 	 * a certain action in the game, such as moving left, right, jumping, and/or shooting
-	 * at an object 
+	 * at an object and a certain audio sound will be played 
 	 * @param deltaTime a float that represents the time span between
 	 * the previously rendered frame and the currently rendered frame
 	 */
@@ -403,6 +421,16 @@ public class WorldController extends InputAdapter implements Disposable
 	     }
 	 }
 	
+	/**
+	 * Method that determines whether Timmy can jump using Box2d's user data system and is used to tell
+	 * if Timmy is actually  on a platform and not in the air. During platform creation a user Data tag is attached 
+	 * to its fixture, namely the String 2. Underneath Timmy's foot is a tiny sensor that has a data tag 
+	 * attached to it of String 3. This method is initially called when user input is put in(ie., jump pressed). 
+	 * So long as Timmy's sensor and the user data of the platform match that means Timmy is on the ground 
+	 * and can jump. Prevents air jumping. Also used to add a timeout to jumping, so that physcis engine can take 
+	 * a break.  
+	 * @return a boolean that means that tim can either jump or not
+	 */
 	private boolean canJumpNow() 
 	{
 		if(jumpTimeout>0)return false; 
@@ -419,6 +447,15 @@ public class WorldController extends InputAdapter implements Disposable
 		return false;
 	}
 	
+	/**
+	 * Method that determines whether Timmy can run using Box2d's user data system and is used to tell
+	 * if Timmy is actually walking on a platform. During platform creation a user Data tag is attached 
+	 * to its fixture, namely the String 2. Underneath Timmy's foot is a tiny sensor that has a data tag 
+	 * attached to it of String 3. This method is initially called when user input is put in(ie., walking) 
+	 * and if is also used to do a sound time out so, Tim's walking speed it not too fast.Method also prevents
+	 * air walking.      
+	 * @return a boolean that means that tim can either walk or not
+	 */
 	private boolean canWalkNow()
 	{
 		Iterator<String> it = MyContactListener.fixturesUnderFoot.iterator();
@@ -616,6 +653,7 @@ public class WorldController extends InputAdapter implements Disposable
 	       fixtureDef.density =20;//set the main character's weight to 20 kg/m^2
 	       fixtureDef.restitution = 0.1f;//low restitution to not make the main character bounce
 	       fixtureDef.friction = 0.1f;//low friction so the main character slides on the platform
+	       fixtureDef.filter.groupIndex=-1;
 	       body.createFixture(fixtureDef);
 	       //Timmy's foot-sensor to disallow him from jumping while in the air
 	       polygonShape.setAsBox(0.4f, 0.1f, new Vector2(0.5f,.1f), 0);//fixture sits right below main characters hit box 

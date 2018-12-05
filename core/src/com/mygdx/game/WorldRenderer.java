@@ -41,7 +41,6 @@ public class WorldRenderer implements Disposable
 	public static OrthographicCamera camera;
 	private SpriteBatch batch;
 	private WorldController worldController; 
-	private Box2DDebugRenderer b2debugRenderer;
 	public Stage stage; 
 	public Stack stack; 
 	public Table leftCorner; 
@@ -53,10 +52,6 @@ public class WorldRenderer implements Disposable
 	public Image powerUp;
 	public Image lives;
 	public Label gameOver;
-	private Image city2;
-	private ExtendViewport backViewport;
-	private Stage backStage;
-	private OrthographicCamera camera2;
 	private Table powerup2;
 	private FitViewport viewport2;
 	private Stage stage2; 
@@ -117,7 +112,6 @@ public class WorldRenderer implements Disposable
 		leftCorner.setFillParent(true);
 		stage.addActor(leftCorner);
 		
-		b2debugRenderer = new Box2DDebugRenderer();
 	}
 	
 

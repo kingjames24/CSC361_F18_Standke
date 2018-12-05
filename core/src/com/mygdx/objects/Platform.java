@@ -21,11 +21,9 @@ public class Platform extends AbstractGameObject
 	private int length;
 	public Rectangle bounds;
 	
-	private final float FLOAT_CYCLE_TIME = 2.0f;
-    private final float FLOAT_AMPLITUDE = 1f;
-    private float floatCycleTimeLeft;
-    private boolean floatingDownwards;
-    private Vector2 floatTargetPosition;
+	
+   
+  
     
     public Vector2 linearVelocity = new Vector2(); 
 	
@@ -56,9 +54,8 @@ public class Platform extends AbstractGameObject
     	
     	setLength(1); 
     	
-    	floatingDownwards = false;
-   	 	floatCycleTimeLeft = MathUtils.random(0, FLOAT_CYCLE_TIME / 2);
-   	 	floatTargetPosition = null;
+    	
+   	 	
     }
     
     /**
@@ -103,29 +100,7 @@ public class Platform extends AbstractGameObject
         }
       
     }
-    /**
-     * Method that updates the floating up and down movement of
-     * the platforms according to their random floatCycle. Then
-     * each platforms' linear velocity is set to make the platforms move 
-     * from a range of -1 to 1 meters in the y-direction 
-     */
-    public void update(float deltaTime) 
-    {
- 	   
- 	   
- 	   floatCycleTimeLeft -= deltaTime;
- 	   	   
- 	   if (floatCycleTimeLeft <= 0)
- 	   {
- 		   floatCycleTimeLeft = FLOAT_CYCLE_TIME;
- 		   floatingDownwards = !floatingDownwards;
- 		   body.setLinearVelocity(0, FLOAT_AMPLITUDE * (floatingDownwards ? -1 : 1));
- 	   }
- 	   else
- 	   {
- 		   body.setLinearVelocity(body.getLinearVelocity().scl(.98f));
- 	   }
-    }
+    
 
     /**
      * Method that sets the length of the platform; ie., the 

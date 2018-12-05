@@ -17,7 +17,7 @@ import com.badlogic.gdx.math.MathUtils;
 public class GamePreferences 
 {
 	 public static final GamePreferences instance = new GamePreferences();
-	 private Preferences prefs;
+	 public Preferences prefs;
 	 public boolean sound;
      public boolean music;
      public String login; 

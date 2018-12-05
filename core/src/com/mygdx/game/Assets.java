@@ -127,7 +127,12 @@ public class Assets implements Disposable, AssetErrorListener
     	public final Animation animDead;
     	public final Animation animShooting; 
     	
-    	
+    	/**
+    	 * Consturctor that takes in a texture atlas in which many animations are stored for 
+    	 * Timmy the main character. Animations such as him running, jumping, being normal, and 
+    	 * also shooting his star power. 
+    	 * @param atlas
+    	 */
     	public AssetTimmy (TextureAtlas atlas)
     	{
     		frame1= atlas.findRegion("Tim");
@@ -279,16 +284,15 @@ public class Assets implements Disposable, AssetErrorListener
         // load texture atlas
         assetManager.load(Constants.TEXTURE_ATLAS_OBJECTS, TextureAtlas.class);
         
+        //loads the two music mp3 files
         assetManager.load("music/rain-01.mp3", Music.class);
 		assetManager.load("music/Yung_Kartz_-_11_-_Lonely.mp3", Music.class); 
+		//loads in multiple game sounds 
 		assetManager.load("sounds/110391__soundscalpel-com__firework-explosion-fizz.wav", Sound.class);
 		assetManager.load("sounds/Trim.wav", Sound.class);
 		assetManager.load("sounds/239579__ryanconway__evil-laugh-2.wav", Sound.class);
-		
 		assetManager.load("sounds/348022__mattix__water-drop-01.wav", Sound.class);
 		assetManager.load("sounds/344004__reitanna__heavy-grunt.wav", Sound.class);
-
-		
 		assetManager.load("sounds/320655__rhodesmas__level-up-01.wav", Sound.class);
 		assetManager.load("sounds/220173__gameaudio__spacey-1up-power-up.wav", Sound.class);
         
@@ -364,13 +368,22 @@ public class Assets implements Disposable, AssetErrorListener
 		
 		
 	}
-	
+	/**
+	 * Class that uses LibGdx's BitMap Font generator to read in a font file, and convert it
+	 * into a raw map of bits of which a scaling algorithm is used to make the original font larger
+	 * then the new font size has a filter applied to it
+	 * @author adam
+	 *
+	 */
 	public class AssetFonts
     {
     	public final BitmapFont defaultSmall;
     	public final BitmapFont defaultNormal;
     	public final BitmapFont defaultBig;
-    	
+    	/**
+    	 * Constructor that constructs three font sizes based 
+    	 * on the scaling factor 
+    	 */
     	public AssetFonts()
     	{
     		//create three fonts using Libgdx's 15px bitmap font

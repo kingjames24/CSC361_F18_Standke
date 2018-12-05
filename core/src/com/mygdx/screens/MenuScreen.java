@@ -49,6 +49,7 @@ import com.mygdx.game.WorldController;
 import com.mygdx.util.AudioManager;
 import com.mygdx.util.Constants;
 import com.mygdx.util.GamePreferences;
+import com.mygdx.util.HighScoreList;
 
 
 /**
@@ -77,7 +78,7 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 	private Image imgRain2;
 	private Image imgRain3;
 	private Image imgRain4;
-	private char[] player; 
+	private ArrayList<Character> player; 
 	private CheckBox chkSound;
     private Slider sldSound;
     private CheckBox chkMusic;
@@ -86,7 +87,8 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 	private Window winOptions;
 	private TextButton btnWinOptSave;
 	private TextButton btnWinOptCancel;
-	private int count; 
+	private Button btnMenuHighScore;
+	 
 
 	/**
      * Constructor that is passed in the Game Class 
@@ -106,15 +108,15 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 	  */
 	 private void loadSettings() 
 	 {
-		 player= new char[20];
-		 count=0; 
+		
+		
 	     GamePreferences prefs = GamePreferences.instance;
 	     prefs.load();
 	     chkSound.setChecked(prefs.sound);
 	     sldSound.setValue(prefs.volSound);
 	     chkMusic.setChecked(prefs.music);
 	     sldMusic.setValue(prefs.volMusic);
-	     login.setText(prefs.login);
+	    
 	 }
 	 /**
 	  * Private method that saves the 
@@ -123,15 +125,18 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 	  */
 	 private void saveSettings() 
 	 {
-		 String login = new String(player);
-		 player=null;
-		 count=0; 
+		 StringBuilder build = new StringBuilder(player.size()); 
+		 for (Character s : player)
+		 {
+			 build.append(s); 
+		 }
+		 String login2 = build.toString(); 
 	     GamePreferences prefs = GamePreferences.instance;
 	     prefs.sound = chkSound.isChecked();
 	     prefs.volSound = sldSound.getValue();
 	     prefs.music = chkMusic.isChecked();
 	     prefs.volMusic = sldMusic.getValue();
-	     prefs.login= login; 
+	     prefs.login= login2; 
 	     prefs.save();
 	 }
 	 
@@ -227,14 +232,7 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 						}
 						else
 						{
-							if(count>=player.length)//an array out of bounds exception
-							{
-								; 
-							}
-							else
-							{
-								player[count++]=character; 
-							}
+							player.add(character); 
 							
 						}
 						 
@@ -362,6 +360,7 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 		
 		viewport = new FitViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT, new OrthographicCamera());
 		stage = new Stage(viewport);
+		player = new ArrayList<Character>(); 
 		Gdx.input.setInputProcessor(stage);
 		rebuildStage(); 
 	}
@@ -470,8 +469,32 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 	private Table buildControlsLayer() 
 	{
 		 Table layer = new Table(); 
+		 btnMenuHighScore = new Button(skinRainMaker, "score");
+		// btnMenuHighScore.setName("High Score List");
+		 //btnMenuHighScore.setColor(Color.WHITE);
+		 layer.add(btnMenuHighScore).align(Align.bottomRight).expand().width(60).height(60);
+		 btnMenuHighScore.addListener(new ChangeListener() {
+
+			@Override
+			public void changed(ChangeEvent event, Actor actor) 
+			{
+				onHighScoreClicked(); 
+				
+			}
+
+			private void onHighScoreClicked() 
+			{
+				HighScoreList.topTenPlayers.clear();
+				game.setScreen(new HighScore(game));
+			}
+			 
+		 }); 
+		 
+		 
+		 
+		 layer.row(); 
 		 btnMenuOptions = new Button(skinRainMaker, "options"); 
-		 layer.add(btnMenuOptions).align(Align.bottomRight).expand().width(60).height(60);
+		 layer.add(btnMenuOptions).align(Align.bottomRight).width(60).height(60);
 		 btnMenuOptions.addListener(new ChangeListener() {
 
 			@Override
@@ -497,7 +520,7 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 		 
 		 layer.row();
 		 btnMenuPlay = new Button(skinRainMaker, "play");
-		 layer.add(btnMenuPlay).align(Align.bottomRight).width(60).height(60);
+		 layer.add(btnMenuPlay).align(Align.bottomRight).width(60).height(55);
 		 btnMenuPlay.addListener(new ChangeListener() {
 
 			@Override
@@ -570,5 +593,7 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 	*/
 	@Override
 	public void pause() {}
+	
+	
 
 }

@@ -27,7 +27,7 @@ public class Constants
 	public static final String SKIN_RainMaker_UI ="images/rainmaker-ui.json";
 	// Game preferences file
 	public static final String PREFERENCES = "rainmaker.prefs";
-	
+	//a 3 second delay is played at the end of game to dispaly player's death and Game over label
 	public static final float TIME_DELAY_GAME_OVER = 3;
 	
 }

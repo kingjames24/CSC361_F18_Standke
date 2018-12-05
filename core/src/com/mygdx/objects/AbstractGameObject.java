@@ -58,6 +58,9 @@ public abstract class AbstractGameObject
 			scale = new Vector2(1, 1);
 			rotation = 0;	
 		}
-		
+		/**
+		 * Abstract method implemented by each sub-class 
+		 * @param batch represents a set of vertex points/positions to render the current frame(sent to GPU)
+		 */
 		public abstract void render(SpriteBatch batch);
 }

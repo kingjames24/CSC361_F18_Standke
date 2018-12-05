@@ -73,12 +73,17 @@ public class Ability extends AbstractGameObject
 		origin.y = this.dimension.y/2; 
 		polygonShape.setAsBox(this.dimension.x/2,this.dimension.y/2, origin, 0);
 		FixtureDef fixtureDef = new FixtureDef();
-	    fixtureDef.shape = polygonShape; 
+	    fixtureDef.shape = polygonShape;
+	    fixtureDef.filter.groupIndex=-1; 
 	    body.createFixture(fixtureDef);
 	    polygonShape.dispose();
 		
 	}
-	
+	/**
+	 * Update method used for the particle effect, used for real-time 
+	 * rendering purposes since the variable time step tells it how to render
+	 * the effect given the current time step  
+	 */
 	public void update(float deltaTime)
 	{
 		
@@ -124,6 +129,12 @@ public class Ability extends AbstractGameObject
 		
 	}
 	
+	/**
+	 * Method called inside the mycontactlistener class
+	 * when a star object has collied either with a dynamic object
+	 * such as a raindrop or the boundary of the game(helps in clean up
+	 * of memory)
+	 */
 	public void startContact() 
 	{
 		particle=true; 

@@ -177,6 +177,7 @@ public class MyContactListener implements ContactListener
 			
 			
 			}
+
 	
 		}
 		if(body1 instanceof Ability && fixtureUserData1!=null || body1 instanceof Ability && FixtureUserData2!=null)
@@ -289,6 +290,8 @@ public class MyContactListener implements ContactListener
 		
 		
 	}
+	
+	
 	
 	
 	

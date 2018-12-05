@@ -42,8 +42,10 @@ public class Timmy extends AbstractGameObject
 	}
 	/**
 	 * Method that initializes a Timmy object to have its 
-	 * origin centered at (.5,.5).  
-	 * Also loads in the Timmy image file. 
+	 * game origin centered at (.5,.5).  
+	 * Also loads in the Timmy image files which are now 
+	 * a bunch of frames of animation. Timmy's default animation 
+	 * is also set here   
 	 */
 	public void init()
 	{
@@ -69,24 +71,24 @@ public class Timmy extends AbstractGameObject
 		position= body.getPosition();
 		rotation= (float) Math.toDegrees(body.getAngle());
 		
-		float correctX=0; 
+		float correctX=0; //slight correction is made to animNormal since texture is a bit taller than the rest 
 		float correctY=0; 
 		if(animation == animNormal)
 		{
 			correctX= -0.02f; 
 			correctY= -0.12f; 
 		}
-		if (animation==animShooting)
+		if (animation==animShooting)//slight correction is made to animShotting since texture is a bit smaller
 		{
 			correctX=.2f; 
 			correctY=.3f; 
 		}
 		
-		if(animation==animDead)
+		if(animation==animDead)//Run-time modification to the basic state machine for when timmy dies
 		{
-			if(animDead.isAnimationFinished(stateTime))
+			if(animDead.isAnimationFinished(stateTime))//Timmy's animation fully plays
 			{
-				reg = (TextureRegion) animation.getKeyFrame(stateTime, false); 
+				reg = (TextureRegion) animation.getKeyFrame(stateTime, false);//then stops on the last frame  
 			} 
 			else
 			{
@@ -118,6 +120,12 @@ public class Timmy extends AbstractGameObject
 	@Override
 	public void createBody(Vector2 position) {}
 	
+	
+	/**
+	 * update method that implements a basic/rudimentary FSM to keep 
+	 * track of the animation state that Timmy is in and how to transition from
+	 * one animation to another in the next frame
+	 */
 	public void update(float deltaTime)
 	{
 		super.update(deltaTime);
@@ -216,11 +224,19 @@ public class Timmy extends AbstractGameObject
 		return life; 
 	}
 	
+	/**
+	 * Method called by contact listener to indicate that Timmmy is allowed to 
+	 * jump in the game(ie., prevents air jumping)
+	 */
 	public void jumping()
 	{
 		jumping=true; 
 	}
 	
+	/**
+	 * Method called by contact listener to indicate that Timmmy is not allowed to 
+	 * jump in the game(ie., prevents air jumping)
+	 */
 	public void notJumping()
 	{
 		jumping=false; 
