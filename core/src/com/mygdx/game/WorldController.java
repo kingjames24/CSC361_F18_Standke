@@ -295,7 +295,7 @@ public class WorldController extends InputAdapter implements Disposable
 	 * Method that handles any player input from a peripheral device, such 
 	 * as a keyboard/mouse. Depending on what the user pressed, Timmy will take
 	 * a certain action in the game, such as moving left, right, jumping, and/or shooting
-	 * at an object 
+	 * at an object and a certain audio sound will be played 
 	 * @param deltaTime a float that represents the time span between
 	 * the previously rendered frame and the currently rendered frame
 	 */
@@ -421,6 +421,16 @@ public class WorldController extends InputAdapter implements Disposable
 	     }
 	 }
 	
+	/**
+	 * Method that determines whether Timmy can jump using Box2d's user data system and is used to tell
+	 * if Timmy is actually  on a platform and not in the air. During platform creation a user Data tag is attached 
+	 * to its fixture, namely the String 2. Underneath Timmy's foot is a tiny sensor that has a data tag 
+	 * attached to it of String 3. This method is initially called when user input is put in(ie., jump pressed). 
+	 * So long as Timmy's sensor and the user data of the platform match that means Timmy is on the ground 
+	 * and can jump. Prevents air jumping. Also used to add a timeout to jumping, so that physcis engine can take 
+	 * a break.  
+	 * @return a boolean that means that tim can either jump or not
+	 */
 	private boolean canJumpNow() 
 	{
 		if(jumpTimeout>0)return false; 
@@ -437,6 +447,15 @@ public class WorldController extends InputAdapter implements Disposable
 		return false;
 	}
 	
+	/**
+	 * Method that determines whether Timmy can run using Box2d's user data system and is used to tell
+	 * if Timmy is actually walking on a platform. During platform creation a user Data tag is attached 
+	 * to its fixture, namely the String 2. Underneath Timmy's foot is a tiny sensor that has a data tag 
+	 * attached to it of String 3. This method is initially called when user input is put in(ie., walking) 
+	 * and if is also used to do a sound time out so, Tim's walking speed it not too fast.Method also prevents
+	 * air walking.      
+	 * @return a boolean that means that tim can either walk or not
+	 */
 	private boolean canWalkNow()
 	{
 		Iterator<String> it = MyContactListener.fixturesUnderFoot.iterator();
@@ -763,18 +782,7 @@ public class WorldController extends InputAdapter implements Disposable
 	}
 	
 	
-	protected String getSaltString() {
-        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        StringBuilder salt = new StringBuilder();
-        Random rnd = new Random();
-        while (salt.length() < 6) { // length of the random string.
-            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-            salt.append(SALTCHARS.charAt(index));
-        }
-        String saltStr = salt.toString();
-        return saltStr;
-
-    }
+	
 		
 	
 

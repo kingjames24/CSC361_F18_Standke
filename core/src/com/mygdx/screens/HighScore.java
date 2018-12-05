@@ -27,7 +27,12 @@ import com.mygdx.game.Assets;
 import com.mygdx.util.Constants;
 import com.mygdx.util.GamePreferences;
 import com.mygdx.util.HighScoreList;
-
+/**
+ * Separate screen that displays user's score if it has logged in and played the game. 
+ * Displayed in descending order 
+ * @author adam
+ *
+ */
 public class HighScore extends AbstractGameScreen
 {
 
@@ -41,12 +46,20 @@ public class HighScore extends AbstractGameScreen
 	private GamePreferences name;
 	
 	
-
+	/**
+	 * Basic Constructor that takes an instance of the Game class
+	 * and calls its parent to store instance of object
+	 * @param game an object that used to transition between screens/scenes in the game  
+	 */
 	public HighScore(Game game) {
 		super(game);
 		
 	}
 	
+	/**
+	 * Method that renders the scene/screen for the High Score list. Basically, low level calls 
+	 * are made to open gl to clear the screen and draw the stage(ie., scene graph)
+	 */
 	public void render(float deltaTime) 
 	{
 		Gdx.gl.glClearColor(30, 144, 255, 1f);
@@ -56,11 +69,20 @@ public class HighScore extends AbstractGameScreen
 	    stage.draw();
 	}
 	
+	/**
+	 * Method that resizes the screen based on how the viewport changes
+	 */
 	public void resize(int width, int height) 
 	{
 		 stage.getViewport().setScreenSize(width, height); 	
 	}
 
+	/**
+	 * Method that is called initially by the Game class to show the scene/screen. In doing so, 
+	 * a new viewport is constructed using pixels as a measurement and orthographic camera. 
+	 * Then a new stage/scene graph is created in which all inputs are re-routed and handled by this
+	 * portion of the program. Also a helper method is used to build the actual UI implementation
+	 */
 	public void show() 
 	{
 		
@@ -70,6 +92,12 @@ public class HighScore extends AbstractGameScreen
 		rebuildStage(); 
 	}
 
+	/**
+	 * Main method that builds the scene/screen to be displayed on screen. First two Skins are loaded in
+	 * used to texture LibGDX widgets. Then an arraylist is created to keep track of the username and score
+	 * in a separate inner class. Then the actual UI elements such as layout widgets, scrollpane and stack widget
+	 * are added to the stage to display the screen in a certain way
+	 */
 	private void rebuildStage() 
 	{
 		skinRainMaker = new Skin(Gdx.files.internal(Constants.SKIN_RainMaker_UI),
@@ -94,7 +122,11 @@ public class HighScore extends AbstractGameScreen
 	    
 		
 	}
-
+	
+	/**
+	 * Method that builds the button widget that when pressed goes back to the main menu
+	 * @return a table widget to be added to the stage
+	 */
 	private Table buildControlsLayer() 
 	{
 		Table layer = new Table(); 
@@ -121,6 +153,13 @@ public class HighScore extends AbstractGameScreen
 		return layer;
 	}
 
+	/**
+	 * Main method that actually builds the high score list. After creating a title both the 
+	 * files handled internally by LibGDX are loaded in(ie., the preferences and the file containing 
+	 * people on the high score list). After which the high score file is manipulated to get it in a 
+	 * use-able form to store as a key/value pair.
+	 * @return a table that contains the high-score list so far
+	 */
 	private Table buildHighScoreList() 
 	{
 		Table layer = new Table();
@@ -184,18 +223,24 @@ public class HighScore extends AbstractGameScreen
 		return layer; 
 	}
 
+	/**
+	 * Helper method that calls the actual selection sort algorithm
+	 * to organize the scores in descending order 
+	 * @param score int that represents the user's score for the game
+	 */
 	private void sort(int score) 
 	{
-		
 				
 				bubble(score); 
-				return; 
-			
-	
-		
+				return; 	
 		
 	}
 	
+	/**
+	 * Method that adds the user's score to the game and sort's the array list
+	 * based on top scores so far. Algo selection sort using a dynamic arraylist
+	 * @param score int that represents the user's score for the game
+	 */
 	private void bubble(int score)
 	{
 		pair.add(new KeyPair(name.login, score));
@@ -222,7 +267,11 @@ public class HighScore extends AbstractGameScreen
 	
 
 	
-
+	/**
+	 * Method that build's the sky-line background for the game in which
+	 * other objects are laid/stacked on-top of
+	 * @return a table widget for the background image 
+	 */
 	private Table buildBackgroundLayer() 
 	{
 		Table layer= new Table(); 
@@ -233,17 +282,31 @@ public class HighScore extends AbstractGameScreen
 		
 	}
 	
+	/**
+	 * Inner Class that stores the player's name and score together, which
+	 * becomes usuefull for sorting later based on the player's score
+	 * @author adam
+	 *
+	 */
 	public class KeyPair
 	{
 		public String key; 
 		public int value; 
 		
+		/**
+		 * Constructor that stores the player's name and score for later use
+		 * @param key a string that represents the player's login name
+		 * @param value an int that represents the player's score
+		 */
 		public KeyPair(String key, int value)
 		{
 			this.key=key; 
 			this.value=value; 
 		}
-		
+		/**
+		 * Method overrides Object's toString method that will be used 
+		 * to format the object's look when displayed on the screen
+		 */
 		public String toString()
 		{
 			return String.format(key+ ":    "+value); 
@@ -251,6 +314,10 @@ public class HighScore extends AbstractGameScreen
 		
 	}
 
+	/**
+	 * Called by Game Class to hide the screen when player presses the main menu
+	 * button. Free's up memory 
+	 */
 	@Override
 	public void hide() 
 	{
@@ -260,7 +327,9 @@ public class HighScore extends AbstractGameScreen
 		HighScoreList.topTenPlayers.clear();
 		
 	}
-
+	/**
+	 * Method that is useful for mobile systems 
+	 */
 	@Override
 	public void pause() {}
 }

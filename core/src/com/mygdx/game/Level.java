@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.objects.City;
 import com.mygdx.objects.People;
 import com.mygdx.objects.Platform;
 import com.mygdx.objects.Points;
@@ -82,7 +81,6 @@ public class Level
 	public Array<Points> point;
 	public Array<Star> enhancement;
 	public People people;
-	public City background;
 	public Ability ability;
 	public Princess goal; 
 	 
@@ -217,8 +215,8 @@ public class Level
 		// decoration
 		people = new People(pixmap.getWidth());
 		people.position.set(0, -5);
-		background = new City(pixmap.getWidth());
-		background.position.set(0, -5);
+		//background = new City(pixmap.getWidth());
+		//background.position.set(0, -5);
 		ability = new Ability(); 
 		
 				
