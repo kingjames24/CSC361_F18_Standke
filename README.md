@@ -7,7 +7,7 @@
     tries to jump from one platform to another while avoiding objects falling from the sky. The game was developed using
     LibGDX's game-development framework for desktop use only. Future releases may include cross-platform support for Andriod 
     and iOS. Because the game was developed for a school project any additional changes/improvments to the game may be done, so long as they are done in a non-commercial manner. Furthermore, the game implements many textures, songs, music, and other copyrighted material that have non-commercial licenses attached to them. Having said that, feel free to fork the project!</p>
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/4pv1b3Cy2k4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+ [![Little red ridning hood](http://i.imgur.com/7YTMFQp.png)](https://vimeo.com/3514904 "Little red riding hood - Click to Watch!")
  </div>
  <div>
   <h2>Features:</h2>
