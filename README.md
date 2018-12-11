@@ -29,7 +29,38 @@
   </div>
   <div>
   <h2>Acknowledgments:</h2>
-     <p></p>
+     <p>
+        <ul>
+        <li>Music/Sound</li>
+        <li>Menu/High Score Music: Yung Kartz, "Lonely"</li>
+        <li>Jumping Sound: Reitanna</li>
+        <li>Particle Sound: soundscalpel.com</li> 
+        <li>Evil Laugh Sound: Ryan Conway</li>
+        <li>Rain Drop Sound: Mattias "Mattix" Lahoud</li>
+        <li>Points Sound: Andy Rhode</li>
+        <li>Special Ability Sound: GameAudio</li>
+        </ul>
+        <ul>
+        <li>Graphics</li> 
+        <li>Tim: Cyrus Annihilator</li>
+        <li>Princess: Cyrus Annihilator</li>
+        <li>Rain Droplets: Maneko</li>
+        <li>Star/Particle Effect: Maneko</li>
+        <li>Points: Maneko</li> 
+        <li>Helicopter: Taito</li>
+        <li>Platforms: jin315</li>
+        <li>City Skyline: AzRaezel</li>
+        <li>Woman with Umbrella: Maneko</li>
+        </ul>
+         <ul>
+        <li>UI/HUD Font and Skins</li>
+         <li>Raymond "Raeleus" Buckley</li> 
+         </ul>
+         <ul>
+        <li>Game Designer and Programmer</li>
+         <li>Adam Standke</li> 
+    </ul> 
+    </p>
   </div>
 </body>
 </html>
