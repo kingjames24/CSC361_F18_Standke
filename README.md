@@ -8,7 +8,7 @@
     LibGDX's game-development framework for desktop use only. Future releases may include cross-platform support for Andriod 
     and iOS. Because the game was developed for a school project any additional changes/improvments to the game may be done, so long as they are done in a non-commercial manner. Furthermore, the game implements many textures, songs, music, and other copyrighted material that have non-commercial licenses attached to them. Having said that, feel free to fork the project!</p>
 <a href="https://youtu.be/4pv1b3Cy2k4">
-<img src="https://i.ytimg.com/vi/4pv1b3Cy2k4/hqdefault.jpg"  width="100" height="80" border="0">
+<img src="https://i.ytimg.com/vi/4pv1b3Cy2k4/hqdefault.jpg"  width="210" height="180" border="0">
 </a>
  </div>
  <div>
