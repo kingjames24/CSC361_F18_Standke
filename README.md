@@ -16,7 +16,7 @@
         <li>Computer Mouse Support </li>
         <li>High Score List</li> 
         <li>In-Game Menu</li>
-        <li>Dynamic screen adjusment of Game and HUD</li>
+        <li>Dynamic screen adjusment for different display sizes</li>
       </ul>
    </p>
   </div>
