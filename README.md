@@ -31,7 +31,7 @@
   <h2>Acknowledgments:</h2>
      <p>
         <ul>
-        <li>Music/Sound</li>
+        <h4>Music/Sound</h4>
         <li>Menu/High Score Music: Yung Kartz, "Lonely"</li>
         <li>Jumping Sound: Reitanna</li>
         <li>Particle Sound: soundscalpel.com</li> 
