@@ -149,24 +149,7 @@ public class WorldController extends InputAdapter implements Disposable
 	 */
 	public void update(float deltaTime)
 	{
-		if (isGameOver() || goalReached)
-		{
-			Gdx.input.setInputProcessor(null);
-			timeLeftGameOverDelay -= deltaTime;
-			if (timeLeftGameOverDelay < 0)
-			{
-				if(goalReached)
-				{
-				   
-					high.load();
-					high.getScore(score+300);	
-					high.save(high.login, score);
-				}
-				backToMenu();
-				return; 
-			}
-			 
-		}
+	
 		handleDebugInput(deltaTime);
 		
 		handleInputGame(deltaTime);
@@ -276,6 +259,7 @@ public class WorldController extends InputAdapter implements Disposable
 				high.getScore(score);
 				high.save(high.login, score);
 				level.tim.dead=true;
+				rain.rainDrop.clear();
 				timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER; 
 				
 			}
@@ -286,6 +270,24 @@ public class WorldController extends InputAdapter implements Disposable
 			
 			}
 			
+		}
+		if (isGameOver() || goalReached)
+		{
+			Gdx.input.setInputProcessor(null);
+			timeLeftGameOverDelay -= deltaTime;
+			if (timeLeftGameOverDelay < 0)
+			{
+				if(goalReached)
+				{
+				   
+					high.load();
+					high.getScore(score+300);	
+					high.save(high.login, score);
+				}
+				backToMenu();
+				//return; 
+			}
+			 
 		}
 		
 		
@@ -302,7 +304,7 @@ public class WorldController extends InputAdapter implements Disposable
 	 */
 	private void handleInputGame (float deltaTime) 
 	{
-		 
+		 if (isGameOver() || goalReached) return; 
 	     if (cameraHelper.hasTarget(level.tim)) 
 	     {
 	       // Player Movement
@@ -516,7 +518,8 @@ public class WorldController extends InputAdapter implements Disposable
 	 * the previously rendered frame and the currently rendered frame
 	 */
 	private void handleDebugInput(float deltaTime)//used only for debbuging camera
-	{
+	{       
+		    if (isGameOver() || goalReached) return; 
 			if (Gdx.app.getType() != ApplicationType.Desktop) return;
 		    if (!cameraHelper.hasTarget(level.tim)) 
 			{
@@ -612,7 +615,7 @@ public class WorldController extends InputAdapter implements Disposable
 		  
     	   BodyDef bodyDef4 = new BodyDef();
 		   bodyDef4.type = BodyType.StaticBody;//static body type for boundary
-		   bodyDef4.position.set(new Vector2(0f, 0f));//set 10 meters to the left scene
+		   bodyDef4.position.set(new Vector2(-2f, 0f));//set 10 meters to the left scene
 		   Body body4 = b2world.createBody(bodyDef4); 
 		   EdgeShape boundary2 = new EdgeShape();//use an edge as shape
 		   FixtureDef fixtureDef4 = new FixtureDef();

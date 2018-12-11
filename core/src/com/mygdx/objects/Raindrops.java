@@ -29,7 +29,7 @@ public class Raindrops extends AbstractGameObject
 	
 	public  Array<RainDrop> raindropScheduledForRemoval;
 	private Array<TextureRegion> rainDrops;
-    private ArrayList<RainDrop> rainDrop;
+    public ArrayList<RainDrop> rainDrop;
     private int amount;
 	public Vector2 position=new Vector2(0,10);
 	public Vector2 dimension=new Vector2();
