@@ -41,7 +41,7 @@
         <li>Special Ability Sound: GameAudio</li>
         </ul>
         <ul>
-        <li>Graphics</li> 
+        <h2>Graphics</h2> 
         <li>Tim: Cyrus Annihilator</li>
         <li>Princess: Cyrus Annihilator</li>
         <li>Rain Droplets: Maneko</li>
@@ -53,12 +53,10 @@
         <li>Woman with Umbrella: Maneko</li>
         </ul>
          <ul>
-        <li>UI/HUD Font and Skins</li>
-         <li>Raymond "Raeleus" Buckley</li> 
+        <li>UI/HUD Font and Skins: Raymond "Raeleus" Buckley</li
          </ul>
          <ul>
-        <li>Game Designer and Programmer</li>
-         <li>Adam Standke</li> 
+        <li>Game Designer and Programmer: Adam Standke</li>
     </ul> 
     </p>
   </div>
