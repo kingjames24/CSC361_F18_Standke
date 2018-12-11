@@ -362,6 +362,7 @@ public class MenuScreen extends AbstractGameScreen implements DestructionListene
 		stage = new Stage(viewport);
 		player = new ArrayList<Character>(); 
 		Gdx.input.setInputProcessor(stage);
+		AudioManager.instance.play(Assets.instance.music.song02);
 		rebuildStage(); 
 	}
 	

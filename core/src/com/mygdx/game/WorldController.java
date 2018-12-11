@@ -778,7 +778,7 @@ public class WorldController extends InputAdapter implements Disposable
 	       // switch to menu screen
 		  
 	       game.setScreen(new MenuScreen(game));
-	       AudioManager.instance.play(Assets.instance.music.song02);
+	       
 	}
 	
 	
