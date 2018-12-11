@@ -109,6 +109,7 @@ public class WorldController extends InputAdapter implements Disposable
 		lives=3; 
 		attached=false; 
 		visible=false;
+		timeLeftGameOverDelay=0; 
 		numFootContacts=0;
 		shootTimeout=15;
 		jumpTimeout=0;
@@ -301,6 +302,7 @@ public class WorldController extends InputAdapter implements Disposable
 	 */
 	private void handleInputGame (float deltaTime) 
 	{
+		 
 	     if (cameraHelper.hasTarget(level.tim)) 
 	     {
 	       // Player Movement
