@@ -3,10 +3,10 @@
 <h1>Welcome to RainMaker!!!</h1>
   <div>
   <h2>About:</h2> 
-    <p>RainMaker is a simple platform game with, currently, one level. Similar to other platform type games, the player
+    <p>Currently, RainMaker is a simple platform game with one level. Similar to other platform type games the player
     tries to jump from one platform to another while avoiding objects falling from the sky. The game was developed using
     LibGDX's game-development framework for desktop use only. Future releases may include cross-platform support for Andriod 
-    and iOS. Because the game was developed for a school project any additional changes/improvments to the game may be done, so long as they are done in a non-commercial manner. Furthermore, the game implements many textures, songs, music, and other copyrighted material that have non-commercial licenses attached to them. Having said that, feel free to fork the project!</p>
+    and/or iOS. Because the game was developed as a school project any additional changes/improvments to the game may be done, so long as they are done in a non-commercial manner. Furthermore, the game implements many textures, songs, music, and other copyrighted material that have licenses attached to them. Having said that, feel free to fork the project!</p>
 <a href="https://youtu.be/4pv1b3Cy2k4">
 <img src="https://i.ytimg.com/vi/4pv1b3Cy2k4/hqdefault.jpg"  width="210" height="180" border="0">
 </a>
