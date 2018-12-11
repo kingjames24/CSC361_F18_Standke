@@ -22,7 +22,7 @@
   </div>
   <div>
   <h2>Setup:</h2>
-     <p></p>
+     <p>Download the game from the repo. After doing so import the project into your IDE and build it using Gradle. For more information see the following link: <a href="https://libgdx.badlogicgames.com/documentation/gettingstarted/Importing%20into%20IDE.html#eclipse">Importing a LibGDX project</a> </p>
   </div>
   <div>
   <h2>Acknowledgments:</h2>
