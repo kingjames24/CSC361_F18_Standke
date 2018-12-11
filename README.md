@@ -3,7 +3,7 @@
 <h1>Welcome to RainMaker!!!</h1>
   <div>
   <h2>About:</h2> 
-    <p></p>
+    <p>RainMaker is a simple platformer that was developed as a final project for CSC361</p>
  </div>
  <div>
   <h2>Features:</h2>
