@@ -103,10 +103,7 @@ public class Timmy extends AbstractGameObject
 		
 		
 		
-		
-		
-		
-		
+
 		batch.draw(reg.getTexture(), position.x, 
 				position.y, origin.x, origin.y, dimension.x+correctX,
 				dimension.y+correctY, scale.x, scale.y, rotation, reg.getRegionX(),
@@ -181,7 +178,8 @@ public class Timmy extends AbstractGameObject
 		else if(dead)
 		{
 			stateTime=0; 
-			setAnimation(animDead); 
+			setAnimation(animDead);
+			
 		}
 		else
 		{

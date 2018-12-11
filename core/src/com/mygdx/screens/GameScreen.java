@@ -39,7 +39,7 @@ public class GameScreen extends AbstractGameScreen
 	public void show() 
 	{
 		worldController = new WorldController(game);
-		worldRenderer = new WorldRenderer(worldController);
+		worldRenderer = new WorldRenderer(worldController, game);
 		 
 		
 	}

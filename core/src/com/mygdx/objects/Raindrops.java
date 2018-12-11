@@ -108,6 +108,7 @@ public class Raindrops extends AbstractGameObject
     * Also, the constructor initializes a new Array of RainDrop objects and calls the helper 
     * method to set various other parameters.  
     * @param amount
+ * @param worldController 
     */
    public Raindrops(int amount)
    {
@@ -214,8 +215,12 @@ public class Raindrops extends AbstractGameObject
     */
    public void destroy(RainDrop drop)
    {
-	   rainDrop.remove(drop);
-	   rainDrop.add(spawnRainDrop());
+	   //if(!WorldController.isGameOver())
+	   //{
+		   rainDrop.remove(drop);
+		   rainDrop.add(spawnRainDrop());
+	   //}
+	   
    }
 
    	/**

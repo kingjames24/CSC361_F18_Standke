@@ -72,7 +72,7 @@ public class WorldController extends InputAdapter implements Disposable
 	private int first;
 	private Game game;
 	private int soundTimeOut;
-	private float timeLeftGameOverDelay;
+	public static float timeLeftGameOverDelay;
 	private HighScoreList high;
 	public static boolean visible; 
      
@@ -150,7 +150,7 @@ public class WorldController extends InputAdapter implements Disposable
 	public void update(float deltaTime)
 	{
 	
-		handleDebugInput(deltaTime);
+		
 		
 		handleInputGame(deltaTime);
 	
@@ -259,7 +259,9 @@ public class WorldController extends InputAdapter implements Disposable
 				high.getScore(score);
 				high.save(high.login, score);
 				level.tim.dead=true;
-				rain.rainDrop.clear();
+				level.tim.jumping=false; 
+				level.tim.runningLeft=false; 
+				level.tim.runningRight=false; 
 				timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER; 
 				
 			}
@@ -284,8 +286,7 @@ public class WorldController extends InputAdapter implements Disposable
 					high.getScore(score+300);	
 					high.save(high.login, score);
 				}
-				backToMenu();
-				//return; 
+				return; 
 			}
 			 
 		}
@@ -356,14 +357,7 @@ public class WorldController extends InputAdapter implements Disposable
 	    	   }
 	    	  
 	       }
-	       else
-	       {
-	    	   
-	    	   level.tim.runningLeft=false; 
-	    	   level.tim.runningRight=false; 
-	    	   
-	       }
-	       if (Gdx.input.isButtonPressed(Input.Buttons.LEFT))
+	       else if (Gdx.input.isButtonPressed(Input.Buttons.LEFT))
 	       {
 	    	   int x = Gdx.input.getX(); 
 	    	   int y = Gdx.input.getY();
@@ -420,7 +414,14 @@ public class WorldController extends InputAdapter implements Disposable
 	    		  
 	    	   
 	    	   }
-
+	    	 
+	       }
+	       else
+	       {
+	    	   
+	    	   level.tim.runningLeft=false; 
+	    	   level.tim.runningRight=false; 
+	    	   
 	       }
 	     }
 	 }
@@ -484,64 +485,6 @@ public class WorldController extends InputAdapter implements Disposable
 		return false;
 	}
 	
-	
-	/**
-	 * Method used currently for debugging purposes. When the enter
-	 * key is pressed the camera is allowed to follow any object it wants
-	 * in the game. Also by pressing escape or
-	 * the back key the game returns to the main menu   
-	 */
-	public boolean keyUp (int keycode) 
-	{
-      //camera debug
-      if (keycode == Keys.ENTER) 
-      {
-        cameraHelper.setTarget(cameraHelper.hasTarget()
-        		? null: level.tim);
-        
-      }
-      //Back to main menu
-      else if(keycode == Keys.ESCAPE || keycode == Keys.BACK)
-      {
-    	  backToMenu();
-      }
-      
-      return false;
-	}
-	
-	/**
-	 * Method used currently for debugging purposes. When the enter
-	 * key is pressed the camera is allowed to follow any object it wants
-	 * in the game by using certain input commands. Also, when the camera
-	 * is allowed to follow any game object it can also use zoom in or out.  
-	 * @param deltaTime a float that represents the time span between
-	 * the previously rendered frame and the currently rendered frame
-	 */
-	private void handleDebugInput(float deltaTime)//used only for debbuging camera
-	{       
-		    if (isGameOver() || goalReached) return; 
-			if (Gdx.app.getType() != ApplicationType.Desktop) return;
-		    if (!cameraHelper.hasTarget(level.tim)) 
-			{
-		    	// Camera Controls (move)
-		    	float camMoveSpeed = 5 * deltaTime;
-		    	float camMoveSpeedAccelerationFactor = 5;
-		    	if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) camMoveSpeed *=camMoveSpeedAccelerationFactor;
-		    	if (Gdx.input.isKeyPressed(Keys.LEFT)) moveCamera(-camMoveSpeed, 0);
-		    	if (Gdx.input.isKeyPressed(Keys.RIGHT)) moveCamera(camMoveSpeed,0);
-		    	if (Gdx.input.isKeyPressed(Keys.UP)) moveCamera(0, camMoveSpeed);
-		    	if (Gdx.input.isKeyPressed(Keys.DOWN)) moveCamera(0,-camMoveSpeed);
-		    	if (Gdx.input.isKeyPressed(Keys.BACKSPACE))cameraHelper.setPosition(0, 0);
-		    	// Camera Controls (zoom)
-		    	float camZoomSpeed = 1 * deltaTime;
-		    	float camZoomSpeedAccelerationFactor = 5;
-		    	if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) camZoomSpeed *= camZoomSpeedAccelerationFactor;
-		    	if (Gdx.input.isKeyPressed(Keys.COMMA))cameraHelper.addZoom(camZoomSpeed);
-		    	if (Gdx.input.isKeyPressed(Keys.PERIOD)) cameraHelper.addZoom(-camZoomSpeed);
-		    	if (Gdx.input.isKeyPressed(Keys.SLASH)) cameraHelper.setZoom(1);
-			}
-		
-	}
 	/**
 	 * Method that sets the position of the camera to a certain 
 	 * position within the scene 
@@ -775,16 +718,8 @@ public class WorldController extends InputAdapter implements Disposable
 	
 	
 	
-	/**
-	 * Method that exits the game screen and returns back to the menu screen
-	 */
-	private void backToMenu () 
-	{
-	       // switch to menu screen
-		  
-	       game.setScreen(new MenuScreen(game));
-	       
-	}
+	
+	
 	
 	
 	

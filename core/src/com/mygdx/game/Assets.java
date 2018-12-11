@@ -151,7 +151,7 @@ public class Assets implements Disposable, AssetErrorListener
     		animNormal= new Animation(1.0f/10.0f, region);
     		
     		regions =atlas.findRegions("Tim_dying"); 
-    		animDead = new Animation(1.0f/4.0f, regions, Animation.PlayMode.NORMAL);
+    		animDead = new Animation(1.0f/10.0f, regions, Animation.PlayMode.NORMAL);
     		
     		regions = atlas.findRegions("Tim"); 
     		animShooting = new Animation(1.0f/9.0f, regions, Animation.PlayMode.NORMAL); 

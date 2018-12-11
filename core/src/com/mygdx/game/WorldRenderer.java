@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -25,6 +26,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.contacts.MyContactListener;
 import com.mygdx.objects.Ability;
 import com.mygdx.objects.Star;
 import com.mygdx.screens.MenuScreen;
@@ -54,16 +56,18 @@ public class WorldRenderer implements Disposable
 	public Label gameOver;
 	private Table powerup2;
 	private FitViewport viewport2;
-	private Stage stage2; 
+	private Stage stage2;
+	private Game game; 
 	
 	/**
 	 * Constructor that takes in an object of the WorldController class and also 
 	 * calls a helper method to create the 3d camera to be used to render frames
 	 * @param worldController
 	 */
-	public WorldRenderer (WorldController worldController) 
+	public WorldRenderer (WorldController worldController, Game game) 
 	{ 
 		this.worldController = worldController;
+		this.game=game; 
 		init();
 	}
 	
@@ -179,7 +183,11 @@ public class WorldRenderer implements Disposable
 	{ 
 		renderWorld(batch, stage2);
 		renderHud(batch, stage);
-		
+		if(WorldController.timeLeftGameOverDelay<0)
+		{
+			MyContactListener.fixturesUnderFoot.clear();
+			game.setScreen(new MenuScreen(game));
+		}
 		
 	}
 	
